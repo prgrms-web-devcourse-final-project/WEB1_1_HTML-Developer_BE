@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - develop
   pull_request:
 
 permissions:
@@ -21,6 +21,18 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Set up secret yml file
+        env:
+          YAML_SECRET: ${{ secrets.YAML_SECRET }}
+          YAML_DIR: src/main/resources
+          YAML_TEST_DIR: src/test/resources
+          YAML_FILE_NAME: application.yml
+        run: |
+          echo $YAML_SECRET | base64 --decode > $YAML_DIR/$YAML_FILE_NAME
+          echo $YAML_SECRET | base64 --decode > $YAML_TEST_DIR/$YAML_FILE_NAME
+          echo "YAML_SECRET has been decoded and saved to $YAML_DIR/$YAML_FILE_NAME"
+          echo "YAML_SECRET has been decoded and saved to $YAML_TEST_DIR/$YAML_FILE_NAME"
 
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
