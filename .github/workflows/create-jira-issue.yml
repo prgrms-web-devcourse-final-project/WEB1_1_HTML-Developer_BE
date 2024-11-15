@@ -55,16 +55,14 @@ jobs:
         with:
           project: ARV
           issuetype: ${{ steps.issue-parser.outputs.issueparser_label-selection }}
-          summary: '${{ github.event.issue.title }}'
+          summary: '[${{ steps.issue-parser.outputs.issueparser_team-selection }}] ${{ github.event.issue.title }}'
           description: '${{ steps.md2jira.outputs.output-text }}'
           fields: |
             {
               "parent": {
                 "key": "${{ steps.issue-parser.outputs.issueparser_parentKey }}"
               },
-              "customfield_10014": {
-                "value": "${{ steps.issue-parser.outputs.issueparser_team-selection }}"
-              }
+              "labels": ["${{ steps.issue-parser.outputs.issueparser_team-selection }}"]
             }
 
       - name: Log created issue
