@@ -4,6 +4,18 @@ labels: [feat]
 title: '이슈 이름을 작성해주세요'
 body:
   - type: dropdown
+    id: team-selection
+    attributes:
+      label: '👥 팀 선택 (Team)'
+      description: '담당 팀을 선택해주세요'
+      multiple: false
+      options:
+        - BE
+        - FE
+    validations:
+      required: true
+
+  - type: dropdown
     id: label-selection
     attributes:
       label: '🏷️ 라벨 선택 (Label)'
@@ -14,7 +26,6 @@ body:
         - FIX
         - REFACTOR
         - CHORE
-
     validations:
       required: true
 
