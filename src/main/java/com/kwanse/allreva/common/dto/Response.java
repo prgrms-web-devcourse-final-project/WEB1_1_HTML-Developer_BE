@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @JsonPropertyOrder({"timeStamp", "code", "message", "result"})
 public class Response<T> {
     private final LocalDateTime timeStamp = LocalDateTime.now();
-    private String code;
-    private String message;
+    private final String code;
+    private final String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
