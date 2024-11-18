@@ -23,9 +23,9 @@ jobs:
         distribution: 'temurin'
         
     - name: Create resource directories
-        run: |
-          mkdir -p src/main/resources
-          mkdir -p src/test/resources
+      run: |
+        mkdir -p src/main/resources
+        mkdir -p src/test/resources
     
     - name: Set up secret yml file
       env:
@@ -43,3 +43,9 @@ jobs:
       uses: supercharge/redis-github-action@1.1.0
       with:
         redis-version: 6
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: test
+      run: ./gradlew test
