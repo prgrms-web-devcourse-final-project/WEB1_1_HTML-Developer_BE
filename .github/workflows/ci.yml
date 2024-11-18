@@ -21,7 +21,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
+        
+    - name: Create resource directories
+        run: |
+          mkdir -p src/main/resources
+          mkdir -p src/test/resources
+    
     - name: Set up secret yml file
       env:
         YAML_SECRET: ${{ secrets.YAML_SECRET }}
