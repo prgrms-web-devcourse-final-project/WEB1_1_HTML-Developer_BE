@@ -7,9 +7,6 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import static com.kwanse.allreva.common.dto.ResponseConst.SUCCESS;
-import static com.kwanse.allreva.common.dto.ResponseConst.SUCCESS_MESSAGE;
-
 @Getter
 @AllArgsConstructor
 @JsonPropertyOrder({"timeStamp", "code", "message", "result"})
@@ -26,11 +23,11 @@ public class Response<T> {
     }
 
     public static <T> Response<T> onSuccess(T result) {
-        return new Response<>(SUCCESS, SUCCESS_MESSAGE, result);
+        return new Response<>("SUCCESS", "요청에 성공하였습니다.", result);
     }
 
     public static <T> Response<T> onSuccess() {
-        return new Response<>(SUCCESS, SUCCESS_MESSAGE);
+        return new Response<>("SUCCESS", "요청에 성공하였습니다.");
     }
 
     public static <T> Response<T> onFailure(String errorCode, String message) {
