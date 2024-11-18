@@ -20,8 +20,8 @@ public class CustomControllerAdvice {
                                 e.getErrorCode().message()
                         )
                 );
-
     }
+
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         log.error("error: {}", e.getMessage(), e);
