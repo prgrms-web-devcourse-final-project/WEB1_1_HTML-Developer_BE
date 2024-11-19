@@ -43,9 +43,9 @@ public class KopisServiceImpl implements KopisService {
     }
 
     @Override
-    public Mono<List<String>> fetchConcertCodes(String id, boolean isDaily) {
+    public Mono<List<String>> fetchConcertCodes(String hallId, boolean isDaily) {
         return webClient.get()
-                .uri(buildConcertUri(id, isDaily))
+                .uri(buildConcertUri(hallId, isDaily))
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(xml -> {
@@ -62,19 +62,19 @@ public class KopisServiceImpl implements KopisService {
                             }
                         }
 
-                        log.info("fetch concert ids complete : hallId {}", id);
+                        log.info("fetch concert ids complete : hallId {}", hallId);
                         return concertIds;
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        log.error("can't fetch concert ids : hallId {}", id);
+                        log.error("can't fetch concert ids : hallId {}", hallId);
+                        log.error("error Message: {}", e.getMessage());
                         return new ArrayList<>();
                     }
                 });
     }
 
-    private String buildConcertUri(String id, boolean isDaily) {
+    private String buildConcertUri(String hallId, boolean isDaily) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(findConcertIdUrl)
-                .queryParam("prfplccd", id);
+                .queryParam("prfplccd", hallId);
 
         if (isDaily) {
             LocalDate today = LocalDate.now();
@@ -86,10 +86,10 @@ public class KopisServiceImpl implements KopisService {
     }
 
     @Override
-    public Mono<KopisConcertResponse> fetchConcertDetail(String id) {
+    public Mono<KopisConcertResponse> fetchConcertDetail(String hallId, String concertcd) {
         return webClient.get()
                 .uri(UriComponentsBuilder.fromUriString(ConcertUrl)
-                        .buildAndExpand(id)
+                        .buildAndExpand(concertcd)
                         .toUriString())
                 .retrieve()
                 .bodyToMono(String.class)
@@ -99,19 +99,19 @@ public class KopisServiceImpl implements KopisService {
                         JsonNode rootNode = xmlMapper.readTree(xml);
                         JsonNode node = rootNode.path("db");
 
-                        log.info("fetch concert info complete : concertId {}", id);
+                        log.info("fetch concert info complete : concertcd {}", concertcd);
 
-                        return toKopisResponse(node, id);
+                        return toKopisResponse(node, hallId);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        log.error("can't fetch concert info : concertId {}", id);
+                        log.error("can't fetch concert info : concertcd {}", concertcd);
+                        log.error("error Message: {}", e.getMessage());
                         return null;
                     }
                 });
     }
 
     private KopisConcertResponse toKopisResponse(JsonNode node, String concertHallId) {
-        String mt20id = node.get("mt20id").asText();
+        String concertcd = node.get("mt20id").asText();
         String prfnm = node.get("prfnm").asText();
         String prfpdfrom = node.get("prfpdfrom").asText();
         String prfpdto = node.get("prfpdto").asText();
@@ -121,7 +121,7 @@ public class KopisServiceImpl implements KopisService {
         List<String> styurl = getStyurls(node);
         List<Relate> relate = getRelates(node);
 
-        return new KopisConcertResponse(mt20id, prfnm, prfpdfrom, prfpdto, concertHallId, poster, pcseguidance, prfstate, styurl, relate);
+        return new KopisConcertResponse(concertcd, prfnm, prfpdfrom, prfpdto, concertHallId, poster, pcseguidance, prfstate, styurl, relate);
     }
 
     private List<Relate> getRelates(JsonNode node) {

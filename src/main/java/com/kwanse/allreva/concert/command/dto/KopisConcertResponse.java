@@ -18,11 +18,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KopisConcertResponse {
-    private String mt20id; //공연 code
+    private String concertcd; //공연 code
     private String prfnm; //공연명
     private String prfpdfrom; //시작 날짜
     private String prfpdto; //종료 날짜
-    private String prfplccd; //공연장소 kopis code
+    private String hallId; //공연장소 kopis code
     private String poster; //포스터
     private String pcseguidance; //가격
     private String prfstate; //공연상태
@@ -33,8 +33,10 @@ public class KopisConcertResponse {
         return Concert.builder()
                 .concertInfo(toConcertInfo(response))
                 .poster(toIntroduceImage(response.poster))
-                .detailImages(response.styurls.stream().map(KopisConcertResponse::toIntroduceImage).toList())
-                .seller(response.relates.stream().map(KopisConcertResponse::toSeller).toList())
+                .detailImages(toDetailImages(response.styurls))
+                .sellers(toSellers(response.relates))
+                .concertcd(response.concertcd)
+                .hallId(response.hallId)
                 .build();
     }
 
@@ -42,7 +44,6 @@ public class KopisConcertResponse {
         return ConcertInfo.builder()
                 .title(response.prfnm)
                 .price(response.pcseguidance)
-                .hallId(response.prfplccd)
                 .stdate(DataConverter.convertToLocalDate(response.prfpdfrom))
                 .eddate(DataConverter.convertToLocalDate(response.prfpdto))
                 .prfstate(ConcertStatus.convertToConcertStatus(response.prfstate))
@@ -56,7 +57,15 @@ public class KopisConcertResponse {
                 .build();
     }
 
+    public static List<Seller> toSellers(final List<Relate> relates) {
+        return relates.stream().map(KopisConcertResponse::toSeller).toList();
+    }
     public static IntroduceImage toIntroduceImage(final String image) {
         return new IntroduceImage(image);
     }
+
+    public static List<IntroduceImage> toDetailImages(final List<String> styurls) {
+        return styurls.stream().map(KopisConcertResponse::toIntroduceImage).toList();
+    }
+
 }

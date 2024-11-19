@@ -4,6 +4,7 @@ import com.kwanse.allreva.common.application.BaseEntity;
 import com.kwanse.allreva.concert.command.domain.value.ConcertInfo;
 import com.kwanse.allreva.concert.command.domain.value.IntroduceImage;
 import com.kwanse.allreva.concert.command.domain.value.Seller;
+import com.kwanse.allreva.concert.command.dto.KopisConcertResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,10 @@ public class Concert extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String hallId;
+
+    private String concertcd;
 
     @Embedded
     private ConcertInfo concertInfo;
@@ -39,5 +44,14 @@ public class Concert extends BaseEntity {
             name = "concert_sellers",
             joinColumns = @JoinColumn(name = "concert_id")
     )
-    private List<Seller> seller;
+    private List<Seller> sellers;
+
+    public void updateFrom(KopisConcertResponse response) {
+        this.concertInfo = KopisConcertResponse.toConcertInfo(response);
+        this.concertcd = response.getConcertcd();
+        this.hallId = response.getHallId();
+        this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
+        this.sellers = KopisConcertResponse.toSellers(response.getRelates());
+        this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
+    }
 }

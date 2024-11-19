@@ -8,5 +8,5 @@ import java.util.List;
 public interface KopisService {
 
     Mono<List<String>> fetchConcertCodes(String hallId, boolean isDaily);
-    Mono<KopisConcertResponse> fetchConcertDetail(String id);
+    Mono<KopisConcertResponse> fetchConcertDetail(String hallId, String concertcd);
 }
