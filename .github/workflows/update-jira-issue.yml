@@ -39,12 +39,11 @@ jobs:
             ${{ github.event.issue.body }}
           mode: md2jira
 
-      - name: Update Jira Issue
-        uses: atlassian/gajira-transition@v3
+      - name: Update Jira Issue Comment
+        uses: atlassian/gajira-comment@v3
         with:
           issue: ${{ steps.extract-key.outputs.jira_key }}
-          description: ${{ steps.md2jira.outputs.output-text }}
-          summary: ${{ github.event.issue.title }}
+          comment: ${{ steps.md2jira.outputs.output-text }}
 
       - name: Add comment about update
         uses: actions-cool/issues-helper@v3
