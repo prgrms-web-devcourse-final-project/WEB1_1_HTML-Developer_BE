@@ -1,8 +1,14 @@
 package com.kwanse.allreva.common.exception.code;
 
-import lombok.RequiredArgsConstructor;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
-import static org.springframework.http.HttpStatus.*;
+import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
@@ -12,6 +18,7 @@ public enum GlobalErrorCode implements ErrorCodeInterface {
     NOT_SUPPORTED_METHOD_ERROR(METHOD_NOT_ALLOWED.value(), METHOD_NOT_ALLOWED.name(), "지원하지 않는 Method입니다."),
     NOT_SUPPORTED_MEDIA_TYPE_ERROR(UNSUPPORTED_MEDIA_TYPE.value(), UNSUPPORTED_MEDIA_TYPE.name(), "지원하지 않는 Media type입니다."),
     SERVER_ERROR(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR.name(), "서버 에러, 관리자에게 문의해주세요."),
+    UNAUTHORIZED_ERROR(UNAUTHORIZED.value(), UNAUTHORIZED.name(), "인증되지 않았습니다."),
     ACCESS_DENIED(FORBIDDEN.value(), FORBIDDEN.name(), "올바르지 않은 권한입니다."),
     ;
 
