@@ -33,19 +33,20 @@ public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
                 concert.poster.as("poster"),
                 concert.detailImages.as("detailImages"),
                 concert.concertInfo.as("concertInfo"),
+                concert.sellers.as("sellers"),
                 concert.prfstate.as("concertStatus"),
                 concertHall.location.as("location")
                 );
     }
 
-    private QBean<ConcertDetail> concertDetailProjection1() {
+/*    private QBean<ConcertDetail> concertDetailProjection1() {
         return Projections.fields(ConcertDetail.class,
                 concert.poster.as("poster"),
                 concert.detailImages.as("detailImages"),
-                concert.seller.as("sellers"),
+                concert.sellers.as("sellers"),
                 concert.concertInfo.as("concertInfo"),
                 concert.prfstate.as("concertStatus"),
                 concertHall.location.as("location")
         );
-    }
+    }*/
 }

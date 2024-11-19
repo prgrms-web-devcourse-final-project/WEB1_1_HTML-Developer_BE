@@ -46,6 +46,6 @@ public class Concert {
             name = "concert_seller",
             joinColumns = @JoinColumn(name = "concert_id")
     )
-    private List<Seller> seller;
+    private List<Seller> sellers;
 
 }
