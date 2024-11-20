@@ -15,9 +15,7 @@ import com.backend.allreva.member.command.application.MemberRepository;
 import com.backend.allreva.member.command.domain.Member;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -32,7 +30,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 2 - socialType 가져오기(third-party id)
         String socialType = userRequest.getClientRegistration().getRegistrationId();
-        log.info("socialType: {}", socialType);
 
         // 3 - 유저 정보 dto 생성(Auth Server로부터 받은 attributes들을 토대로 유저 정보 DTO를 만듬)
         OAuth2UserInfo oAuth2UserInfo = switch (socialType) {
@@ -46,12 +43,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .email(oAuth2UserInfo.email())
                 .build();
         Member member = memberRepository.findByEmail(emailVO)
-                .orElseGet(() ->
-                    Member.createTemporary(
-                            oAuth2UserInfo.email(),
-                            oAuth2UserInfo.nickname(),
-                            oAuth2UserInfo.loginProvider()
-                ));
+                .orElseGet(() -> Member.createTemporary(
+                        oAuth2UserInfo.email(),
+                        oAuth2UserInfo.nickname(),
+                        oAuth2UserInfo.loginProvider()));
         memberRepository.save(member); // 임시 회원 포함 저장
 
         // 5 - OAuth2User로 반환

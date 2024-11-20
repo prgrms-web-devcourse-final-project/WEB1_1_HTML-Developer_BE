@@ -12,14 +12,13 @@ public record OAuth2UserInfo(
         String providerId,
         String nickname,
         String email,
-        String profile
-) {
+        String profile) {
 
     public static OAuth2UserInfo ofGoogle(Map<String, Object> attributes) {
         return OAuth2UserInfo.builder()
                 .loginProvider(LoginProvider.GOOGLE)
                 .providerId((String) attributes.get("sub"))
-                .nickname((String) attributes.get("nickname"))
+                .nickname((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .profile((String) attributes.get("picture"))
                 .build();
