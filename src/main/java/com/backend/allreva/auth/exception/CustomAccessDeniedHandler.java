@@ -8,9 +8,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.backend.allreva.common.exception.CustomException;
-import com.backend.allreva.common.exception.code.GlobalErrorCode;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +31,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.info("권한 없음 예외 발생: {}", accessDeniedException);
-        resolver.resolveException(request, response, null, new CustomException(GlobalErrorCode.ACCESS_DENIED));
+        Exception exception = (Exception) request.getAttribute("jakarta.servlet.error.exception");
+        log.info("권한 없음 예외 발생: {}", exception);
+        resolver.resolveException(request, response, null, exception);
     }
 }
