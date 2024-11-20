@@ -5,9 +5,9 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.backend.allreva.auth.exception.ExpiredJwtTokenException;
-import com.backend.allreva.auth.exception.InvalidJwtSignatureException;
-import com.backend.allreva.auth.exception.InvalidJwtTokenException;
+import com.backend.allreva.auth.exception.code.ExpiredJwtTokenException;
+import com.backend.allreva.auth.exception.code.InvalidJwtSignatureException;
+import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

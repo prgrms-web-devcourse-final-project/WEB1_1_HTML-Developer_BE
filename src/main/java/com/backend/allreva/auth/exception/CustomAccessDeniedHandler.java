@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.handler;
+package com.backend.allreva.auth.exception;
 
 import java.io.IOException;
 
@@ -6,9 +6,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.common.exception.code.GlobalErrorCode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
