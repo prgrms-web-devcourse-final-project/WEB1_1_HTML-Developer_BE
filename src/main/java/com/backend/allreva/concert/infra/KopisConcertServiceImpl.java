@@ -1,10 +1,11 @@
 package com.backend.allreva.concert.infra;
 
+import com.backend.allreva.concert.command.application.KopisConcertService;
+import com.backend.allreva.hall.command.application.dto.KopisHallResponse;
+import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
+import com.backend.allreva.concert.infra.dto.Relate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.backend.allreva.concert.command.application.KopisService;
-import com.backend.allreva.concert.command.dto.KopisConcertResponse;
-import com.backend.allreva.concert.command.dto.Relate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class KopisServiceImpl implements KopisService {
+public class KopisConcertServiceImpl implements KopisConcertService {
 
     private final WebClient webClient;
     private final XmlMapper xmlMapper;
@@ -37,7 +38,7 @@ public class KopisServiceImpl implements KopisService {
     private String eddate;
 
 
-    public KopisServiceImpl(WebClient.Builder webClientBuilder) {
+    public KopisConcertServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
         this.xmlMapper = new XmlMapper();
     }
@@ -101,7 +102,7 @@ public class KopisServiceImpl implements KopisService {
 
                         log.info("fetch concert info complete : concertcd {}", concertcd);
 
-                        return toKopisResponse(node, hallId);
+                        return toKopisConcertResponse(node, hallId);
                     } catch (Exception e) {
                         log.error("can't fetch concert info : concertcd {}", concertcd);
                         log.error("error Message: {}", e.getMessage());
@@ -110,7 +111,7 @@ public class KopisServiceImpl implements KopisService {
                 });
     }
 
-    private KopisConcertResponse toKopisResponse(JsonNode node, String concertHallId) {
+    private KopisConcertResponse toKopisConcertResponse(JsonNode node, String concertHallId) {
         String concertcd = node.get("mt20id").asText();
         String prfnm = node.get("prfnm").asText();
         String prfpdfrom = node.get("prfpdfrom").asText();
@@ -121,7 +122,8 @@ public class KopisServiceImpl implements KopisService {
         List<String> styurl = getStyurls(node);
         List<Relate> relate = getRelates(node);
 
-        return new KopisConcertResponse(concertcd, prfnm, prfpdfrom, prfpdto, concertHallId, poster, pcseguidance, prfstate, styurl, relate);
+        return new KopisConcertResponse(concertcd, prfnm, prfpdfrom, prfpdto, concertHallId, poster,
+                pcseguidance, prfstate, styurl, relate);
     }
 
     private List<Relate> getRelates(JsonNode node) {

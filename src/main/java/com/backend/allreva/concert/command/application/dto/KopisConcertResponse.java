@@ -1,4 +1,4 @@
-package com.backend.allreva.concert.command.dto;
+package com.backend.allreva.concert.command.application.dto;
 
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.concert.command.domain.Concert;
@@ -6,15 +6,14 @@ import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.ConcertStatus;
 import com.backend.allreva.concert.command.domain.value.IntroduceImage;
 import com.backend.allreva.concert.command.domain.value.Seller;
+import com.backend.allreva.concert.infra.dto.Relate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class KopisConcertResponse {

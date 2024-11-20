@@ -1,9 +1,9 @@
 package com.backend.allreva.concert.command.application;
 
-import com.backend.allreva.concert.command.application.util.CsvUtil;
+import com.backend.allreva.common.util.CsvUtil;
+import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
-import com.backend.allreva.concert.command.dto.KopisConcertResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class AdminConcertService {
-    private final KopisService kopisService;
+    private final KopisConcertService kopisConcertService;
     private final ConcertRepository concertRepository;
 
     //공연정보 받아오기
@@ -25,11 +25,11 @@ public class AdminConcertService {
         List<String> hallIds = CsvUtil.readConcertHallIds();
 
         hallIds.forEach(hallId -> {
-            kopisService.fetchConcertCodes(hallId, false)
+            kopisConcertService.fetchConcertCodes(hallId, false)
                     .flatMap(concertCodes -> {
                         List<Mono<KopisConcertResponse>> concertDetails = new ArrayList<>();
                         concertCodes.forEach(concertCode -> {
-                            Mono<KopisConcertResponse> concertDetailMono = kopisService.fetchConcertDetail(hallId, concertCode)
+                            Mono<KopisConcertResponse> concertDetailMono = kopisConcertService.fetchConcertDetail(hallId, concertCode)
                                     .publishOn(Schedulers.boundedElastic()) //DB에 저장할 때 블로킹되므로 스레드 따로 할당
                                     .doOnNext(concert -> {
                                         if (concert != null)
@@ -49,11 +49,11 @@ public class AdminConcertService {
     public void fetchDailyConcertInfoList() {
         List<String> hallIds = CsvUtil.readConcertHallIds();
         hallIds.forEach(hallId -> {
-            kopisService.fetchConcertCodes(hallId, true)
+            kopisConcertService.fetchConcertCodes(hallId, true)
                     .flatMap(concertCodes -> {
                         List<Mono<KopisConcertResponse>> concertDetails = new ArrayList<>();
                         concertCodes.forEach(concertCode -> {
-                            Mono<KopisConcertResponse> concertDetailMono = kopisService.fetchConcertDetail(hallId, concertCode)
+                            Mono<KopisConcertResponse> concertDetailMono = kopisConcertService.fetchConcertDetail(hallId, concertCode)
                                     .publishOn(Schedulers.boundedElastic()) //DB에 저장할 때 블로킹되므로 스레드 따로 할당
                                     .doOnNext(concert -> {
                                         if (concert != null) {

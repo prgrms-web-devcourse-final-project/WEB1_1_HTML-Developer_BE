@@ -4,7 +4,7 @@ import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.IntroduceImage;
 import com.backend.allreva.concert.command.domain.value.Seller;
-import com.backend.allreva.concert.command.dto.KopisConcertResponse;
+import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
 import jakarta.persistence.*;
 import lombok.*;
 

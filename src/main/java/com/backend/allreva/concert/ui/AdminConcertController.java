@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/admin/concerts")
 @RequiredArgsConstructor
-public class AdminConcertController {
+public class AdminConcertController {     //TODO : 추후 관리자 권한 설정
     private final AdminConcertService adminConcertService;
 
-    //TODO : 추후 관리자 권한 붙이기
-    @PostMapping("/info")
+    @PostMapping
     public Response<Void> fetchConcertInfoList() {
         adminConcertService.fetchConcertInfoList();
         return Response.onSuccess();
