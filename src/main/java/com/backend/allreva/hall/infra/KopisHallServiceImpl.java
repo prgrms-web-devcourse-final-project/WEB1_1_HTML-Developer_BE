@@ -40,7 +40,7 @@ public class KopisHallServiceImpl implements KopisHallService {
                         JsonNode node = rootNode.path("db");
                         return toKopisConcertHallResponse(hallId, node);
                     } catch (Exception e) {
-                        log.error("Can't fetch hallId detail: hallId {}", hallId);
+                        log.error("Can't fetch hall Code detail: hall Code {}", hallId);
                         log.error("Error Message: {}", e.getMessage());
                         return null;
                     }

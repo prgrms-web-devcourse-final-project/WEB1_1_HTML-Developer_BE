@@ -24,7 +24,7 @@ public class AdminHallService {
                     KopisHallResponse response = kopisHallService.fetchConcertHallDetail(hallId).block();
                     if (response != null)
                         concertHallRepository.save(KopisHallResponse.toEntity(response));
-                    log.info("hall detail fetch complete for hallId: {}", hallId);
+                    log.info("hall detail fetch complete for hall Code: {}", hallId);
                 });
         log.info("All hall detail fetch complete");
     }

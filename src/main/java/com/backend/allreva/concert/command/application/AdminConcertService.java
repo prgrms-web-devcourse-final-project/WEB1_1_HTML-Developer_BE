@@ -39,7 +39,7 @@ public class AdminConcertService {
                         });
 
                         return Mono.when(concertDetails)
-                                .doOnTerminate(() -> log.info("All concert details processed for hallId: {}", hallId));
+                                .doOnTerminate(() -> log.info("All concert details processed for hall Code: {}", hallId));
                     })
                     .subscribe(); // 비동기적으로 처리 시작
         });
@@ -76,7 +76,7 @@ public class AdminConcertService {
                         });
 
                         return Mono.when(concertDetails)
-                                .doOnTerminate(() -> log.info("All concert details processed for hallId: {}", hallId));
+                                .doOnTerminate(() -> log.info("All concert details processed for hall Code: {}", hallId));
                     })
                     .subscribe(); // 비동기적으로 처리 시작
         });
