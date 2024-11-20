@@ -21,6 +21,8 @@ public class ConcertHall {
 
     private Double star;
 
+    private String facilityCode;
+
     @Embedded
     private ConcertHallInfo hallInfo;
 

@@ -1,6 +1,9 @@
 package com.backend.allreva.concert.command.domain.value;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,7 +22,11 @@ public class ConcertInfo {
     private LocalDate stdate;
     @Column(name = "concert_eddate")
     private LocalDate eddate;
+    @Column(name = "concert_prfstate")
     @Enumerated(EnumType.STRING)
     private ConcertStatus prfstate;
+    @Column(name = "concert_timeTable")
     private String timeTable;
+    @Column(name = "concert_host")
+    private String host;
 }

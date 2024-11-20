@@ -18,14 +18,16 @@ import java.util.List;
 @AllArgsConstructor
 public class KopisConcertResponse {
     private String concertcd; //공연 code
+    private String fcltycd; //공연시설 kopis code
     private String prfnm; //공연명
     private String prfpdfrom; //시작 날짜
     private String prfpdto; //종료 날짜
-    private String hallId; //공연장소 kopis code
+    private String hallcd; //공연장소 kopis code
     private String poster; //포스터
     private String pcseguidance; //가격
     private String prfstate; //공연상태
     private String dtguidance; //공연 타임테이블
+    private String entrpsnmH; //주최
     private List<String> styurls; //소개이미지 list
     private List<Relate> relates; //판매처 list
 
@@ -35,8 +37,9 @@ public class KopisConcertResponse {
                 .poster(toIntroduceImage(response.poster))
                 .detailImages(toDetailImages(response.styurls))
                 .sellers(toSellers(response.relates))
-                .concertcd(response.concertcd)
-                .hallId(response.hallId)
+                .concertCode(response.concertcd)
+                .facilityCode(response.fcltycd)
+                .hallCode(response.hallcd)
                 .build();
     }
 
@@ -48,6 +51,7 @@ public class KopisConcertResponse {
                 .eddate(DataConverter.convertToLocalDate(response.prfpdto))
                 .prfstate(ConcertStatus.convertToConcertStatus(response.prfstate))
                 .timeTable(response.dtguidance)
+                .host(response.entrpsnmH)
                 .build();
     }
 
@@ -61,6 +65,7 @@ public class KopisConcertResponse {
     public static List<Seller> toSellers(final List<Relate> relates) {
         return relates.stream().map(KopisConcertResponse::toSeller).toList();
     }
+
     public static IntroduceImage toIntroduceImage(final String image) {
         return new IntroduceImage(image);
     }

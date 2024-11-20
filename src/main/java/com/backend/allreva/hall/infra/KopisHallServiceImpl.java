@@ -27,7 +27,7 @@ public class KopisHallServiceImpl implements KopisHallService {
     }
 
     @Override
-    public Mono<KopisHallResponse> fetchConcertHallDetail(String hallId) {
+    public Mono<KopisHallResponse> fetchConcertHallDetail(final String hallId) {
         return webClient.get()
                 .uri(UriComponentsBuilder.fromUriString(ConcertHallUrl)
                         .buildAndExpand(getFacilityId(hallId))
@@ -48,11 +48,11 @@ public class KopisHallServiceImpl implements KopisHallService {
     }
 
 
-    private String getFacilityId(String hallId) {
+    private String getFacilityId(final String hallId) {
         return hallId.split("-")[0];
     }
 
-    private KopisHallResponse toKopisConcertHallResponse(String hallId, JsonNode node) {
+    private KopisHallResponse toKopisConcertHallResponse(final String hallId, final JsonNode node) {
 
         String fcltynm = node.get("fcltynm").asText();
         String adres = node.get("adres").asText();
@@ -70,12 +70,12 @@ public class KopisHallServiceImpl implements KopisHallService {
         JsonNode mt13 = node.get("mt13s").get("mt13");
         Pfmplc prfplc = getPfmplc(mt13, hallId);
 
-        return new KopisHallResponse(fcltynm, prfplc.getPrfplcnm(), prfplc.getSeatscale(), prfplc.getMt13id(),
+        return new KopisHallResponse(fcltynm, getFacilityId(hallId), prfplc.getPrfplcnm(), prfplc.getSeatscale(), prfplc.getMt13id(),
                 adres, la, lo, restaurant, cafe, store, parkinglot, parkbarrier, restbarrier, runwbarrier, elevbarrier);
 
     }
 
-    private Pfmplc getPfmplc(JsonNode mt13, String hallId) {
+    private Pfmplc getPfmplc(final JsonNode mt13, final String hallId) {
         if (mt13.isArray()) {
             for (JsonNode one : mt13) {
                 if (one.path("mt13id").asText().equals(hallId)) {

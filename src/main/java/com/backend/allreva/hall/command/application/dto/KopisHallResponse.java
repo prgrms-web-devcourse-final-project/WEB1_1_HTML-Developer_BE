@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KopisHallResponse {
     private String fcltynm; //공연시설명
+    private String fcltycd; //공연시설코드
     private String prfplcnm; //공연장명
     private String seatscale; //좌석수
     private String mt13id; //공연장코드
@@ -34,6 +35,7 @@ public class KopisHallResponse {
                 .hallInfo(toConcertHallInfo(response.fcltynm, response.prfplcnm, response.seatscale))
                 .convenienceInfo(toConvenienceInfo(response))
                 .location(toLocation(response.lo,response.la, response.adres))
+                .facilityCode(response.fcltycd)
                 .build();
     }
 

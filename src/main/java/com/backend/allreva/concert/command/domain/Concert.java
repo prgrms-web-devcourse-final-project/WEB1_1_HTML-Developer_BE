@@ -20,9 +20,11 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String hallId;
+    private String concertCode;
 
-    private String concertcd;
+    private String hallCode;
+
+    private String facilityCode;
 
     @Embedded
     private ConcertInfo concertInfo;
@@ -48,8 +50,8 @@ public class Concert extends BaseEntity {
 
     public void updateFrom(KopisConcertResponse response) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(response);
-        this.concertcd = response.getConcertcd();
-        this.hallId = response.getHallId();
+        this.concertCode = response.getConcertcd();
+        this.hallCode = response.getHallcd();
         this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
         this.sellers = KopisConcertResponse.toSellers(response.getRelates());
         this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());

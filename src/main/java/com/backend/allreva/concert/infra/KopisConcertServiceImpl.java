@@ -44,7 +44,7 @@ public class KopisConcertServiceImpl implements KopisConcertService {
     }
 
     @Override
-    public Mono<List<String>> fetchConcertCodes(String hallId, boolean isDaily) {
+    public Mono<List<String>> fetchConcertCodes(final String hallId, final boolean isDaily) {
         return webClient.get()
                 .uri(buildConcertUri(hallId, isDaily))
                 .retrieve()
@@ -73,7 +73,7 @@ public class KopisConcertServiceImpl implements KopisConcertService {
                 });
     }
 
-    private String buildConcertUri(String hallId, boolean isDaily) {
+    private String buildConcertUri(final String hallId, final boolean isDaily) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(findConcertIdUrl)
                 .queryParam("prfplccd", hallId);
 
@@ -87,7 +87,7 @@ public class KopisConcertServiceImpl implements KopisConcertService {
     }
 
     @Override
-    public Mono<KopisConcertResponse> fetchConcertDetail(String hallId, String concertcd) {
+    public Mono<KopisConcertResponse> fetchConcertDetail(final String hallId, final String concertcd) {
         return webClient.get()
                 .uri(UriComponentsBuilder.fromUriString(ConcertUrl)
                         .buildAndExpand(concertcd)
@@ -111,7 +111,7 @@ public class KopisConcertServiceImpl implements KopisConcertService {
                 });
     }
 
-    private KopisConcertResponse toKopisConcertResponse(JsonNode node, String concertHallId) {
+    private KopisConcertResponse toKopisConcertResponse(final JsonNode node, final String hallId) {
         String concertcd = node.get("mt20id").asText();
         String prfnm = node.get("prfnm").asText();
         String prfpdfrom = node.get("prfpdfrom").asText();
@@ -120,14 +120,20 @@ public class KopisConcertServiceImpl implements KopisConcertService {
         String pcseguidance = node.get("pcseguidance").asText();
         String dtguidance = node.get("dtguidance").asText();
         String poster = node.get("poster").asText();
+        String entrpsnmH = node.get("entrpsnmH").asText();
         List<String> styurl = getStyurls(node);
         List<Relate> relate = getRelates(node);
 
-        return new KopisConcertResponse(concertcd, prfnm, prfpdfrom, prfpdto, concertHallId, poster,
-                pcseguidance, prfstate, dtguidance, styurl, relate);
+        return new KopisConcertResponse(concertcd, getFacilityId(hallId), prfnm, prfpdfrom, prfpdto, hallId, poster,
+                pcseguidance, prfstate, dtguidance, entrpsnmH, styurl, relate);
     }
 
-    private List<Relate> getRelates(JsonNode node) {
+    private String getFacilityId(final String hallId) {
+        return hallId.split("-")[0];
+    }
+
+
+    private List<Relate> getRelates(final JsonNode node) {
         List<Relate> relates = new ArrayList<>();
         JsonNode relatesNode = node.get("relates").get("relate");
 
@@ -147,7 +153,7 @@ public class KopisConcertServiceImpl implements KopisConcertService {
         return relates;
     }
 
-    private List<String> getStyurls(JsonNode node) {
+    private List<String> getStyurls(final JsonNode node) {
         JsonNode styurlsNode = node.get("styurls");
         if (styurlsNode == null) return new ArrayList<>();
         List<String> styurlList = new ArrayList<>();
