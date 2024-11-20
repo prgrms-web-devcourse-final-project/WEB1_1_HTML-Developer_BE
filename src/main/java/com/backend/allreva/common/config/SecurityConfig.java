@@ -18,10 +18,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
-import com.backend.allreva.auth.exception.JwtExceptionFilter;
+import com.backend.allreva.auth.exception.CustomAccessDeniedHandler;
+import com.backend.allreva.auth.exception.CustomAuthenticationEntryPoint;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
-import com.backend.allreva.auth.handler.CustomAccessDeniedHandler;
-import com.backend.allreva.auth.handler.CustomAuthenticationEntryPoint;
+import com.backend.allreva.auth.oauth2.application.CustomOAuth2UserService;
+import com.backend.allreva.auth.oauth2.handler.OAuth2LoginFailureHandler;
+import com.backend.allreva.auth.oauth2.handler.OAuth2LoginSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +40,10 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtExceptionFilter jwtExceptionFilter;
+    // OAuth2
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
     /**
      * 정적 자원 허용 설정
@@ -63,13 +68,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(AUTH_URLS).permitAll()
                         .requestMatchers(ALLOW_URLS).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/manager/**").hasRole("MANAGER")
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/members/**").hasRole("GUEST")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        // TODO: OAuth2 인증
+        // OAuth2 인증 필터
+        http
+                .oauth2Login(customConfigurer -> customConfigurer
+                        .authorizationEndpoint(end -> end.baseUri("/api/v1/oauth2/login"))
+                        .userInfoEndpoint(endPointConfig -> endPointConfig.userService(customOAuth2UserService))
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler));
 
         // jwt 인증 필터
         http
@@ -77,10 +88,6 @@ public class SecurityConfig {
         http
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler));
-
-        // jwt validation exception 처리 전용 필터
-        http
-                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
