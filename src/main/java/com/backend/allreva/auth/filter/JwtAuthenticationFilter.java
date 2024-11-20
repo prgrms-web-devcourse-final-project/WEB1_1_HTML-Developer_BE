@@ -14,6 +14,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.backend.allreva.auth.exception.code.JwtTokenNotFoundException;
 import com.backend.allreva.auth.util.JwtParser;
 import com.backend.allreva.auth.util.JwtValidator;
 
@@ -53,6 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // request로부터 token 받기
         String refreshToken = jwtParser.getRefreshToken(request);
         String accessToken = jwtParser.getAccessToken(request);
+        if (accessToken == null && refreshToken == null) {
+            throw new JwtTokenNotFoundException();
+        }
 
         // token 검증 수행
         if (accessToken != null) {
