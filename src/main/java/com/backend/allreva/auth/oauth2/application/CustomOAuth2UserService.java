@@ -35,14 +35,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info("socialType: {}", socialType);
 
         // 3 - 유저 정보 dto 생성(Auth Server로부터 받은 attributes들을 토대로 유저 정보 DTO를 만듬)
-        OAuth2UserInfo oAuth2UserInfo;
-        if (socialType.equals("google")) {
-            oAuth2UserInfo = OAuth2UserInfo.ofGoogle(oAuth2User.getAttributes());
-        } else if (socialType.equals("kakao")) {
-            oAuth2UserInfo = OAuth2UserInfo.ofKakao(oAuth2User.getAttributes());
-        }else {
-            throw new UnsupportedProviderException();
-        }
+        OAuth2UserInfo oAuth2UserInfo = switch (socialType) {
+            case "google" -> OAuth2UserInfo.ofGoogle(oAuth2User.getAttributes());
+            case "kakao" -> OAuth2UserInfo.ofKakao(oAuth2User.getAttributes());
+            default -> throw new UnsupportedProviderException();
+        };
 
         // 4 - 회원 존재 확인, 없다면 임시 회원 정보 생성
         Email emailVO = Email.builder()
