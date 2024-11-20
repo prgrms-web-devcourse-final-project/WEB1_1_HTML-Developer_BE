@@ -19,13 +19,13 @@ public class AdminHallService {
     //공연장 정보 받아오기
     public void fetchConcertHallInfoList() {
         List<String> hallIds = CsvUtil.readConcertHallIds();
-        hallIds.forEach(hallId -> {
-            KopisHallResponse response = kopisHallService.fetchConcertHallDetail(hallId).block();
-            if (response != null)
-                concertHallRepository.save(KopisHallResponse.toEntity(response));
-            log.info("hall detail fetch complete for hallId: {}", hallId);
-        });
-
+        hallIds.parallelStream()
+                .forEach(hallId -> {
+                    KopisHallResponse response = kopisHallService.fetchConcertHallDetail(hallId).block();
+                    if (response != null)
+                        concertHallRepository.save(KopisHallResponse.toEntity(response));
+                    log.info("hall detail fetch complete for hallId: {}", hallId);
+                });
         log.info("All hall detail fetch complete");
     }
 }
