@@ -21,5 +21,5 @@ public class ConcertInfo {
     private LocalDate eddate;
     @Enumerated(EnumType.STRING)
     private ConcertStatus prfstate;
-
+    private String timeTable;
 }

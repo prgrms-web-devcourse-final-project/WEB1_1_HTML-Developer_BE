@@ -118,12 +118,13 @@ public class KopisConcertServiceImpl implements KopisConcertService {
         String prfpdto = node.get("prfpdto").asText();
         String prfstate = node.get("prfstate").asText();
         String pcseguidance = node.get("pcseguidance").asText();
+        String dtguidance = node.get("dtguidance").asText();
         String poster = node.get("poster").asText();
         List<String> styurl = getStyurls(node);
         List<Relate> relate = getRelates(node);
 
         return new KopisConcertResponse(concertcd, prfnm, prfpdfrom, prfpdto, concertHallId, poster,
-                pcseguidance, prfstate, styurl, relate);
+                pcseguidance, prfstate, dtguidance, styurl, relate);
     }
 
     private List<Relate> getRelates(JsonNode node) {

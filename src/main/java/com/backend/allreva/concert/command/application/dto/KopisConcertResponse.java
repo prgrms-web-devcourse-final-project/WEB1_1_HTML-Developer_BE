@@ -25,6 +25,7 @@ public class KopisConcertResponse {
     private String poster; //포스터
     private String pcseguidance; //가격
     private String prfstate; //공연상태
+    private String dtguidance; //공연 타임테이블
     private List<String> styurls; //소개이미지 list
     private List<Relate> relates; //판매처 list
 
@@ -46,6 +47,7 @@ public class KopisConcertResponse {
                 .stdate(DataConverter.convertToLocalDate(response.prfpdfrom))
                 .eddate(DataConverter.convertToLocalDate(response.prfpdto))
                 .prfstate(ConcertStatus.convertToConcertStatus(response.prfstate))
+                .timeTable(response.dtguidance)
                 .build();
     }
 
