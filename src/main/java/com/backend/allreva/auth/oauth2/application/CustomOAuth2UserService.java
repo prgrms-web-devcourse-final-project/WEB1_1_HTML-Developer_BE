@@ -35,7 +35,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = switch (socialType) {
             case "google" -> OAuth2UserInfo.ofGoogle(oAuth2User.getAttributes());
             case "kakao" -> OAuth2UserInfo.ofKakao(oAuth2User.getAttributes());
-            default -> throw new UnsupportedProviderException();
+            default -> throw new UnsupportedProviderException(); // ISSUE: 해당 정보 가져오기 전에 이미 Filter단에서 미리 구현된 다른 예외가 잡힘
         };
 
         // 4 - 회원 존재 확인, 없다면 임시 회원 정보 생성
@@ -46,8 +46,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .orElseGet(() -> Member.createTemporary(
                         oAuth2UserInfo.email(),
                         oAuth2UserInfo.nickname(),
-                        oAuth2UserInfo.loginProvider()));
-        memberRepository.save(member); // 임시 회원 포함 저장
+                        oAuth2UserInfo.loginProvider(),
+                        oAuth2UserInfo.profile()));
 
         // 5 - OAuth2User로 반환
         return new PrincipalDetails(member, oAuth2User.getAttributes());

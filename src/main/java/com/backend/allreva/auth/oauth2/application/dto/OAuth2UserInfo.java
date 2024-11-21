@@ -36,6 +36,7 @@ public record OAuth2UserInfo(
                 .providerId(String.valueOf(providerId))
                 .nickname((String) profile.get("nickname"))
                 .email((String) account.get("email"))
+                .profile((String) attributes.get("profile_image_url"))
                 .build();
     }
 }

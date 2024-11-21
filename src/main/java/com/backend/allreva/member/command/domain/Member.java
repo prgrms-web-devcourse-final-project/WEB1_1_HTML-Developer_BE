@@ -42,13 +42,12 @@ public class Member {
 
     @Builder
     private Member(
-        Email email, 
-        MemberRole memberRole, 
-        LoginProvider loginProvider,
-        String nickname,
-        String introduce,
-        String profileImageUrl
-    ) {
+            Email email,
+            MemberRole memberRole,
+            LoginProvider loginProvider,
+            String nickname,
+            String introduce,
+            String profileImageUrl) {
         this.email = email;
         this.memberRole = memberRole;
         this.loginProvider = loginProvider;
@@ -69,15 +68,16 @@ public class Member {
     public static Member createTemporary(
             String email,
             String nickname,
-            LoginProvider loginProvider
-    ) {
+            LoginProvider loginProvider,
+            String profileImageUrl) {
         return Member.builder()
                 .email(Email.builder()
-                    .email(email)
-                    .build())
+                        .email(email)
+                        .build())
                 .nickname(nickname)
                 .loginProvider(loginProvider)
                 .memberRole(MemberRole.GUEST)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 
@@ -87,10 +87,9 @@ public class Member {
      * 회원 가입 이후 회원 정보를 기입하면 회원 권한이 USER로 승격됩니다.
      */
     public void updateMemberInfo(
-        String nickname,
-        String introduce,
-        String profileImageUrl
-    ) {
+            String nickname,
+            String introduce,
+            String profileImageUrl) {
         this.memberInfo = MemberInfo.builder()
                 .nickname(nickname)
                 .introduce(introduce)
