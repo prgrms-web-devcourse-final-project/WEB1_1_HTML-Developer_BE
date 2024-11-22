@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.command.domain;
 
+import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @Entity
 @SQLRestriction("delete_at IS")
 @SQLDelete(sql = "UPDATE survey_join SET deleted_at = NOW() WHERE id = ?")
-public class SurveyJoin extends Survey {
+public class SurveyJoin extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
