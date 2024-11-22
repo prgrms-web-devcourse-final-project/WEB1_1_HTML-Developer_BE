@@ -32,8 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/h2-console/**"),
             // OAuth2 관련 URL
             new AntPathRequestMatcher("/api/v1/oauth2/login/**"),
-            new AntPathRequestMatcher("/login/oauth2/**")
-    );
+            new AntPathRequestMatcher("/login/oauth2/**"));
 
     private final JwtParser jwtParser;
     private final JwtValidator jwtValidator;
@@ -43,7 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * JWT 토큰을 검증하는 메서드
      */
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         // JWT 인가 과정 필요없는 URL 제외
         if (isExcluded(request)) {
@@ -61,16 +61,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // token 검증 수행
         if (accessToken != null) {
             jwtValidator.validateToken(accessToken);
-            String email = jwtParser.extractEmail(accessToken);
-            setAuthenication(email, request);
         }
 
         if (accessToken == null && refreshToken != null) {
             // TODO: refreshToken validation 적용
-
-            String email = jwtParser.extractEmail(refreshToken);
-            setAuthenication(email, request);
         }
+
+        // 토큰으로부터 member id 추출
+        String memberId = jwtParser.extractMemberId(accessToken);
+
+        // Authentication Security Holder에 저장
+        setAuthenication(memberId, request);
 
         filterChain.doFilter(request, response);
     }
@@ -85,13 +86,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities()
-        );
+                userDetails, null, userDetails.getAuthorities());
 
         // add info (default - remote ip address, session id)
         authenticationToken.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
+                new WebAuthenticationDetailsSource().buildDetails(request));
 
         // Context Holder 저장
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

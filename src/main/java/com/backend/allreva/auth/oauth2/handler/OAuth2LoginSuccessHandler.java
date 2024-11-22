@@ -25,21 +25,24 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
+
     /**
      * OAuth2 인증 success시 JWT 반환하는 메서드
      *
      * OAuth2는 OAuth2UserService에서 이미 인증되기 때문에 별도의 인증 filter가 필요없다.
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication)
             throws IOException, ServletException {
         // OAuth2 인증된 사용자 정보 가져오기
         PrincipalDetails oAuth2User = (PrincipalDetails) authentication.getPrincipal();
         Member member = oAuth2User.member();
 
         // token 생성
-        String accessToken = jwtProvider.generateAccessToken(member.getEmail().getEmail());
-        String refreshToken = jwtProvider.generateRefreshToken(member.getEmail().getEmail());
+        String memberId = String.valueOf(member.getId());
+        String accessToken = jwtProvider.generateAccessToken(memberId);
+        String refreshToken = jwtProvider.generateRefreshToken(memberId);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

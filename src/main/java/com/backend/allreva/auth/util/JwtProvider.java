@@ -30,24 +30,24 @@ public class JwtProvider {
         this.REFRESH_TIME = REFRESH_TIME;
     }
 
-    public String generateAccessToken(String email) {
+    public String generateAccessToken(String subject) {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + ACCESS_TIME);
 
         return Jwts.builder()
-                .subject(email)
+                .subject(subject)
                 .issuedAt(currentDate)
                 .expiration(expireDate)
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String generateRefreshToken(String email) {
+    public String generateRefreshToken(String subject) {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + REFRESH_TIME);
 
         return Jwts.builder()
-                .subject(email)
+                .subject(subject)
                 .issuedAt(currentDate)
                 .expiration(expireDate)
                 .signWith(secretKey)

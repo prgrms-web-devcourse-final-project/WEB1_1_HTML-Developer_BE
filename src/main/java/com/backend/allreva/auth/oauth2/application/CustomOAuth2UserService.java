@@ -12,6 +12,7 @@ import com.backend.allreva.auth.oauth2.application.dto.OAuth2UserInfo;
 import com.backend.allreva.auth.oauth2.exception.UnsupportedProviderException;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.application.MemberRepository;
+import com.backend.allreva.member.command.domain.LoginProvider;
 import com.backend.allreva.member.command.domain.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Email emailVO = Email.builder()
                 .email(oAuth2UserInfo.email())
                 .build();
-        Member member = memberRepository.findByEmail(emailVO)
+        LoginProvider loginProvider = oAuth2UserInfo.loginProvider();
+        Member member = memberRepository.findByEmailAndLoginProvider(emailVO, loginProvider)
                 .orElseGet(() -> registerTemporaryMember(oAuth2UserInfo));
 
         // 5 - OAuth2User로 반환
@@ -55,7 +57,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 oAuth2UserInfo.nickname(),
                 oAuth2UserInfo.loginProvider(),
                 oAuth2UserInfo.profile());
-        memberRepository.save(temporaryMember);
-        return temporaryMember;
+        return memberRepository.save(temporaryMember);
     }
 }

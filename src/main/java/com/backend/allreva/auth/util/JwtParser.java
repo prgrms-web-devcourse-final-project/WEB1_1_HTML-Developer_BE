@@ -58,7 +58,7 @@ public class JwtParser {
         }
     }
 
-    public String extractEmail(String token) {
+    public String extractMemberId(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
