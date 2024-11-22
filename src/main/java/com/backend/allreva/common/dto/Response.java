@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @JsonPropertyOrder({"timeStamp", "code", "message", "result"})
 public class Response<T> {
+
     private final LocalDateTime timeStamp = LocalDateTime.now();
     private final String code;
     private final String message;
