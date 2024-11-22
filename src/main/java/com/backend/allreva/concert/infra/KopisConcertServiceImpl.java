@@ -1,7 +1,6 @@
 package com.backend.allreva.concert.infra;
 
 import com.backend.allreva.concert.command.application.KopisConcertService;
-import com.backend.allreva.hall.command.application.dto.KopisHallResponse;
 import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
 import com.backend.allreva.concert.infra.dto.Relate;
 import com.fasterxml.jackson.databind.JsonNode;

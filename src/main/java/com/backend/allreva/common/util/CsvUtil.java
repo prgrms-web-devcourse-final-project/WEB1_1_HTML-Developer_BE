@@ -23,14 +23,13 @@ public class CsvUtil {
             String[] line;
             csvReader.readNext();
 
-            // 각 id를 읽고 출력
             while ((line = csvReader.readNext()) != null) {
                 String id = line[0];
                 ids.add(id);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("hallId를 불러올 수 없습니다.");
+            log.error("can't fetch hall ids.");
+            log.error("Error Message: {}", e.getMessage());
         }
 
         return ids;
