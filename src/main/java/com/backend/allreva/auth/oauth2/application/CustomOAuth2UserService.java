@@ -43,13 +43,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .email(oAuth2UserInfo.email())
                 .build();
         Member member = memberRepository.findByEmail(emailVO)
-                .orElseGet(() -> Member.createTemporary(
-                        oAuth2UserInfo.email(),
-                        oAuth2UserInfo.nickname(),
-                        oAuth2UserInfo.loginProvider(),
-                        oAuth2UserInfo.profile()));
+                .orElseGet(() -> registerTemporaryMember(oAuth2UserInfo));
 
         // 5 - OAuth2User로 반환
         return new PrincipalDetails(member, oAuth2User.getAttributes());
+    }
+
+    private Member registerTemporaryMember(OAuth2UserInfo oAuth2UserInfo) {
+        Member temporaryMember = Member.createTemporary(
+                oAuth2UserInfo.email(),
+                oAuth2UserInfo.nickname(),
+                oAuth2UserInfo.loginProvider(),
+                oAuth2UserInfo.profile());
+        memberRepository.save(temporaryMember);
+        return temporaryMember;
     }
 }
