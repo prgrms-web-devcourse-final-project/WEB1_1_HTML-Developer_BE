@@ -1,4 +1,4 @@
-package com.backend.allreva.member.command.domain;
+package com.backend.allreva.member.command.domain.value;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
