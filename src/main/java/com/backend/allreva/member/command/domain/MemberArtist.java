@@ -1,10 +1,7 @@
 package com.backend.allreva.member.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -22,7 +19,9 @@ public class MemberArtist extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long memberId;
 
+    @Column(nullable = false)
     private String artistId;
 }

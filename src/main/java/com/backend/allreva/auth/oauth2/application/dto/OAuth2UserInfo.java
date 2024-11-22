@@ -2,7 +2,7 @@ package com.backend.allreva.auth.oauth2.application.dto;
 
 import java.util.Map;
 
-import com.backend.allreva.member.command.domain.LoginProvider;
+import com.backend.allreva.member.command.domain.value.LoginProvider;
 
 import lombok.Builder;
 

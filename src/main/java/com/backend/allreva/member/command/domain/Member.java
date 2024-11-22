@@ -1,6 +1,9 @@
 package com.backend.allreva.member.command.domain;
 
 import com.backend.allreva.common.model.Email;
+import com.backend.allreva.member.command.domain.value.LoginProvider;
+import com.backend.allreva.member.command.domain.value.MemberInfo;
+import com.backend.allreva.member.command.domain.value.MemberRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

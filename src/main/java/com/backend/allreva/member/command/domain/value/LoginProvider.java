@@ -1,4 +1,4 @@
-package com.backend.allreva.member.command.domain;
+package com.backend.allreva.member.command.domain.value;
 
 public enum LoginProvider {
 
