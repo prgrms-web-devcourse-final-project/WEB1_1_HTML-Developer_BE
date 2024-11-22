@@ -1,10 +1,10 @@
 package com.backend.allreva.concert.command.application.dto;
 
 import com.backend.allreva.common.converter.DataConverter;
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.ConcertStatus;
-import com.backend.allreva.concert.command.domain.value.IntroduceImage;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.infra.dto.Relate;
 import lombok.AllArgsConstructor;
@@ -66,11 +66,11 @@ public class KopisConcertResponse {
         return relates.stream().map(KopisConcertResponse::toSeller).toList();
     }
 
-    public static IntroduceImage toIntroduceImage(final String image) {
-        return new IntroduceImage(image);
+    public static Image toIntroduceImage(final String image) {
+        return new Image(image);
     }
 
-    public static List<IntroduceImage> toDetailImages(final List<String> styurls) {
+    public static List<Image> toDetailImages(final List<String> styurls) {
         return styurls.stream().map(KopisConcertResponse::toIntroduceImage).toList();
     }
 

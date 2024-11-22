@@ -1,4 +1,5 @@
-package com.backend.allreva.concert.command.domain.value;
+package com.backend.allreva.common.model;
+
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -8,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
-public class IntroduceImage {
+public class Image {
     private String url;
-    public IntroduceImage(final String url) {
+
+    public Image(final String url) {
         this.url = url;
     }
 }
