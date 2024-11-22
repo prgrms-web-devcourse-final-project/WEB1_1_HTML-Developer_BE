@@ -1,5 +1,6 @@
 package com.backend.allreva.seatReview.command.domain;
 
+import com.backend.allreva.common.model.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,6 +11,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -29,6 +33,13 @@ public class SeatReview {
 
     @Range(min = 0, max = 5)
     private int star;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "seat_review_image", // 매핑될 테이블 이름
+            joinColumns = @JoinColumn(name = "review_id") // 외래 키 설정
+    )
+    private List<Image> images = new ArrayList<>();
 
     private Long member_id;
 
