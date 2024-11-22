@@ -10,7 +10,6 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 public enum GlobalErrorCode implements ErrorCodeInterface {
     BAD_REQUEST_ERROR(BAD_REQUEST.value(), BAD_REQUEST.name(), "잘못된 요청입니다."),
