@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Entity
 @SQLRestriction("delete_at IS")
 @SQLDelete(sql = "UPDATE survey_join SET deleted_at = NOW() WHERE id = ?")
-public class SurveyJoin {
+public class SurveyJoin extends Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,5 +1,6 @@
 package com.backend.allreva.seatReview.command.domain;
 
+import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -21,7 +22,7 @@ import java.util.List;
 @Entity
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE seat_review SET deleted_at = NOW() WHERE id = ?")
-public class SeatReview {
+public class SeatReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,5 +1,6 @@
 package com.backend.allreva.seatReview.command.domain;
 
+import com.backend.allreva.common.application.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 @SQLRestriction("deleted_ad IS NULL")
 @SQLDelete(sql = "UPDATE seat_review_like set deleted_ad = NOW() WHERE id = ?")
-public class SeatReviewLike {
+public class SeatReviewLike extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
