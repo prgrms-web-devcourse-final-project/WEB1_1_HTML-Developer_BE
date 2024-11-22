@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.command.domain.value;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -9,7 +10,12 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Price {
-    private Integer roundPrice;
-    private Integer upTimePrice;
-    private Integer downTimePrice;
+    @Column(nullable = false)
+    private int roundPrice;
+
+    @Column(nullable = false)
+    private int upTimePrice;
+
+    @Column(nullable = false)
+    private int downTimePrice;
 }

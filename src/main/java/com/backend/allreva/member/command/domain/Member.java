@@ -1,5 +1,6 @@
 package com.backend.allreva.member.command.domain;
 
+import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberInfo;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

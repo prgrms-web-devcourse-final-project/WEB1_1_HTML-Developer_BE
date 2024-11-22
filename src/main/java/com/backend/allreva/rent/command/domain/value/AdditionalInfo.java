@@ -15,7 +15,7 @@ import java.util.Date;
 @Embeddable
 public class AdditionalInfo {
     @Column(nullable = false)
-    private Integer recruitmentCount; //모집인원
+    private int recruitmentCount; //모집인원
 
     @Column(nullable = false)
     private Date eddate; //모집마감날짜

@@ -22,5 +22,5 @@ public class Bus {
     private BusType busType;
 
     @Column(nullable = false)
-    private Integer maxPassenger;
+    private int maxPassenger;
 }

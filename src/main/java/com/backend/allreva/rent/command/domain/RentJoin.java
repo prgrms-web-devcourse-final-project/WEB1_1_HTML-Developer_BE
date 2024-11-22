@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.command.domain;
 
+import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.rent.command.domain.value.BoardingType;
 import com.backend.allreva.rent.command.domain.value.Depositor;
 import com.backend.allreva.rent.command.domain.value.RefundType;
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE rent_join SET deleted_at = NOW() WHERE id = ?")
 @Entity
-public class RentJoin {
+public class RentJoin extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +33,7 @@ public class RentJoin {
     private Depositor depositor;
 
     @Column(nullable = false)
-    private Integer passengerNum;
+    private int passengerNum;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
