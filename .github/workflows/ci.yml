@@ -12,16 +12,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.TEST_MYSQL_DB }}
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping --silent" --health-start-period=60s
-
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      
     steps:
       - uses: actions/checkout@v3
 
