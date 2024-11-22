@@ -1,7 +1,7 @@
 package com.backend.allreva.member.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +20,7 @@ public class OAuth2RegisterController {
 
     private final MemberCommandService memberCommandService;
 
-    @PostMapping("/register")
+    @PatchMapping("/register")
     public ResponseEntity<Void> register(
             @AuthMember Member member,
             @RequestBody MemberOAuth2RegisterRequest memberOAuth2RegisterRequest) {
