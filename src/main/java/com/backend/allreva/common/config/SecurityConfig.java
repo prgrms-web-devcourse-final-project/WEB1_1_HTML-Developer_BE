@@ -32,68 +32,68 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // 인가 과정에서 허용할 URL 등록
-    private static final String[] ALLOW_URLS = {"/h2-console/**"};
-    private static final String[] AUTH_URLS = {"/api/v1/oauth2/login/**", "/login/oauth2/**"};
+        // 인가 과정에서 허용할 URL 등록
+        private static final String[] ALLOW_URLS = { "/h2-console/**" };
+        private static final String[] AUTH_URLS = { "/api/v1/oauth2/login/**", "/login/oauth2/**" };
 
-    // JWT
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    // OAuth2
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+        // JWT
+        private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+        private final CustomAccessDeniedHandler customAccessDeniedHandler;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        // OAuth2
+        private final CustomOAuth2UserService customOAuth2UserService;
+        private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+        private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
-    /**
-     * 정적 자원 허용 설정
-     */
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
+        /**
+         * 정적 자원 허용 설정
+         */
+        @Bean
+        public WebSecurityCustomizer webSecurityCustomizer() {
+                return web -> web.ignoring()
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(CsrfConfigurer<HttpSecurity>::disable)
-                .formLogin(FormLoginConfigurer<HttpSecurity>::disable)
-                .httpBasic(HttpBasicConfigurer<HttpSecurity>::disable)
-                .headers(it -> it.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .sessionManagement(it ->
-                        it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(AUTH_URLS).permitAll()
-                        .requestMatchers(ALLOW_URLS).permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/members/**").hasRole("GUEST")
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(AbstractHttpConfigurer::disable);
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(CsrfConfigurer<HttpSecurity>::disable)
+                                .formLogin(FormLoginConfigurer<HttpSecurity>::disable)
+                                .httpBasic(HttpBasicConfigurer<HttpSecurity>::disable)
+                                .headers(it -> it.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                                .sessionManagement(it -> it.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                .requestMatchers(AUTH_URLS).permitAll()
+                                                .requestMatchers(ALLOW_URLS).permitAll()
+                                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/api/v1/oauth2/**").hasRole("GUEST")
+                                                .anyRequest().authenticated())
+                                .httpBasic(AbstractHttpConfigurer::disable);
 
-        // OAuth2 인증 필터
-        http
-                .oauth2Login(customConfigurer -> customConfigurer
-                        .authorizationEndpoint(end -> end.baseUri("/api/v1/oauth2/login"))
-                        .userInfoEndpoint(endPointConfig -> endPointConfig.userService(customOAuth2UserService))
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler));
+                // OAuth2 인증 필터
+                http
+                                .oauth2Login(customConfigurer -> customConfigurer
+                                                .authorizationEndpoint(end -> end.baseUri("/api/v1/oauth2/login"))
+                                                .userInfoEndpoint(endPointConfig -> endPointConfig
+                                                                .userService(customOAuth2UserService))
+                                                .successHandler(oAuth2LoginSuccessHandler)
+                                                .failureHandler(oAuth2LoginFailureHandler));
 
-        // jwt 인증 필터
-        http
-                .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class);
-        http
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
-                .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler));
+                // jwt 인증 필터
+                http
+                                .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class);
+                http
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint(customAuthenticationEntryPoint))
+                                .exceptionHandling(
+                                                exception -> exception.accessDeniedHandler(customAccessDeniedHandler));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+                return configuration.getAuthenticationManager();
+        }
 }
