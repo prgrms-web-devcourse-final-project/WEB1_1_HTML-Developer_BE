@@ -1,10 +1,10 @@
 package com.backend.allreva.concert.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
-import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.concert.command.domain.value.IntroduceImage;
-import com.backend.allreva.concert.command.domain.value.Seller;
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
+import com.backend.allreva.concert.command.domain.value.ConcertInfo;
+import com.backend.allreva.concert.command.domain.value.Seller;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,14 +31,14 @@ public class Concert extends BaseEntity {
 
     @Embedded
     @AttributeOverride(name = "url", column = @Column(name = "poster"))
-    private IntroduceImage poster;
+    private Image poster;
 
     @ElementCollection
     @CollectionTable(
             name = "concert_images",
             joinColumns = @JoinColumn(name = "concert_id")
     )
-    private List<IntroduceImage> detailImages;
+    private List<Image> detailImages;
 
 
     @ElementCollection
