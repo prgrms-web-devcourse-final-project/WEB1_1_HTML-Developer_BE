@@ -1,6 +1,6 @@
 package com.backend.allreva.hall.query.application;
 
-import com.backend.allreva.hall.query.domain.ConcertHallRepository;
+import com.backend.allreva.hall.command.domain.ConcertHallRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

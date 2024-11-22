@@ -2,10 +2,7 @@ package com.backend.allreva.concert.command.application.dto;
 
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.concert.command.domain.Concert;
-import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.concert.command.domain.value.ConcertStatus;
-import com.backend.allreva.concert.command.domain.value.IntroduceImage;
-import com.backend.allreva.concert.command.domain.value.Seller;
+import com.backend.allreva.concert.command.domain.value.*;
 import com.backend.allreva.concert.infra.dto.Relate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,9 +34,12 @@ public class KopisConcertResponse {
                 .poster(toIntroduceImage(response.poster))
                 .detailImages(toDetailImages(response.styurls))
                 .sellers(toSellers(response.relates))
-                .concertCode(response.concertcd)
-                .facilityCode(response.fcltycd)
-                .hallCode(response.hallcd)
+                .code(Code.builder()
+                        .facilityCode(response.fcltycd)
+                        .concertCode(response.concertcd)
+                        .hallCode(response.getHallcd())
+                        .build()
+                )
                 .build();
     }
 
@@ -47,10 +47,14 @@ public class KopisConcertResponse {
         return ConcertInfo.builder()
                 .title(response.prfnm)
                 .price(response.pcseguidance)
-                .stdate(DataConverter.convertToLocalDate(response.prfpdfrom))
-                .eddate(DataConverter.convertToLocalDate(response.prfpdto))
+                .dateInfo(
+                        new DateInfo(
+                                DataConverter.convertToLocalDate(response.prfpdfrom),
+                                DataConverter.convertToLocalDate(response.prfpdto),
+                                response.getDtguidance()
+                        )
+                )
                 .prfstate(ConcertStatus.convertToConcertStatus(response.prfstate))
-                .timeTable(response.dtguidance)
                 .host(response.entrpsnmH)
                 .build();
     }

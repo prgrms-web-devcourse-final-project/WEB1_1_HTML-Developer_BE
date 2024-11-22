@@ -1,6 +1,7 @@
 package com.backend.allreva.concert.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.IntroduceImage;
 import com.backend.allreva.concert.command.domain.value.Seller;
@@ -20,11 +21,11 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String concertCode;
+    @Column(name = "concert_view_count")
+    private Long viewCount;
 
-    private String hallCode;
-
-    private String facilityCode;
+    @Embedded
+    private Code code;
 
     @Embedded
     private ConcertInfo concertInfo;
@@ -50,10 +51,28 @@ public class Concert extends BaseEntity {
 
     public void updateFrom(KopisConcertResponse response) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(response);
-        this.concertCode = response.getConcertcd();
-        this.hallCode = response.getHallcd();
+        this.code = Code.builder()
+                .hallCode(response.getHallcd())
+                .concertCode(response.getConcertcd())
+                .facilityCode(response.getFcltycd())
+                .build();
         this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
         this.sellers = KopisConcertResponse.toSellers(response.getRelates());
         this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
+    }
+
+    @Builder
+    public Concert(
+            Code code,
+            ConcertInfo concertInfo,
+            IntroduceImage poster,
+            List<IntroduceImage> detailImages,
+            List<Seller> sellers
+    ) {
+        this.code = code;
+        this.concertInfo = concertInfo;
+        this.poster = poster;
+        this.detailImages = detailImages;
+        this.sellers = sellers;
     }
 }
