@@ -15,4 +15,5 @@ public class ConcertQueryService {
     public ConcertDetail findDetailById(Long concertId) {
         return concertRepository.findDetailById(concertId);
     }
+
 }

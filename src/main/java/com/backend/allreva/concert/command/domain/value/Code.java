@@ -12,19 +12,14 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Code {
 
-    @Column(name = "concert_code")
     private String concertCode;
-
-    @Column(name = "concert_hall_code")
     private String hallCode;
-
-    @Column(name = "concert_facility_code")
-    private String facilityCode;
+    private String fcltyCode;
 
     @Builder
     public Code(String concertCode, String hallCode, String facilityCode) {
         this.concertCode = concertCode;
         this.hallCode = hallCode;
-        this.facilityCode = facilityCode;
+        this.fcltyCode = facilityCode;
     }
 }

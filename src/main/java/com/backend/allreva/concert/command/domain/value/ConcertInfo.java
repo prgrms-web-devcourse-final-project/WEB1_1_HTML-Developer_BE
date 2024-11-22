@@ -11,14 +11,15 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class ConcertInfo {
-    @Column(name = "concert_title")
+
     private String title;
-    @Column(name = "concert_price",columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT")
     private String price;
-    @Column(name = "concert_prfstate")
+
     @Enumerated(EnumType.STRING)
     private ConcertStatus prfstate;
-    @Column(name = "concert_host")
+
     private String host;
 
     @Embedded

@@ -4,7 +4,7 @@ package com.backend.allreva.concert.query.application.dto;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.concert.command.domain.value.IntroduceImage;
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.value.Seller;
 
 import com.backend.allreva.hall.command.domain.value.ConcertHallInfo;
@@ -20,8 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 public final class ConcertDetail {
 
-    private IntroduceImage poster;
-    private List<IntroduceImage> detailImages;
+    private Image poster;
+    private List<Image> detailImages;
 
     private ConcertInfo concertInfo;
     private List<Seller> sellers;

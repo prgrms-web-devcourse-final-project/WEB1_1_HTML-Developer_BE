@@ -10,9 +10,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Seller {
-    @Column(name = "concert_relate_name")
+
     private String relateName;
-    @Column(name = "concert_relate_url")
     private String relateUrl;
 
 }

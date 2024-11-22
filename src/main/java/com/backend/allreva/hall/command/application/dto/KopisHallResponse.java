@@ -35,7 +35,7 @@ public class KopisHallResponse {
                 .hallInfo(toConcertHallInfo(response.fcltynm, response.prfplcnm, response.seatscale))
                 .convenienceInfo(toConvenienceInfo(response))
                 .location(toLocation(response.lo,response.la, response.adres))
-                .facilityCode(response.fcltycd)
+                .fcltyCode(response.fcltycd)
                 .build();
     }
 

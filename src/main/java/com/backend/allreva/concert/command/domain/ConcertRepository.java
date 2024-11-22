@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConcertRepository extends JpaRepository<Concert, Long>, ConcertRepositoryCustom {
-    boolean existsByConcertCode(String concertCode);
-    Concert findByConcertCode(String concertCode);
+    boolean existsByCodeConcertCode(String concertCode);
+    Concert findByCodeConcertCode(String concertCode);
 }

@@ -3,7 +3,7 @@ package com.backend.allreva.concert.command.domain;
 import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.concert.command.domain.value.IntroduceImage;
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
 import jakarta.persistence.*;
@@ -21,7 +21,6 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "concert_view_count")
     private Long viewCount;
 
     @Embedded
@@ -32,20 +31,20 @@ public class Concert extends BaseEntity {
 
     @Embedded
     @AttributeOverride(name = "url", column = @Column(name = "poster"))
-    private IntroduceImage poster;
+    private Image poster;
 
     @ElementCollection
     @CollectionTable(
-            name = "concert_images",
-            joinColumns = @JoinColumn(name = "concert_id")
+            name = "concert_image",
+            joinColumns = @JoinColumn(name = "id")
     )
-    private List<IntroduceImage> detailImages;
+    private List<Image> detailImages;
 
 
     @ElementCollection
     @CollectionTable(
-            name = "concert_sellers",
-            joinColumns = @JoinColumn(name = "concert_id")
+            name = "concert_seller",
+            joinColumns = @JoinColumn(name = "id")
     )
     private List<Seller> sellers;
 
@@ -65,8 +64,8 @@ public class Concert extends BaseEntity {
     public Concert(
             Code code,
             ConcertInfo concertInfo,
-            IntroduceImage poster,
-            List<IntroduceImage> detailImages,
+            Image poster,
+            List<Image> detailImages,
             List<Seller> sellers
     ) {
         this.code = code;

@@ -11,10 +11,7 @@ import lombok.*;
 @Embeddable
 public class ConcertHallInfo {
 
-    @Column(name = "concert_hall_fclty_name")
     private String fcltyName;
-    @Column(name = "concert_hall_prfplc_name")
     private String prfplcName;
-    @Column(name = "concert_hall_seat_scale")
     private Integer seatScale;
 }

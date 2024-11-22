@@ -14,13 +14,9 @@ import java.time.LocalDate;
 @Embeddable
 public class DateInfo {
 
-    @Column(name = "concert_stdate")
     private LocalDate stdate;
-
-    @Column(name = "concert_eddate")
     private LocalDate eddate;
 
-    @Column(name = "concert_timeTable")
     private String timeTable;
 
     @Builder

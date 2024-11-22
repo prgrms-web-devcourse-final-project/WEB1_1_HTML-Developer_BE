@@ -11,10 +11,8 @@ import lombok.*;
 @Embeddable
 public class Location {
 
-    @Column(name = "concert_hall_longitude")
     private Double longitude;
-    @Column(name = "concert_hall_latitude")
     private Double latitude;
-    @Column(name = "concert_hall_address")
+
     private String address;
 }
