@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE rent_join SET deleted_at = NOW() WHERE id = ?")
+@Entity
 public class RentJoin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
