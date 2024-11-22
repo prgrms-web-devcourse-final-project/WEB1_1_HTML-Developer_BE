@@ -31,8 +31,8 @@ public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
         return Projections.constructor(ConcertDetail.class,
                 concert,
                 concertHall.hallInfo,
-                concertHall.convenienceInfo,
-                concertHall.location
+                concertHall.facilityInfo.convenienceInfo,
+                concertHall.facilityInfo.location
         );
     }
 }

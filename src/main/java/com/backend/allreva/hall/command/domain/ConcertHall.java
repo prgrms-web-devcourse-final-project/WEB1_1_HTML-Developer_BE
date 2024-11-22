@@ -2,9 +2,7 @@ package com.backend.allreva.hall.command.domain;
 
 
 import com.backend.allreva.hall.command.domain.value.ConcertHallInfo;
-import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
-import com.backend.allreva.hall.command.domain.value.Location;
-import jakarta.persistence.Column;
+import com.backend.allreva.hall.command.domain.value.FacilityInfo;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,16 +18,9 @@ public class ConcertHall {
     @Id
     private String id;
 
-    private Double star;
-
-    private String fcltyCode;
-
+    @Embedded
+    private FacilityInfo facilityInfo;
     @Embedded
     private ConcertHallInfo hallInfo;
 
-    @Embedded
-    private ConvenienceInfo convenienceInfo;
-
-    @Embedded
-    private Location location;
 }

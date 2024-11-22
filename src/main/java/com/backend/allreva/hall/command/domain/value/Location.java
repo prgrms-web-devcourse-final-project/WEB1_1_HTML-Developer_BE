@@ -1,6 +1,5 @@
 package com.backend.allreva.hall.command.domain.value;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 

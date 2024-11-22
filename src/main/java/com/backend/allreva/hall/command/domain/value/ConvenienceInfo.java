@@ -1,6 +1,5 @@
 package com.backend.allreva.hall.command.domain.value;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -11,13 +10,13 @@ import lombok.*;
 @Embeddable
 public class ConvenienceInfo {
 
-    private Boolean parking;
-    private Boolean restaurant;
-    private Boolean cafe;
-    private Boolean store;
+    private boolean parking;
+    private boolean restaurant;
+    private boolean cafe;
+    private boolean store;
 
-    private Boolean parkBarrier;
-    private Boolean restBarrier;
-    private Boolean elevBarrier;
-    private Boolean runwBarrier;
+    private boolean parkBarrier;
+    private boolean restBarrier;
+    private boolean elevBarrier;
+    private boolean runwBarrier;
 }
