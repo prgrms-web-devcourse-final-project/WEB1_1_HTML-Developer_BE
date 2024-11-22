@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.member.command.application.MemberCommandService;
 import com.backend.allreva.member.command.application.dto.MemberOAuth2RegisterRequest;
+import com.backend.allreva.member.command.domain.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +22,9 @@ public class OAuth2RegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(
+            @AuthMember Member member,
             @RequestBody MemberOAuth2RegisterRequest memberOAuth2RegisterRequest) {
-        memberCommandService.registerOAuth2Member(memberOAuth2RegisterRequest);
+        memberCommandService.registerOAuth2Member(memberOAuth2RegisterRequest, member);
 
         return ResponseEntity.noContent().build();
     }

@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.allreva.member.command.application.dto.MemberOAuth2RegisterRequest;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.exception.MemberNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,13 +12,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberCommandService {
 
-    private final MemberRepository memberRepository;
-
     @Transactional
-    public void registerOAuth2Member(MemberOAuth2RegisterRequest memberOAuth2RegisterRequest) {
-        Member member = memberRepository.findById(memberOAuth2RegisterRequest.memberId())
-                .orElseThrow(() -> new MemberNotFoundException());
-
+    public void registerOAuth2Member(
+            MemberOAuth2RegisterRequest memberOAuth2RegisterRequest,
+            Member member) {
         member.updateMemberInfo(
                 memberOAuth2RegisterRequest.nickname(),
                 memberOAuth2RegisterRequest.introduce(),
