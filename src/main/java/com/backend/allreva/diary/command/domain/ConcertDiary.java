@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,10 +33,11 @@ public class ConcertDiary extends BaseEntity {
 
     private String episode; //회차
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(
             name = "diary_images",
             joinColumns = @JoinColumn(name = "id")
     )
-    private List<Image> diaryImages;
+    private List<Image> diaryImages = new ArrayList<>();
 }
