@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
@@ -45,15 +44,6 @@ public class SecurityConfig {
         private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
         private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
-        /**
-         * 정적 자원 허용 설정
-         */
-        @Bean
-        public WebSecurityCustomizer webSecurityCustomizer() {
-                return web -> web.ignoring()
-                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-        }
-
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
@@ -64,6 +54,7 @@ public class SecurityConfig {
                                 .sessionManagement(it -> it.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(authorize -> authorize
                                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                                 .requestMatchers(AUTH_URLS).permitAll()
                                                 .requestMatchers(ALLOW_URLS).permitAll()
                                                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
