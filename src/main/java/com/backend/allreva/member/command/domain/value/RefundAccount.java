@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class RefundAccountInfo {
+public class RefundAccount {
 
     private String bank;
     private String number;
 
     @Builder
-    private RefundAccountInfo(String bank, String number) {
+    private RefundAccount(String bank, String number) {
         this.bank = bank;
         this.number = number;
     }

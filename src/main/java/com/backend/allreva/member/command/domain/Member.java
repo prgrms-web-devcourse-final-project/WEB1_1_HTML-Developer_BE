@@ -5,7 +5,7 @@ import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberInfo;
 import com.backend.allreva.member.command.domain.value.MemberRole;
-import com.backend.allreva.member.command.domain.value.RefundAccountInfo;
+import com.backend.allreva.member.command.domain.value.RefundAccount;
 import com.backend.allreva.member.infra.converter.RefundAccountConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -50,7 +50,7 @@ public class Member extends BaseEntity {
 
     @Convert(converter = RefundAccountConverter.class)
     @Column(name = "refund_account")
-    private RefundAccountInfo refundAccountInfo;
+    private RefundAccount refundAccount;
 
     @Builder
     private Member(
@@ -93,14 +93,7 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    /**
-     * 회원 정보 수정
-     */
-    public void updateMemberInfo(
-            String nickname,
-            String introduce,
-            String profileImageUrl
-    ) {
+    public void setMemberInfo(String nickname, String introduce, String profileImageUrl) {
         this.memberInfo = MemberInfo.builder()
                 .nickname(nickname)
                 .introduce(introduce)
@@ -108,9 +101,13 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    /**
-     * 회원 권한 USER 승격
-     */
+    public void setRefundAccount(String bank, String number) {
+        this.refundAccount = RefundAccount.builder()
+                .bank(bank)
+                .number(number)
+                .build();
+    }
+
     public void upgradeToUser() {
         if (this.memberRole.equals(MemberRole.GUEST)) {
             this.memberRole = MemberRole.USER;
