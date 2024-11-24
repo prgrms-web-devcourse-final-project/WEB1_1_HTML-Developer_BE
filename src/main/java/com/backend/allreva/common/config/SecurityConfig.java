@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
         // 인가 과정에서 허용할 URL 등록
-        private static final String[] ALLOW_URLS = { "/h2-console/**" };
+        private static final String[] ALLOW_URLS = { "/h2-console/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"};
         private static final String[] AUTH_URLS = { "/api/v1/oauth2/login/**", "/login/oauth2/**" };
 
         // JWT
