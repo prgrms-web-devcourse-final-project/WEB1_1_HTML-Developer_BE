@@ -7,8 +7,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE member_artist SET deleted_at = NOW() WHERE id = ?")
@@ -24,4 +22,11 @@ public class MemberArtist extends BaseEntity {
 
     @Column(nullable = false)
     private String artistId;
+
+    @Builder
+    private MemberArtist(Long id, Long memberId, String artistId) {
+        this.id = id;
+        this.memberId = memberId;
+        this.artistId = artistId;
+    }
 }
