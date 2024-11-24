@@ -33,7 +33,6 @@ public class KopisHallResponse {
                 .id(response.getMt13id())
                 .name(response.getFcltynm() + " " +response.getPrfplcnm())
                 .seatScale(Integer.parseInt(response.seatscale.replace(",","")))
-                .star(0.0)
                 .convenienceInfo(toConvenienceInfo(response))
                 .location(toLocation(response.getLo(), response.getLa(), response.getAdres()))
                 .build();

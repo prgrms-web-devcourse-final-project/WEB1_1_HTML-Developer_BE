@@ -25,36 +25,18 @@ public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
 
     @Override
     public ConcertDetail findDetailById(Long concertId) {
-        return queryFactory.select(concertDetailProjection())
+        return queryFactory
                 .from(concert)
                 .join(concertHall).on(concertHall.id.eq(concert.code.hallCode))
                 .leftJoin(concert.detailImages, image)
                 .leftJoin(concert.sellers, seller)
                 .where(concert.id.eq(concertId))
                 .transform(GroupBy.groupBy(concert.id)
-                        .list(transformProjection()))
+                        .list(concertDetailProjection()))
                 .get(0);
-
-
-
     }
 
     private Expression<ConcertDetail> concertDetailProjection() {
-        return Projections.constructor(ConcertDetail.class,
-                concert.poster,
-                GroupBy.list(concert.detailImages),
-                concert.concertInfo,
-                GroupBy.list(concert.sellers),
-
-                concertHall.id,
-                concertHall.name,
-                concertHall.seatScale,
-                concertHall.convenienceInfo,
-                concertHall.location.address
-        );
-    }
-
-    private Expression<ConcertDetail> transformProjection() {
         return Projections.constructor(ConcertDetail.class,
                 concert.poster,
                 Projections.list(Projections.constructor(Image.class, image.url)),
@@ -66,9 +48,6 @@ public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
                 concertHall.convenienceInfo,
                 concertHall.location.address
         );
-
-
-
     }
 }
 

@@ -12,8 +12,6 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Concert extends BaseEntity {
@@ -21,7 +19,7 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long viewCount;
+    private long viewCount;
 
     @Embedded
     private Code code;
@@ -58,6 +56,7 @@ public class Concert extends BaseEntity {
         this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
     }
 
+
     @Builder
     public Concert(
             Code code,
@@ -71,5 +70,7 @@ public class Concert extends BaseEntity {
         this.poster = poster;
         this.detailImages = detailImages;
         this.sellers = sellers;
+
+        this.viewCount = 0L;
     }
 }

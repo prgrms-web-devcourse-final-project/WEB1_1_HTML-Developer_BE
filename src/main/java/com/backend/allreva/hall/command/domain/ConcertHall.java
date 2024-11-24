@@ -9,8 +9,6 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ConcertHall {
@@ -19,11 +17,28 @@ public class ConcertHall {
     private String id;
     // fcltyName + prfplcName
     private String name;
-    private Integer seatScale;
-    private Double star;
+    private int seatScale;
+    private double star;
 
     @Embedded
     private ConvenienceInfo convenienceInfo;
     @Embedded
     private Location location;
+
+
+    @Builder
+    public ConcertHall(
+            String id,
+            String name,
+            int seatScale,
+            ConvenienceInfo convenienceInfo,
+            Location location
+    ) {
+        this.id = id;
+        this.name = name;
+        this.seatScale = seatScale;
+        this.star = 0.0;
+        this.convenienceInfo = convenienceInfo;
+        this.location = location;
+    }
 }

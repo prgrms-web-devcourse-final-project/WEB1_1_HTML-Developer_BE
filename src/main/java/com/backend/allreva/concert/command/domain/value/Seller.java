@@ -6,7 +6,6 @@ import lombok.*;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Seller {
@@ -14,4 +13,8 @@ public class Seller {
     private String relateName;
     private String relateUrl;
 
+    public Seller(String relateName, String relateUrl) {
+        this.relateName = relateName;
+        this.relateUrl = relateUrl;
+    }
 }

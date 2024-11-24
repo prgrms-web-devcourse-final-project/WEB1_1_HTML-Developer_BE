@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/concert-hall")
+@RequestMapping("/concert-halls")
 @RestController
 public class ConcertHallController {
 
     private final ConcertHallQueryService concertHallQueryService;
 
     @GetMapping("/{hallCode}")
-    public Response<ConcertHallDetail> findHallDetailByFacilityId(
+    public Response<ConcertHallDetail> findHallDetailByHallCode(
             @PathVariable("hallCode") String hallCode
     ) {
         ConcertHallDetail details = concertHallQueryService.findDetailByHallCode(hallCode);
