@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MemberInfo {
 
+    @Column(nullable = false)
     private String nickname;
     private String introduce;
-    @Column(name = "profile_image_url")
+    @Column(name = "profile_image_url", nullable = false)
     private String profileImageUrl;
 
     @Builder

@@ -5,7 +5,17 @@ import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberInfo;
 import com.backend.allreva.member.command.domain.value.MemberRole;
-import jakarta.persistence.*;
+import com.backend.allreva.member.command.domain.value.RefundAccountInfo;
+import com.backend.allreva.member.infra.converter.RefundAccountConverter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,15 +38,19 @@ public class Member extends BaseEntity {
     private Email email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private MemberRole memberRole;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "provider")
+    @Column(name = "provider", nullable = false)
     private LoginProvider loginProvider;
 
     @Embedded
     private MemberInfo memberInfo;
+
+    @Convert(converter = RefundAccountConverter.class)
+    @Column(name = "refund_account")
+    private RefundAccountInfo refundAccountInfo;
 
     @Builder
     private Member(
