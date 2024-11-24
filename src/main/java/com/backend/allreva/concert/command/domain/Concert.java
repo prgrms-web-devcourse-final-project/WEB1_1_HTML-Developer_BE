@@ -40,7 +40,6 @@ public class Concert extends BaseEntity {
     )
     private List<Image> detailImages;
 
-
     @ElementCollection
     @CollectionTable(
             name = "concert_seller",
@@ -53,7 +52,6 @@ public class Concert extends BaseEntity {
         this.code = Code.builder()
                 .hallCode(response.getHallcd())
                 .concertCode(response.getConcertcd())
-                .facilityCode(response.getFcltycd())
                 .build();
         this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
         this.sellers = KopisConcertResponse.toSellers(response.getRelates());

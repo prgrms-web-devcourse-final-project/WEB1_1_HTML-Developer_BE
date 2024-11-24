@@ -1,9 +1,7 @@
 package com.backend.allreva.hall.command.application.dto;
 
 import com.backend.allreva.hall.command.domain.ConcertHall;
-import com.backend.allreva.hall.command.domain.value.ConcertHallInfo;
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
-import com.backend.allreva.hall.command.domain.value.FacilityInfo;
 import com.backend.allreva.hall.command.domain.value.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,24 +31,11 @@ public class KopisHallResponse {
     public static ConcertHall toEntity(final KopisHallResponse response) {
         return ConcertHall.builder()
                 .id(response.getMt13id())
-                .hallInfo(toConcertHallInfo(response.prfplcnm, response.seatscale))
-                .facilityInfo(toFacilityInfo(response))
-                .build();
-    }
-    private static FacilityInfo toFacilityInfo(final KopisHallResponse response) {
-        return FacilityInfo.builder()
-                .fcltyName(response.fcltynm)
-                .fcltyCode(response.fcltycd)
-                .convenienceInfo(toConvenienceInfo(response))
-                .location(toLocation(response.lo,response.la, response.adres))
-                .build();
-    }
-
-    private static ConcertHallInfo toConcertHallInfo(final String prfplcnm, final String seatscale) {
-        return ConcertHallInfo.builder()
-                .prfplcName(prfplcnm)
-                .seatScale(Integer.parseInt(seatscale.replace(",","")))
+                .name(response.getFcltynm() + " " +response.getPrfplcnm())
+                .seatScale(Integer.parseInt(response.seatscale.replace(",","")))
                 .star(0.0)
+                .convenienceInfo(toConvenienceInfo(response))
+                .location(toLocation(response.getLo(), response.getLa(), response.getAdres()))
                 .build();
     }
 

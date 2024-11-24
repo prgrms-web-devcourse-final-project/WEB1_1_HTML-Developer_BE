@@ -1,8 +1,8 @@
 package com.backend.allreva.hall.command.domain;
 
 
-import com.backend.allreva.hall.command.domain.value.ConcertHallInfo;
-import com.backend.allreva.hall.command.domain.value.FacilityInfo;
+import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
+import com.backend.allreva.hall.command.domain.value.Location;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,10 +17,13 @@ public class ConcertHall {
 
     @Id
     private String id;
+    // fcltyName + prfplcName
+    private String name;
+    private Integer seatScale;
+    private Double star;
 
     @Embedded
-    private FacilityInfo facilityInfo;
+    private ConvenienceInfo convenienceInfo;
     @Embedded
-    private ConcertHallInfo hallInfo;
-
+    private Location location;
 }

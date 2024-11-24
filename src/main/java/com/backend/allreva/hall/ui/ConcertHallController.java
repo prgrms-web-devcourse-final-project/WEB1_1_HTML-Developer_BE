@@ -18,11 +18,11 @@ public class ConcertHallController {
 
     private final ConcertHallQueryService concertHallQueryService;
 
-    @GetMapping("/{facilityCode}")
-    public Response<List<ConcertHallDetail>> findHallDetailByFacilityId(
-            @PathVariable("facilityCode") String facilityCode
+    @GetMapping("/{hallCode}")
+    public Response<ConcertHallDetail> findHallDetailByFacilityId(
+            @PathVariable("hallCode") String hallCode
     ) {
-        List<ConcertHallDetail> details = concertHallQueryService.findDetailByFacilityCode(facilityCode);
+        ConcertHallDetail details = concertHallQueryService.findDetailByHallCode(hallCode);
         return Response.onSuccess(details);
     }
 }

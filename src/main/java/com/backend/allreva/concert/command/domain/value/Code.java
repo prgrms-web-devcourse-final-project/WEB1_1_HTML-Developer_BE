@@ -1,6 +1,5 @@
 package com.backend.allreva.concert.command.domain.value;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,12 +13,10 @@ public class Code {
 
     private String concertCode;
     private String hallCode;
-    private String fcltyCode;
 
     @Builder
-    public Code(String concertCode, String hallCode, String facilityCode) {
+    public Code(String concertCode, String hallCode) {
         this.concertCode = concertCode;
         this.hallCode = hallCode;
-        this.fcltyCode = facilityCode;
     }
 }

@@ -36,7 +36,6 @@ public class KopisConcertResponse {
                 .detailImages(toDetailImages(response.styurls))
                 .sellers(toSellers(response.relates))
                 .code(Code.builder()
-                        .facilityCode(response.fcltycd)
                         .concertCode(response.concertcd)
                         .hallCode(response.getHallcd())
                         .build()

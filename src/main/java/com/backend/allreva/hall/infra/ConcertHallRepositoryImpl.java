@@ -18,19 +18,20 @@ public class ConcertHallRepositoryImpl implements ConcertHallRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ConcertHallDetail> findDetailByFacilityCode(String facilityCode) {
+    public ConcertHallDetail findDetailByHallCode(String hallCode) {
         return queryFactory.select(hallDetailProjections())
                 .from(concertHall)
-                .where(concertHall.facilityInfo.fcltyCode.eq(facilityCode))
-                .fetch();
+                .where(concertHall.id.eq(hallCode))
+                .fetchFirst();
     }
 
     private static ConstructorExpression<ConcertHallDetail> hallDetailProjections() {
         return Projections.constructor(ConcertHallDetail.class,
-                concertHall.facilityInfo,
-                concertHall.hallInfo
+                concertHall.name,
+                concertHall.seatScale,
+                concertHall.star,
+                concertHall.convenienceInfo,
+                concertHall.location
         );
     }
-
-
 }

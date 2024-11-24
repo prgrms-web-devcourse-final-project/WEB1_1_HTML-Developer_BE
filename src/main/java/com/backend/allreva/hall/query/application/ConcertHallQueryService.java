@@ -15,8 +15,8 @@ public class ConcertHallQueryService {
 
     private final ConcertHallRepository concertHallRepository;
 
-    public List<ConcertHallDetail> findDetailByFacilityCode(String facilityCode) {
-        return concertHallRepository.findDetailByFacilityCode(facilityCode);
+    public ConcertHallDetail findDetailByHallCode(String hallCode) {
+        return concertHallRepository.findDetailByHallCode(hallCode);
     }
 
 }
