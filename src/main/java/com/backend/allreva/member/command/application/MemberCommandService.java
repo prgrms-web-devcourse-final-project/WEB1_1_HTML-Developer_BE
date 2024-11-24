@@ -77,6 +77,9 @@ public class MemberCommandService {
         return member;
     }
 
+    /**
+     * 환불 계좌 soft delete
+     */
     public void deleteRefundAccount(
         Member member
     ) {
