@@ -11,41 +11,47 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    services:
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
+      
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Create resource directories
-      run: |
-        mkdir -p src/main/resources
-        mkdir -p src/test/resources
-    
-    - name: Set up secret yml file
-      env:
-        YAML_SECRET: ${{ secrets.YAML_SECRET }}
-        YAML_DIR: src/main/resources
-        YAML_TEST_DIR: src/test/resources
-        YAML_FILE_NAME: application.yml
-      run: |
-        echo $YAML_SECRET | base64 --decode > $YAML_DIR/$YAML_FILE_NAME
-        echo $YAML_SECRET | base64 --decode > $YAML_TEST_DIR/$YAML_FILE_NAME
-        echo "YAML_SECRET has been decoded and saved to $YAML_DIR/$YAML_FILE_NAME"
-        echo "YAML_SECRET has been decoded and saved to $YAML_TEST_DIR/$YAML_FILE_NAME"
+      - uses: actions/checkout@v3
 
-    - name: Start Redis
-      uses: supercharge/redis-github-action@1.1.0
-      with:
-        redis-version: 6
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    - name: test
-      run: ./gradlew test
+      - name: Create resource directories
+        run: |
+          mkdir -p src/main/resources
+          mkdir -p src/test/resources
+
+      - name: Set up secret yml file
+        env:
+          YAML_SECRET: ${{ secrets.YAML_SECRET }}
+        run: |
+          echo $YAML_SECRET | base64 --decode > src/main/resources/application.yml
+          echo $YAML_SECRET | base64 --decode > src/test/resources/application.yml
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: 6
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Wait for MySQL to be ready
+        run: sleep 30
+
+      - name: Run tests
+        run: ./gradlew test
