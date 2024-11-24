@@ -24,7 +24,7 @@
 ## Commit Message
 💡 commit message는 [티켓번호] 태그이름: 내용으로 커밋 <br>
 ```java
-[ARV-01] 회원가입 API 구현
+[ARV-01] feat : 회원가입 API 구현
 ```
 💡 태그이름은 모두 소문자로 쓰고 아래 9개 중 하나로 <br>
 

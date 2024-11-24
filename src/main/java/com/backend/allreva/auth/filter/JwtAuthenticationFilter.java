@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/h2-console/**"),
             // OAuth2 관련 URL
             new AntPathRequestMatcher("/api/v1/oauth2/login/**"),
-            new AntPathRequestMatcher("/login/oauth2/**"));
+            new AntPathRequestMatcher("/login/oauth2/**"),
+            new AntPathRequestMatcher("/favicon.*"));
 
     private final JwtParser jwtParser;
     private final JwtValidator jwtValidator;
