@@ -115,5 +115,4 @@ public class ConcertDocument {
     )
     private LocalDateTime deletedAt;
 
-    // Getters and setters
 }
