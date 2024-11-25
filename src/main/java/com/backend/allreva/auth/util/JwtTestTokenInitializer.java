@@ -3,8 +3,10 @@ package com.backend.allreva.auth.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JwtTestTokenInitializer {
 
@@ -18,7 +20,7 @@ public class JwtTestTokenInitializer {
         jwtTokens.put("GUEST", jwtProvider.generateRefreshToken(String.valueOf(3L)));
 
         jwtTokens.forEach((role, token) ->
-                System.out.println(role + " Token: " + token));
+                log.info("{} Token: {}", role, token));
     }
 
     public String getToken(String role) {
