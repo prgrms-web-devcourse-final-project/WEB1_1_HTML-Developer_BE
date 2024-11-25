@@ -1,7 +1,7 @@
 package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
-import com.backend.allreva.rent.command.domain.value.Region;
+import com.backend.allreva.survey.command.domain.value.Region;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
