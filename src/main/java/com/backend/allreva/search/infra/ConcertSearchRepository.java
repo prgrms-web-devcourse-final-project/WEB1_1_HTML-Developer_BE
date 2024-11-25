@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ConcertSearchRepository extends ElasticsearchRepository<ConcertDocument, String> {
+public interface ConcertSearchRepository extends
+        ElasticsearchRepository<ConcertDocument, String>,
+        CustomConcertSearchRepo{
     @Query("{\"match\": {\"title.mixed\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}")
-    List<ConcertDocument> findByTitleWithFuzziness(String title, Pageable pageable);}
+    List<ConcertDocument> findByTitleWithFuzziness(String title, Pageable pageable);
+
+}
