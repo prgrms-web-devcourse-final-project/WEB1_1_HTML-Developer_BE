@@ -16,9 +16,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@SQLRestriction("delete_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE survey_join SET deleted_at = NOW() WHERE id = ?")
 public class SurveyJoin extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

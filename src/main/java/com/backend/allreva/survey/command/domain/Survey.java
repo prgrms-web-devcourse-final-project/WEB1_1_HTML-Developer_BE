@@ -16,7 +16,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("delete_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE survey SET deleted_at = NOW() WHERE id = ?")
 @Entity
 public class Survey extends BaseEntity {

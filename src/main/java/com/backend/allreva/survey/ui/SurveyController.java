@@ -23,10 +23,10 @@ public class SurveyController {
     private final SurveyCommandService surveyCommandService;
 
     @Operation(summary = "수요조사 개설 API", description = "수요조사를 개설합니다.")
-    @PostMapping()
+    @PostMapping
     public Response<SurveyIdResponse> openSurvey(@AuthMember Member member,
                                                  @Valid @RequestBody OpenSurveyRequest openSurveyRequest) {
-        return Response.onSuccess(surveyCommandService.openSurvey(openSurveyRequest));
+        return Response.onSuccess(surveyCommandService.openSurvey(member.getId(), openSurveyRequest));
     }
 
 }
