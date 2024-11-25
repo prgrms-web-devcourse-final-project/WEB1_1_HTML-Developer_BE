@@ -30,6 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final List<RequestMatcher> EXCLUDED_URL_MATCHERS = List.of(
             new AntPathRequestMatcher("/h2-console/**"),
+
+            new AntPathRequestMatcher("/swagger-ui/**"),
+            new AntPathRequestMatcher("/v3/api-docs/**"),
+            new AntPathRequestMatcher("/swagger-resources/**"),
+
             // OAuth2 관련 URL
             new AntPathRequestMatcher("/api/v1/oauth2/login/**"),
             new AntPathRequestMatcher("/login/oauth2/**"),

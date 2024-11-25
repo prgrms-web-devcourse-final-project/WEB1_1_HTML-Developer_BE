@@ -1,7 +1,6 @@
 package com.backend.allreva.hall.command.domain;
 
 
-import com.backend.allreva.hall.command.domain.value.ConcertHallInfo;
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
 import com.backend.allreva.hall.command.domain.value.Location;
 import jakarta.persistence.Embedded;
@@ -10,25 +9,36 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ConcertHall {
 
     @Id
     private String id;
-
-    private Double star;
-
-    private String facilityCode;
-
-    @Embedded
-    private ConcertHallInfo hallInfo;
+    // fcltyName + prfplcName
+    private String name;
+    private int seatScale;
+    private double star;
 
     @Embedded
     private ConvenienceInfo convenienceInfo;
-
     @Embedded
     private Location location;
+
+
+    @Builder
+    public ConcertHall(
+            String id,
+            String name,
+            int seatScale,
+            ConvenienceInfo convenienceInfo,
+            Location location
+    ) {
+        this.id = id;
+        this.name = name;
+        this.seatScale = seatScale;
+        this.star = 0.0;
+        this.convenienceInfo = convenienceInfo;
+        this.location = location;
+    }
 }

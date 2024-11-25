@@ -1,7 +1,6 @@
 package com.backend.allreva.hall.command.application.dto;
 
 import com.backend.allreva.hall.command.domain.ConcertHall;
-import com.backend.allreva.hall.command.domain.value.ConcertHallInfo;
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
 import com.backend.allreva.hall.command.domain.value.Location;
 import lombok.AllArgsConstructor;
@@ -32,18 +31,10 @@ public class KopisHallResponse {
     public static ConcertHall toEntity(final KopisHallResponse response) {
         return ConcertHall.builder()
                 .id(response.getMt13id())
-                .hallInfo(toConcertHallInfo(response.fcltynm, response.prfplcnm, response.seatscale))
+                .name(response.getFcltynm() + " " +response.getPrfplcnm())
+                .seatScale(Integer.parseInt(response.seatscale.replace(",","")))
                 .convenienceInfo(toConvenienceInfo(response))
-                .location(toLocation(response.lo,response.la, response.adres))
-                .facilityCode(response.fcltycd)
-                .build();
-    }
-
-    private static ConcertHallInfo toConcertHallInfo(final String fcltynm, final String prfplcnm, final String seatscale) {
-        return ConcertHallInfo.builder()
-                .fcltyName(fcltynm)
-                .prfplcName(prfplcnm)
-                .seatScale(Integer.parseInt(seatscale.replace(",","")))
+                .location(toLocation(response.getLo(), response.getLa(), response.getAdres()))
                 .build();
     }
 

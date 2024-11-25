@@ -1,5 +1,6 @@
 package com.backend.allreva.member.exception;
 
+
 import com.backend.allreva.common.exception.code.ErrorCode;
 import com.backend.allreva.common.exception.code.ErrorCodeInterface;
 import lombok.RequiredArgsConstructor;
