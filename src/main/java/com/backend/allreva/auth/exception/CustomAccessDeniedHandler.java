@@ -32,7 +32,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
         Exception exception = (Exception) request.getAttribute("jakarta.servlet.error.exception");
-        log.info("권한 없음 예외 발생: {}", exception);
-        resolver.resolveException(request, response, null, exception);
+        if (exception != null) {
+            log.info("권한 없음 예외 발생: {}", exception);
+            resolver.resolveException(request, response, null, exception);
+        } else {
+            log.info("권한 없음 예외 발생: {}", accessDeniedException);
+            resolver.resolveException(request, response, null, accessDeniedException);
+        }
     }
 }
