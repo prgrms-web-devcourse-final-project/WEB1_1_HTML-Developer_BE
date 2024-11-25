@@ -1,12 +1,15 @@
 package com.backend.allreva.member.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
-import com.backend.allreva.member.command.application.MemberCommandService;
+import com.backend.allreva.member.command.application.MemberInfoCommandService;
 import com.backend.allreva.member.command.application.MemberRepository;
-import com.backend.allreva.member.command.application.dto.MemberInfoUpdateRequest;
+import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,10 +20,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class MemberCommandTest {
+public class MemberInfoCommandTest {
 
     @InjectMocks
-    private MemberCommandService memberCommandService;
+    private MemberInfoCommandService memberInfoCommandService;
 
     @Mock
     private MemberRepository memberRepository;
@@ -38,16 +41,18 @@ public class MemberCommandTest {
     }
 
     @Test
-    void 회원_가입_시_회원_정보를_성공적으로_입력한다() {
+    void 회원_가입_시_회원_정보를_성공적으로_등록한다() {
         // given
-        MemberInfoUpdateRequest memberInfoUpdateRequest = new MemberInfoUpdateRequest(
+        MemberInfoRequest memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
-                "updated profile image url"
+                "updated profile image url",
+                List.of()
         );
+        given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        Member updatedMember = memberCommandService.updateMemberInfo(memberInfoUpdateRequest, member);
+        Member updatedMember = memberInfoCommandService.updateMemberInfo(memberInfoRequest, member);
 
         // then
         assertThat(updatedMember.getMemberInfo().getIntroduce()).isEqualTo("test introduce");
@@ -56,14 +61,16 @@ public class MemberCommandTest {
     @Test
     void 회원_정보를_성공적으로_수정한다() {
         // given
-        MemberInfoUpdateRequest memberInfoUpdateRequest = new MemberInfoUpdateRequest(
+        MemberInfoRequest memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
-                "updated profile image url"
+                "updated profile image url",
+                List.of()
         );
+        given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        Member updatedMember = memberCommandService.updateMemberInfo(memberInfoUpdateRequest, member);
+        Member updatedMember = memberInfoCommandService.updateMemberInfo(memberInfoRequest, member);
 
         // then
         assertThat(updatedMember.getMemberInfo().getIntroduce()).isEqualTo("test introduce");

@@ -49,7 +49,7 @@ public class Member extends BaseEntity {
     private MemberInfo memberInfo;
 
     @Convert(converter = RefundAccountConverter.class)
-    @Column(name = "refund_account")
+    @Column(name = "refund_account", nullable = false)
     private RefundAccount refundAccount;
 
     @Builder
@@ -105,6 +105,13 @@ public class Member extends BaseEntity {
         this.refundAccount = RefundAccount.builder()
                 .bank(bank)
                 .number(number)
+                .build();
+    }
+
+    public void setDefaultRefundAccount() {
+        this.refundAccount = RefundAccount.builder()
+                .bank("")
+                .number("")
                 .build();
     }
 

@@ -11,11 +11,25 @@ public class RefundAccountConverter implements AttributeConverter<RefundAccount,
 
     @Override
     public String convertToDatabaseColumn(RefundAccount attribute) {
+        if (attribute == null) {
+            return DELEMETER;
+        }
+        String bank = "";
+        String number = "";
+        if (attribute.getBank() != null) {
+            bank = attribute.getBank();
+        }
+        if (attribute.getNumber() != null) {
+            number = attribute.getNumber();
+        }
         return String.join(DELEMETER, attribute.getBank(), attribute.getNumber());
     }
 
     @Override
     public RefundAccount convertToEntityAttribute(String dbData) {
+        if (dbData.equals(DELEMETER)) {
+            return RefundAccount.builder().build();
+        }
         String[] split = dbData.split(",");
         return RefundAccount.builder()
                 .bank(split[0])

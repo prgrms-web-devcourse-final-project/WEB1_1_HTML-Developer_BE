@@ -1,8 +1,8 @@
 package com.backend.allreva.member.ui;
 
 import com.backend.allreva.auth.application.AuthMember;
-import com.backend.allreva.member.command.application.MemberCommandService;
-import com.backend.allreva.member.command.application.dto.MemberInfoUpdateRequest;
+import com.backend.allreva.member.command.application.MemberCommandFacade;
+import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,19 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/oauth2")
-public class OAuth2RegisterController {
+public class OAuth2Controller {
 
-    private final MemberCommandService memberCommandService;
+    private final MemberCommandFacade memberCommandFacade;
 
     @Operation(summary = "oauth2 회원가입", description = "oauth2 회원가입 시 회원 정보 입력 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "성공적으로 가입했습니다.", content = @Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "204", content = @Content(mediaType = "application/json"))
     })
     @PostMapping("/register")
     public ResponseEntity<Void> register(
             @AuthMember Member member,
-            @RequestBody MemberInfoUpdateRequest memberInfoUpdateRequest) {
-        memberCommandService.registerMember(memberInfoUpdateRequest, member);
+            @RequestBody MemberInfoRequest memberInfoRequest) {
+        memberCommandFacade.registerMember(memberInfoRequest, member);
 
         return ResponseEntity.noContent().build();
     }

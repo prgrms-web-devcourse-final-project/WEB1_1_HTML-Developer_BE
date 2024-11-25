@@ -2,13 +2,11 @@ package com.backend.allreva.member.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.given;
 
-import com.backend.allreva.member.command.application.MemberCommandService;
+import com.backend.allreva.member.command.application.MemberInfoCommandService;
 import com.backend.allreva.member.command.application.MemberRepository;
-import com.backend.allreva.member.command.application.dto.RefundAccountRegisterRequest;
+import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class RefundAccountCommandTest {
 
     @InjectMocks
-    private MemberCommandService memberCommandService;
+    private MemberInfoCommandService memberInfoCommandService;
 
     @Mock
     private MemberRepository memberRepository;
@@ -45,36 +43,25 @@ public class RefundAccountCommandTest {
     @Test
     void 환불_계좌_정보를_성공적으로_등록한다() {
         // given
-        RefundAccountRegisterRequest refundAccountRegisterRequest = new RefundAccountRegisterRequest("땡땡은행", "123456789");
+        RefundAccountRequest refundAccountRequest = new RefundAccountRequest("땡땡은행", "123456789");
+        given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        Member registered = memberCommandService.registerRefundAccount(refundAccountRegisterRequest, member);
+        Member registered = memberInfoCommandService.registerRefundAccount(refundAccountRequest, member);
 
         // then
         assertThat(registered.getRefundAccount().getBank()).isEqualTo("땡땡은행");
     }
 
     @Test
-    void 환불_계좌_정보를_성공적으로_수정한다() {
-        // given
-        RefundAccountRegisterRequest refundAccountRegisterRequest = new RefundAccountRegisterRequest("땡땡은행", "123456789");
-
-        // when
-        Member updated = memberCommandService.updateRefundAccount(refundAccountRegisterRequest, member);
-
-        // then
-        assertThat(updated.getRefundAccount().getBank()).isEqualTo("땡땡은행");
-    }
-
-    @Test
     void 환불_계좌_정보를_성공적으로_삭제한다() {
         // given
-        willDoNothing().given(memberRepository).delete(any(Member.class));
+        given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        memberCommandService.deleteRefundAccount(member);
+        Member deleted = memberInfoCommandService.deleteRefundAccount(member);
 
         // then
-        verify(memberRepository, times(1)).delete(any(Member.class));
+        assertThat(deleted.getRefundAccount().getBank()).isEqualTo("");
     }
 }

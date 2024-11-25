@@ -1,8 +1,15 @@
 package com.backend.allreva.member.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -24,8 +31,7 @@ public class MemberArtist extends BaseEntity {
     private String artistId;
 
     @Builder
-    private MemberArtist(Long id, Long memberId, String artistId) {
-        this.id = id;
+    private MemberArtist(Long memberId, String artistId) {
         this.memberId = memberId;
         this.artistId = artistId;
     }
