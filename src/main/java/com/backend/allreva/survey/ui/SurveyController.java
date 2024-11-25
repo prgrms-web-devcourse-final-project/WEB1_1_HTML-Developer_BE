@@ -10,14 +10,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/surveys")
+@RequestMapping("/api/v1/surveys/form")
 @Tag(name = "수요조사 API Controller")
 public class SurveyController {
     private final SurveyCommandService surveyCommandService;
@@ -27,6 +24,15 @@ public class SurveyController {
     public Response<SurveyIdResponse> openSurvey(@AuthMember Member member,
                                                  @Valid @RequestBody OpenSurveyRequest openSurveyRequest) {
         return Response.onSuccess(surveyCommandService.openSurvey(member.getId(), openSurveyRequest));
+    }
+
+
+    @Operation(summary = "수요조사 삭제 API", description = "수요조사를 삭제합니다.")
+    @DeleteMapping
+    public Response<SurveyIdResponse> removeSurvey(@AuthMember Member member,
+                                                   @RequestParam(name = "surveyId") Long surveyId) {
+        surveyCommandService.removeSurvey(member.getId(), surveyId);
+        return Response.onSuccess();
     }
 
 }

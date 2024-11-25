@@ -21,7 +21,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,6 +42,8 @@ class SurveyControllerTest extends ControllerTestSupport {
     @MockBean
     private SurveyCommandService surveyCommandService;
 
+    private static final String BASE_URI = "/api/v1/surveys/form";
+
     @Test
     @WithCustomMockUser
     @DisplayName("설문조사 개설에 성공한다.")
@@ -48,19 +52,38 @@ class SurveyControllerTest extends ControllerTestSupport {
         OpenSurveyRequest request = new OpenSurveyRequest("하현상 콘서트: Elegy [서울]",
                 1L, List.of("2024.11.30(토)", "2024.12.01(일)"),
                 "하현상", Region.SEOUL, LocalDate.now(),
-                25,"이틀 모두 운영합니다.");
+                25, "이틀 모두 운영합니다.");
         SurveyIdResponse response = new SurveyIdResponse(1L);
 
         // Mocking
-        doReturn(response).when(surveyCommandService).openSurvey(any(),any());
+        doReturn(response).when(surveyCommandService).openSurvey(any(), any());
 
         // When & Then
-        mockMvc.perform(post("/api/v1/surveys")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.surveyId").value(1L))
+        ;
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("설문조사 삭제에 성공한다.")
+    void deleteSurvey() throws Exception {
+        // Given
+        Long surveyId = 1L;
+
+        // Mocking
+        doNothing().when(surveyCommandService).removeSurvey(any(), any());
+
+        // When & Then
+        mockMvc.perform(delete(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("surveyId", String.valueOf(surveyId)))
+                .andDo(print())
+                .andExpect(status().isOk())
         ;
     }
 
