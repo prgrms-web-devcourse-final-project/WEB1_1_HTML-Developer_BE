@@ -27,7 +27,7 @@ jobs:
         env:
           discovery.type: single-node
           ELASTIC_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
-          xpack.security.enabled: false
+          xpack.security.enabled: false
         options: >-
           --health-cmd="curl -u elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health"
           --health-interval=10s
