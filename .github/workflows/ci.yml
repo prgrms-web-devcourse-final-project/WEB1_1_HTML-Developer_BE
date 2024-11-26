@@ -21,7 +21,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
       elasticsearch:
-        image: elasticsearch:7.17.10
+        image: elasticsearch:8.16.0
         ports:
           - 9200:9200
         env:
