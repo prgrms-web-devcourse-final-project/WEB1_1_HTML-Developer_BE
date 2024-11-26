@@ -21,15 +21,15 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
       elasticsearch:
-        image: elasticsearch:8.16.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.16.0
         ports:
           - 9200:9200
         env:
           discovery.type: single-node
-          ELASTIC_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
           xpack.security.enabled: false
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
         options: >-
-          --health-cmd="curl -u elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health"
+          --health-cmd="curl http://localhost:9200/_cluster/health"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -42,6 +42,45 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Install Elasticsearch Plugin
+        run: |
+          docker exec ${{ job.services.elasticsearch.id }} elasticsearch-plugin install analysis-nori
+
+      - name: Create Elasticsearch mapping
+        run: |
+          cat << EOF > elasticsearch_mapping.json
+          {
+            "mappings": {
+              "properties": {
+                "text": {
+                  "type": "text",
+                  "analyzer": "korean_mixed"
+                }
+              }
+            },
+            "settings": {
+              "analysis": {
+                "analyzer": {
+                  "korean_mixed": {
+                    "type": "custom",
+                    "tokenizer": "nori_tokenizer",
+                    "filter": [
+                      "nori_readingform",
+                      "lowercase",
+                      "nori_part_of_speech",
+                      "nori_number"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+          EOF
+
+      - name: Apply Elasticsearch mapping
+        run: |
+          curl -X PUT "localhost:9200/your_index_name" -H "Content-Type: application/json" -d @elasticsearch_mapping.json
 
       - name: Create resource directories
         run: |
@@ -63,8 +102,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Wait for MySQL to be ready
-        run: sleep 30
+      - name: Wait for services to be ready
+        run: |
+          sleep 30
+          curl -X GET "http://localhost:9200/_cluster/health"
 
       - name: Run tests
         run: ./gradlew test
