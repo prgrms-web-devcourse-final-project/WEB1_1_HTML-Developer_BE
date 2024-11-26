@@ -7,6 +7,8 @@ import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
 import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.survey.query.application.SurveyQueryService;
+import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "수요조사 API Controller")
 public class SurveyController {
     private final SurveyCommandService surveyCommandService;
+    private final SurveyQueryService surveyQueryService;
 
     @Operation(summary = "수요조사 개설 API", description = "수요조사를 개설합니다.")
     @PostMapping
@@ -45,4 +48,9 @@ public class SurveyController {
         return Response.onSuccess();
     }
 
+    @Operation(summary = "수요조사 상세 조회 API", description = "수요조사를 상세조회합니다.")
+    @GetMapping("/{id}")
+    public Response<SurveyDetailResponse> findSurveyDetail(@PathVariable(name = "id") Long surveyId) {
+        return Response.onSuccess(surveyQueryService.findSurveyDetail(surveyId));
+    }
 }
