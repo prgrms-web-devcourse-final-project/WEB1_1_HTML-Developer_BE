@@ -20,19 +20,6 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.16.0
-        ports:
-          - 9200:9200
-        env:
-          discovery.type: single-node
-          xpack.security.enabled: false
-          ES_JAVA_OPTS: -Xms512m -Xmx512m
-        options: >-
-          --health-cmd="curl http://localhost:9200/_cluster/health"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
 
     steps:
       - uses: actions/checkout@v3
@@ -42,59 +29,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Install Elasticsearch Plugin and Restart
-        run: |
-          docker exec ${{ job.services.elasticsearch.id }} elasticsearch-plugin install analysis-nori
-          docker restart ${{ job.services.elasticsearch.id }}
-          sleep 30
-
-      - name: Configure Elasticsearch
-        run: |
-          cat << EOF > es_settings.json
-          {
-            "settings": {
-              "analysis": {
-                "tokenizer": {
-                  "nori_tokenizer": {
-                    "type": "nori_tokenizer"
-                  }
-                },
-                "analyzer": {
-                  "korean_mixed": {
-                    "type": "custom",
-                    "tokenizer": "nori_tokenizer",
-                    "filter": [
-                      "nori_readingform",
-                      "lowercase",
-                      "nori_part_of_speech",
-                      "nori_number"
-                    ]
-                  }
-                }
-              }
-            },
-            "mappings": {
-              "properties": {
-                "title": {
-                  "type": "text",
-                  "analyzer": "korean_mixed"
-                },
-                "content": {
-                  "type": "text",
-                  "analyzer": "korean_mixed"
-                }
-              }
-            }
-          }
-          EOF
-          curl -X PUT "localhost:9200/your_index_name" -H "Content-Type: application/json" -d @es_settings.json
-
-      - name: Verify Elasticsearch Configuration
-        run: |
-          curl -X GET "localhost:9200/_cat/plugins"
-          curl -X GET "localhost:9200/your_index_name/_settings"
-          curl -X GET "localhost:9200/your_index_name/_mapping"
 
       - name: Create resource directories
         run: |
@@ -116,15 +50,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Wait for services to be ready
-        run: |
-          sleep 30
-          curl -X GET "http://localhost:9200/_cluster/health"
-          curl -X GET "localhost:3306" || true
-          redis-cli ping || true
-
-      - name: Build with Gradle
-        run: ./gradlew build -x test
+      - name: Wait for MySQL to be ready
+        run: sleep 30
 
       - name: Run tests
         run: ./gradlew test

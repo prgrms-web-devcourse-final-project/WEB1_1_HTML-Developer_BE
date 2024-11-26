@@ -15,7 +15,7 @@ import java.time.Duration;
 @Configuration
 @EnableElasticsearchRepositories
 public class ElasticSearchConfig extends ElasticsearchConfiguration {
-    @Value("${spring.data.elasticsearch.url}")
+    @Value("${spring.data.elasticsearch.uris}")
     private String url;
     @Value("${spring.data.elasticsearch.username}")
     private String username;
@@ -26,6 +26,7 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
                 .connectedTo(url)
+                .usingSsl()
                 .withBasicAuth(username, password)
                 .withConnectTimeout(Duration.ofSeconds(5))
                 .withSocketTimeout(Duration.ofSeconds(3))
