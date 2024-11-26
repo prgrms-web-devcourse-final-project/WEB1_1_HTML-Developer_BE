@@ -74,7 +74,7 @@ jobs:
         # 이메일 회원가입을 진행했다면, DOCKER_PASSWORD에는 token값을 적으면 된다
         # 도커 유저네임에는 도커허브 이름을 적는다(이메일이 아님)
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} --password-stdin
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/allreva .
           docker push ${{ secrets.DOCKER_USERNAME }}/allreva
 
