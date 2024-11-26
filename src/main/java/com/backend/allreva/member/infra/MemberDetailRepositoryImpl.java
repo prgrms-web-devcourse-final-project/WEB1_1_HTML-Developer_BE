@@ -30,7 +30,7 @@ public class MemberDetailRepositoryImpl implements MemberDetailRepository {
     }
 
     private ConstructorExpression<MemberDetail> memberDetailProjections() {
-        ConstructorExpression<MemberDetail> constructor = Projections.constructor(MemberDetail.class,
+        return Projections.constructor(MemberDetail.class,
                 member.email.email,
                 member.memberInfo.nickname,
                 member.memberInfo.introduce,
@@ -41,6 +41,5 @@ public class MemberDetailRepositoryImpl implements MemberDetailRepository {
                 )),
                 member.refundAccount
         );
-        return constructor;
     }
 }
