@@ -1,6 +1,7 @@
 package com.backend.allreva.member.ui;
 
 import com.backend.allreva.auth.application.AuthMember;
+import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
@@ -34,11 +35,11 @@ public class MemberController {
             @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
     })
     @GetMapping
-    public ResponseEntity<MemberDetail> getMemberDetail(
+    public ResponseEntity<Response<MemberDetail>> getMemberDetail(
             @AuthMember Member member
     ) {
         return ResponseEntity.ok()
-                .body(memberQueryService.findById(member.getId()));
+                .body(Response.onSuccess(memberQueryService.getById(member.getId())));
     }
 
     @Operation(summary = "회원 프로필 수정", description = "회원 프로필 수정 API")

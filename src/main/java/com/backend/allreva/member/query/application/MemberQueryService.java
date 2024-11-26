@@ -11,7 +11,7 @@ public class MemberQueryService {
 
     private final MemberDetailRepository memberDetailRepository;
 
-    public MemberDetail findById(Long id) {
+    public MemberDetail getById(Long id) {
         return memberDetailRepository.findById(id);
     }
 }
