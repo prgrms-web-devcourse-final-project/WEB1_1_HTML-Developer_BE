@@ -20,7 +20,20 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
-      
+      elasticsearch:
+        image: elasticsearch:7.17.10
+        ports:
+          - 9200:9200
+        env:
+          discovery.type: single-node
+          ELASTIC_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
+          xpack.security.enabled: true
+        options: >-
+          --health-cmd="curl -u elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - uses: actions/checkout@v3
 
