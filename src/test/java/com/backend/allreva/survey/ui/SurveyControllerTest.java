@@ -119,7 +119,7 @@ class SurveyControllerTest extends ControllerTestSupport {
     void findSurveyDetail() throws Exception {
         // Given
         Long surveyId = 1L;
-        SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.", List.of(LocalDate.now()), "정보정보");
+        SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.", List.of(LocalDate.now()), "정보정보",false);
 
         // Mocking
         doReturn(response).when(surveyQueryService).findSurveyDetail(any());

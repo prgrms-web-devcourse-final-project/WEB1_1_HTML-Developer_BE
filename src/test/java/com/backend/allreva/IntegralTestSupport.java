@@ -1,6 +1,5 @@
 package com.backend.allreva;
 
-import com.backend.allreva.common.config.JpaAuditingConfig;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
@@ -9,13 +8,11 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest
-@MockBean(JpaAuditingConfig.class)
 public abstract class IntegralTestSupport {
     // 테스트용 Member 객체 생성
     protected Member createTestMember() {
