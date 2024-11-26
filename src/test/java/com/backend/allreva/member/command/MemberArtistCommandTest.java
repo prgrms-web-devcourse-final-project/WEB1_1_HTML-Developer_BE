@@ -3,7 +3,10 @@ package com.backend.allreva.member.command;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.given;
 
+import com.backend.allreva.artist.command.ArtistCommandService;
+import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.member.command.application.MemberArtistCommandService;
 import com.backend.allreva.member.command.application.MemberArtistRepository;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
@@ -28,6 +31,9 @@ public class MemberArtistCommandTest {
     @Mock
     private MemberArtistRepository memberArtistRepository;
 
+    @Mock
+    private ArtistCommandService artistCommandService;
+
     Member member;
 
     @BeforeEach
@@ -43,9 +49,13 @@ public class MemberArtistCommandTest {
     @Test
     void 관심_아티스트를_성공적으로_수정한다() {
         // given
+        Artist artist = Artist.builder()
+                .id("spotify_1L")
+                .name("하현상")
+                .build();
+        given(artistCommandService.getArtistById(any(String.class))).willReturn(artist);
         List<MemberArtistRequest> requests = List.of(
-                new MemberArtistRequest("spotify_1L"),
-                new MemberArtistRequest("spotify_2L")
+                new MemberArtistRequest("spotify_1L")
         );
 
         // when
