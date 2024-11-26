@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,8 +54,8 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     void tearDown() {
         memberRepository.deleteAllInBatch();
         surveyCommandRepository.deleteAllInBatch();
-        concertRepository.deleteAllInBatch();
         surveyJoinCommandRepository.deleteAllInBatch();
+        concertRepository.deleteAllInBatch();
     }
 
     @Test
@@ -105,6 +106,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
 
     @Test
     @DisplayName("수요조사 폼 삭제에 성공한다.")
+    @Transactional //softDelete로 인해 tearDown으로 삭제되지 않음
     public void removeSurvey() {
         // Given
         OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
