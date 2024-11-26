@@ -1,4 +1,4 @@
-package com.backend.allreva.member.command.application;
+package com.backend.allreva.member.command.domain;
 
 import java.util.Optional;
 
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
-import com.backend.allreva.member.command.domain.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {

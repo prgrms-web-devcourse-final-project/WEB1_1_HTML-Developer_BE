@@ -11,7 +11,7 @@ import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.auth.oauth2.application.dto.OAuth2UserInfo;
 import com.backend.allreva.auth.oauth2.exception.UnsupportedProviderException;
 import com.backend.allreva.common.model.Email;
-import com.backend.allreva.member.command.application.MemberRepository;
+import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.Member;
 

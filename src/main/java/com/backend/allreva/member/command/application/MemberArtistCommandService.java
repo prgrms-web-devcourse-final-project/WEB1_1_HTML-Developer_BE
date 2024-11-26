@@ -4,6 +4,7 @@ import com.backend.allreva.artist.command.ArtistCommandService;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberArtist;
+import com.backend.allreva.member.command.domain.MemberArtistRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

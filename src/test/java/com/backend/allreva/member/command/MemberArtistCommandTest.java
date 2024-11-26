@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.backend.allreva.artist.command.ArtistCommandService;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.member.command.application.MemberArtistCommandService;
-import com.backend.allreva.member.command.application.MemberArtistRepository;
+import com.backend.allreva.member.command.domain.MemberArtistRepository;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;

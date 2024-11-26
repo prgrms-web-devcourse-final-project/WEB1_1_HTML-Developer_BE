@@ -3,6 +3,7 @@ package com.backend.allreva.member.command.application;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.member.command.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

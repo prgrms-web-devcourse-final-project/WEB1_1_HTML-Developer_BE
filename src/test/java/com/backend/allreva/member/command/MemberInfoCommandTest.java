@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.backend.allreva.member.command.application.MemberInfoCommandService;
-import com.backend.allreva.member.command.application.MemberRepository;
+import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;

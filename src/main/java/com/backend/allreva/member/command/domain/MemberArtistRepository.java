@@ -1,6 +1,5 @@
-package com.backend.allreva.member.command.application;
+package com.backend.allreva.member.command.domain;
 
-import com.backend.allreva.member.command.domain.MemberArtist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
