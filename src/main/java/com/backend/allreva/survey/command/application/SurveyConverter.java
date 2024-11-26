@@ -15,7 +15,7 @@ public class SurveyConverter {
                 .concertId(request.concertId())
                 .title(request.title())
                 .boardingDate(request.boardingDate().stream().map(DataConverter::convertToLocalDateFromDateWithDay).toList())
-                .eddate(request.eddate())
+                .endDate(request.eddate())
                 .information(request.information())
                 .artistName(request.artistName())
                 .region(request.region())

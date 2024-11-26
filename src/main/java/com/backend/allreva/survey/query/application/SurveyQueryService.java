@@ -1,9 +1,15 @@
 package com.backend.allreva.survey.query.application;
 
+import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -13,5 +19,9 @@ public class SurveyQueryService {
 
     public SurveyDetailResponse findSurveyDetail(Long surveyId) {
         return surveyQueryRepository.findSurveyDetail(surveyId);
+    }
+
+    public List<SurveySummaryResponse> findSurveyList(Region region, SortType sortType, Long lastId, LocalDate lastEndDate, int pageSize) {
+        return surveyQueryRepository.findSurveyList(region, sortType, lastId, lastEndDate, pageSize);
     }
 }
