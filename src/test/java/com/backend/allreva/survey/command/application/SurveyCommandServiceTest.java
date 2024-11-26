@@ -62,7 +62,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
                 testConcert.getId(),
                 of("2024.11.30(토)", "2024.12.01(일)"),
                 "하현상",
-                Region.SEOUL,
+                Region.서울,
                 LocalDate.now(),
                 25,
                 "이틀 모두 운영합니다."
@@ -87,7 +87,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
                 200000L,
                 of("2024.11.30(토)", "2024.12.01(일)"),
                 "하현상",
-                Region.SEOUL,
+                Region.서울,
                 LocalDate.now(),
                 25,
                 "이틀 모두 운영합니다."
@@ -108,7 +108,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
                 testConcert.getId(),
                 of("2024.11.30(토)", "2024.12.01(일)"),
                 "하현상",
-                Region.SEOUL,
+                Region.서울,
                 LocalDate.now(),
                 25,
                 "이틀 모두 운영합니다."
@@ -134,7 +134,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
                 testConcert.getId(),
                 of("2024.11.30(토)", "2024.12.01(일)"),
                 "하현상",
-                Region.SEOUL,
+                Region.서울,
                 LocalDate.now(),
                 25,
                 "이틀 모두 운영합니다."
@@ -143,7 +143,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
         UpdateSurveyRequest updateSurveyRequest = new UpdateSurveyRequest(
                 "하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.",
                 List.of("2024.12.01(일)"),
-                Region.SEOUL,
+                Region.서울,
                 LocalDate.now().plusDays(3),
                 25,
                 "일요일만 운영합니다."
@@ -175,7 +175,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     }
 
     @Test
-    @DisplayName("작성자와 로그인 멤버가 같지않아  폼 삭제에 실패한다.")
+    @DisplayName("작성자와 로그인 멤버가 같지않아 폼 삭제에 실패한다.")
     public void failRemoveSurveyWithNotWriterException() {
         // Given
         OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
@@ -183,7 +183,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
                 testConcert.getId(),
                 of("2024.11.30(토)", "2024.12.01(일)"),
                 "하현상",
-                Region.SEOUL,
+                Region.서울,
                 LocalDate.now(),
                 25,
                 "이틀 모두 운영합니다."

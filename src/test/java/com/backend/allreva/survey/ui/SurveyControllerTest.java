@@ -46,12 +46,12 @@ class SurveyControllerTest extends ControllerTestSupport {
 
     @Test
     @WithCustomMockUser
-    @DisplayName("설문조사 개설에 성공한다.")
+    @DisplayName("수요조사 개설에 성공한다.")
     void openSurvey() throws Exception {
         // Given
         OpenSurveyRequest request = new OpenSurveyRequest("하현상 콘서트: Elegy [서울]",
                 1L, List.of("2024.11.30(토)", "2024.12.01(일)"),
-                "하현상", Region.SEOUL, LocalDate.now(),
+                "하현상", Region.서울, LocalDate.now(),
                 25, "이틀 모두 운영합니다.");
         SurveyIdResponse response = new SurveyIdResponse(1L);
 
@@ -70,13 +70,13 @@ class SurveyControllerTest extends ControllerTestSupport {
 
     @Test
     @WithCustomMockUser
-    @DisplayName("설문조사 수정에 성공한다.")
+    @DisplayName("수요조사 수정에 성공한다.")
     void updateSurvey() throws Exception {
         // Given
         Long surveyId = 1L;
         UpdateSurveyRequest request = new UpdateSurveyRequest("하현상 콘서트: Elegy [서울]",
                 List.of("2024.11.30(토)", "2024.12.01(일)"),
-                Region.SEOUL, LocalDate.now(),
+                Region.서울, LocalDate.now(),
                 25, "이틀 모두 운영합니다.");
 
         // Mocking
@@ -94,7 +94,7 @@ class SurveyControllerTest extends ControllerTestSupport {
 
     @Test
     @WithCustomMockUser
-    @DisplayName("설문조사 삭제에 성공한다.")
+    @DisplayName("수요조사 삭제에 성공한다.")
     void deleteSurvey() throws Exception {
         // Given
         Long surveyId = 1L;
