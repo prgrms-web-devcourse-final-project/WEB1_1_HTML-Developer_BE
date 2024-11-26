@@ -53,15 +53,15 @@ public class SurveyController {
     }
 
     @Operation(summary = "수요조사 상세 조회 API", description = "수요조사를 상세조회합니다.")
-    @GetMapping("/{id}")
-    public Response<SurveyDetailResponse> findSurveyDetail(@PathVariable(name = "id") Long surveyId) {
+    @GetMapping("/{surveyId}")
+    public Response<SurveyDetailResponse> findSurveyDetail(@PathVariable(name = "surveyId") Long surveyId) {
         return Response.onSuccess(surveyQueryService.findSurveyDetail(surveyId));
     }
 
     @Operation(summary = "수요조사 응답 제출 API", description = "수요조사에 대한 응답을 제출합니다.")
-    @PostMapping("/{id}/response")
+    @PostMapping("/{surveyId}/response")
     public Response<SurveyJoinIdResponse> createSurveyResponse(@AuthMember Member member,
-                                                               @PathVariable(name = "id") Long surveyId,
+                                                               @PathVariable(name = "surveyId") Long surveyId,
                                                                @Valid @RequestBody JoinSurveyRequest surveyJoinRequest) {
         return Response.onSuccess(surveyCommandService.createSurveyResponse(member.getId(), surveyId, surveyJoinRequest));
     }
