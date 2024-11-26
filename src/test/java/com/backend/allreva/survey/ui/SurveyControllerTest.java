@@ -5,9 +5,8 @@ import com.backend.allreva.WithCustomMockUser;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
 import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.*;
+import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
@@ -41,98 +40,121 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class SurveyControllerTest extends ControllerTestSupport {
 
-        @MockBean
-        private SurveyCommandService surveyCommandService;
-        @MockBean
-        private SurveyQueryService surveyQueryService;
+    @MockBean
+    private SurveyCommandService surveyCommandService;
+    @MockBean
+    private SurveyQueryService surveyQueryService;
 
-        private static final String BASE_URI = "/api/v1/surveys/form";
+    private static final String BASE_URI = "/api/v1/surveys";
 
-        @Test
-        @WithCustomMockUser
-        @DisplayName("수요조사 개설에 성공한다.")
-        void openSurvey() throws Exception {
-            // Given
-            OpenSurveyRequest request = new OpenSurveyRequest("하현상 콘서트: Elegy [서울]",
-                    1L, List.of("2024.11.30(토)", "2024.12.01(일)"),
-                    "하현상", Region.서울, LocalDate.now(),
-                    25, "이틀 모두 운영합니다.");
-            SurveyIdResponse response = new SurveyIdResponse(1L);
+    @Test
+    @WithCustomMockUser
+    @DisplayName("수요조사 개설에 성공한다.")
+    void openSurvey() throws Exception {
+        // Given
+        OpenSurveyRequest request = new OpenSurveyRequest("하현상 콘서트: Elegy [서울]",
+                1L, List.of("2024.11.30(토)", "2024.12.01(일)"),
+                "하현상", Region.서울, LocalDate.now(),
+                25, "이틀 모두 운영합니다.");
+        SurveyIdResponse response = new SurveyIdResponse(1L);
 
-            // Mocking
-            doReturn(response).when(surveyCommandService).openSurvey(any(), any());
+        // Mocking
+        doReturn(response).when(surveyCommandService).openSurvey(any(), any());
 
-            // When & Then
-            mockMvc.perform(post(BASE_URI)
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .content(objectMapper.writeValueAsString(request)))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.result.surveyId").value(1L))
-            ;
-        }
+        // When & Then
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.surveyId").value(1L))
+        ;
+    }
 
-        @Test
-        @WithCustomMockUser
-        @DisplayName("수요조사 수정에 성공한다.")
-        void updateSurvey() throws Exception {
-            // Given
-            Long surveyId = 1L;
-            UpdateSurveyRequest request = new UpdateSurveyRequest("하현상 콘서트: Elegy [서울]",
-                    List.of("2024.11.30(토)", "2024.12.01(일)"),
-                    Region.서울, LocalDate.now(),
-                    25, "이틀 모두 운영합니다.");
+    @Test
+    @WithCustomMockUser
+    @DisplayName("수요조사 수정에 성공한다.")
+    void updateSurvey() throws Exception {
+        // Given
+        Long surveyId = 1L;
+        UpdateSurveyRequest request = new UpdateSurveyRequest("하현상 콘서트: Elegy [서울]",
+                List.of("2024.11.30(토)", "2024.12.01(일)"),
+                Region.서울, LocalDate.now(),
+                25, "이틀 모두 운영합니다.");
 
-            // Mocking
-            doNothing().when(surveyCommandService).updateSurvey(any(), any(), any());
+        // Mocking
+        doNothing().when(surveyCommandService).updateSurvey(any(), any(), any());
 
-            // When & Then
-            mockMvc.perform(patch(BASE_URI)
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .param("surveyId", String.valueOf(surveyId))
-                            .content(objectMapper.writeValueAsString(request)))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-            ;
-        }
+        // When & Then
+        mockMvc.perform(patch(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("surveyId", String.valueOf(surveyId))
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+    }
 
-        @Test
-        @WithCustomMockUser
-        @DisplayName("수요조사 삭제에 성공한다.")
-        void deleteSurvey() throws Exception {
-            // Given
-            Long surveyId = 1L;
+    @Test
+    @WithCustomMockUser
+    @DisplayName("수요조사 삭제에 성공한다.")
+    void deleteSurvey() throws Exception {
+        // Given
+        Long surveyId = 1L;
 
-            // Mocking
-            doNothing().when(surveyCommandService).removeSurvey(any(), any());
+        // Mocking
+        doNothing().when(surveyCommandService).removeSurvey(any(), any());
 
-            // When & Then
-            mockMvc.perform(delete(BASE_URI)
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .param("surveyId", String.valueOf(surveyId)))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-            ;
-        }
+        // When & Then
+        mockMvc.perform(delete(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("surveyId", String.valueOf(surveyId)))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+    }
 
-        @Test
-        @DisplayName("수요조사 상세 조회에 성공한다.")
-        void findSurveyDetail() throws Exception {
-            // Given
-            Long surveyId = 1L;
-            SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.",List.of(LocalDate.now()), "정보정보");
+    @Test
+    @DisplayName("수요조사 상세 조회에 성공한다.")
+    void findSurveyDetail() throws Exception {
+        // Given
+        Long surveyId = 1L;
+        SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.", List.of(LocalDate.now()), "정보정보");
 
-            // Mocking
-            doReturn(response).when(surveyQueryService).findSurveyDetail(any());
+        // Mocking
+        doReturn(response).when(surveyQueryService).findSurveyDetail(any());
 
-            // When & Then
-            mockMvc.perform(get(BASE_URI+"/{id}", surveyId)
-                            .contentType(MediaType.APPLICATION_JSON_VALUE))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.result.surveyId").value(1L))
-                    .andExpect(jsonPath("$.result.title").value("하현상 콘서트 차대절 수요조사합니다."))
-            ;
-        }
+        // When & Then
+        mockMvc.perform(get(BASE_URI + "/{id}", surveyId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.surveyId").value(1L))
+                .andExpect(jsonPath("$.result.title").value("하현상 콘서트 차대절 수요조사합니다."))
+        ;
+    }
 
+    @Test
+    @WithCustomMockUser
+    @DisplayName("수요조사 응답에 성공한다.")
+    void createSurveyJoin() throws Exception {
+        // Given
+        Long surveyId = 1L;
+        JoinSurveyRequest request = new JoinSurveyRequest(
+                "2024.11.30(토)", BoardingType.DOWN, 2, true
+        );
+        SurveyJoinIdResponse response = new SurveyJoinIdResponse(1L);
+
+        // Mocking
+        doReturn(response).when(surveyCommandService).createSurveyResponse(any(), any(), any());
+
+        // When & Then
+        mockMvc.perform(post(BASE_URI + "/{id}/response", surveyId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.surveyJoinId").value(1L))
+        ;
+    }
 }

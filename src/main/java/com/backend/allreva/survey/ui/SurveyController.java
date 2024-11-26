@@ -4,9 +4,7 @@ import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/surveys/form")
+@RequestMapping("/api/v1/surveys")
 @Tag(name = "수요조사 API Controller")
 public class SurveyController {
     private final SurveyCommandService surveyCommandService;
@@ -53,4 +51,14 @@ public class SurveyController {
     public Response<SurveyDetailResponse> findSurveyDetail(@PathVariable(name = "id") Long surveyId) {
         return Response.onSuccess(surveyQueryService.findSurveyDetail(surveyId));
     }
+
+    @Operation(summary = "수요조사 응답 제출 API", description = "수요조사에 대한 응답을 제출합니다.")
+    @PostMapping("/{id}/response")
+    public Response<SurveyJoinIdResponse> createSurveyResponse(@AuthMember Member member,
+                                                               @PathVariable(name = "id") Long surveyId,
+                                                               @Valid @RequestBody JoinSurveyRequest surveyJoinRequest) {
+        return Response.onSuccess(surveyCommandService.createSurveyResponse(member.getId(), surveyId, surveyJoinRequest));
+    }
+
+
 }

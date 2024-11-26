@@ -6,10 +6,10 @@ import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.command.domain.exception.ConcertNotFoundException;
 import com.backend.allreva.member.command.application.MemberRepository;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.Survey;
+import com.backend.allreva.survey.command.domain.SurveyJoin;
+import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
 import com.backend.allreva.survey.exception.SurveyNotWriterException;
@@ -35,6 +35,8 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     @Autowired
     private SurveyCommandRepository surveyCommandRepository;
     @Autowired
+    private SurveyJoinCommandRepository surveyJoinCommandRepository;
+    @Autowired
     private ConcertRepository concertRepository;
     private Member testMember;
     private Concert testConcert;
@@ -49,8 +51,10 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
 
     @AfterEach
     void tearDown() {
-        memberRepository.flush();
-        surveyCommandRepository.deleteAll();
+        memberRepository.deleteAllInBatch();
+        surveyCommandRepository.deleteAllInBatch();
+        concertRepository.deleteAllInBatch();
+        surveyJoinCommandRepository.deleteAllInBatch();
     }
 
     @Test
@@ -196,6 +200,37 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
         assertThrows(SurveyNotWriterException.class, () -> {
             surveyCommandService.removeSurvey(999999999L, response.surveyId());
         });
+    }
+
+    @Test
+    @DisplayName("수요조사 응답에 성공한다.")
+    public void createSurveyResponse() {
+        // Given
+        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
+                "하현상 콘서트: Elegy [서울]",
+                testConcert.getId(),
+                of("2024.11.30(토)", "2024.12.01(일)"),
+                "하현상",
+                Region.서울,
+                LocalDate.now(),
+                25,
+                "이틀 모두 운영합니다."
+        );
+
+        JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(
+                "2024.11.30(토)", BoardingType.DOWN, 2, true
+        );
+
+        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+
+        // When
+        Long surveyJoinId = surveyCommandService.createSurveyResponse(testMember.getId(), response.surveyId(), joinSurveyRequest).surveyJoinId();
+        SurveyJoin savedSurveyJoin = surveyJoinCommandRepository.findById(surveyJoinId).orElse(null);
+        // Then
+        assertNotNull(surveyJoinId);
+        assertNotNull(savedSurveyJoin);
+        assertEquals(response.surveyId(), savedSurveyJoin.getSurveyId());
+        assertEquals(LocalDate.of(2024,11,30), savedSurveyJoin.getBoardingDate());
     }
 
 }

@@ -4,18 +4,18 @@ import com.backend.allreva.common.application.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+
+@Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE survey_join SET deleted_at = NOW() WHERE id = ?")
 public class SurveyJoin extends BaseEntity {
@@ -41,4 +41,15 @@ public class SurveyJoin extends BaseEntity {
 
     @Column(nullable = false)
     private Long memberId;
+
+    @Builder
+    public SurveyJoin(Long memberId, Long surveyId, LocalDate boardingDate, BoardingType boardingType, int passengerNum, boolean notified) {
+        this.memberId = memberId;
+        this.surveyId = surveyId;
+        this.boardingDate = boardingDate;
+        this.boardingType = boardingType;
+        this.passengerNum = passengerNum;
+        this.notified = notified;
+
+    }
 }

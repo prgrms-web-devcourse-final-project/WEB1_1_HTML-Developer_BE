@@ -9,7 +9,6 @@ import com.backend.allreva.survey.command.application.SurveyCommandRepository;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
-import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -50,8 +49,8 @@ public class SurveyQueryServiceTest extends IntegralTestSupport {
 
     @AfterEach
     void tearDown() {
-        memberRepository.flush();
-        surveyCommandRepository.deleteAll();
+        memberRepository.deleteAllInBatch();
+        surveyCommandRepository.deleteAllInBatch();
     }
 
     @Test

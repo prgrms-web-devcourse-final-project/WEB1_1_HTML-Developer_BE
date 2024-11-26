@@ -15,7 +15,7 @@ public record OpenSurveyRequest(
         String artistName,
         Region region,
         LocalDate eddate,
-        @Min(value = 0, message = "탑승 인원 수는 0명 이상이어야 합니다.")
+        @Min(value = 1, message = "탑승 인원 수는 1명 이상이어야 합니다.")
         int maxPassenger,
         String information
 ) {

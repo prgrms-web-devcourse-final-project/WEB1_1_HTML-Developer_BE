@@ -3,10 +3,9 @@ package com.backend.allreva.survey.command.application;
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.command.domain.exception.ConcertNotFoundException;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.Survey;
+import com.backend.allreva.survey.command.domain.SurveyJoin;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
 import com.backend.allreva.survey.exception.SurveyNotWriterException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SurveyCommandService {
     private final SurveyCommandRepository surveyCommandRepository;
+    private final SurveyJoinCommandRepository surveyJoinCommandRepository;
     private final ConcertRepository concertRepository;
     private final SurveyConverter surveyConverter;
 
@@ -25,7 +25,7 @@ public class SurveyCommandService {
         checkConcert(openSurveyRequest);
 
         Survey survey = surveyCommandRepository.save(
-                surveyConverter.createSurvey(memberId, openSurveyRequest));
+                surveyConverter.toSurvey(memberId, openSurveyRequest));
         return new SurveyIdResponse(survey.getId());
     }
 
@@ -46,7 +46,15 @@ public class SurveyCommandService {
         Survey survey = findSurvey(surveyId);
         checkWriter(memberId, survey.getMemberId());
 
-        surveyCommandRepository.deleteById(surveyId);
+        surveyCommandRepository.delete(survey);
+    }
+
+    public SurveyJoinIdResponse createSurveyResponse(Long memberId, Long surveyId, JoinSurveyRequest request) {
+        checkSurvey(surveyId);
+
+        SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
+                surveyConverter.toSurveyJoin(memberId, surveyId, request));
+        return new SurveyJoinIdResponse(surveyJoin.getId());
     }
 
     private void checkConcert(OpenSurveyRequest request) {
@@ -58,6 +66,11 @@ public class SurveyCommandService {
         if (!memberId.equals(writerId)) {
             throw new SurveyNotWriterException();
         }
+    }
+
+    private void checkSurvey(Long surveyId) {
+        if(!surveyCommandRepository.existsById(surveyId))
+            throw new SurveyNotFoundException();
     }
 
     private Survey findSurvey(Long surveyId) {
