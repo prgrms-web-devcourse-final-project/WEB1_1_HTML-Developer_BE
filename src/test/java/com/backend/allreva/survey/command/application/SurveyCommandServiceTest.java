@@ -8,6 +8,7 @@ import com.backend.allreva.member.command.application.MemberRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
+import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.util.List.of;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -112,14 +114,55 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
                 "이틀 모두 운영합니다."
         );
 
-        // When
         SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
         surveyCommandRepository.flush();
+
+        // When
         surveyCommandService.removeSurvey(testMember.getId(), response.surveyId());
         Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
 
         // Then
         assertNull(savedSurvey);
+    }
+
+    @Test
+    @DisplayName("수요조사 폼 수정에 성공한다.")
+    public void updateSurvey() {
+        // Given
+        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
+                "하현상 콘서트: Elegy [서울]",
+                testConcert.getId(),
+                of("2024.11.30(토)", "2024.12.01(일)"),
+                "하현상",
+                Region.SEOUL,
+                LocalDate.now(),
+                25,
+                "이틀 모두 운영합니다."
+        );
+
+        UpdateSurveyRequest updateSurveyRequest = new UpdateSurveyRequest(
+                "하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.",
+                List.of("2024.12.01(일)"),
+                Region.SEOUL,
+                LocalDate.now().plusDays(3),
+                25,
+                "일요일만 운영합니다."
+        );
+
+        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        surveyCommandRepository.flush();
+
+        // When
+        surveyCommandService.updateSurvey(testMember.getId(), response.surveyId(), updateSurveyRequest);
+        Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
+
+        // Then
+        assertNotNull(savedSurvey);
+        assertEquals("하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.", savedSurvey.getTitle());
+        assertEquals(1, savedSurvey.getBoardingDate().size());
+        assertEquals(LocalDate.of(2024,12,1), savedSurvey.getBoardingDate().get(0));
+
+
     }
 
     @Test

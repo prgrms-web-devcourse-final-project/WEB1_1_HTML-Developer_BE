@@ -27,7 +27,7 @@ public class Survey extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "survey_boarding_date",
             joinColumns = @JoinColumn(name = "id", nullable = false)
@@ -64,6 +64,16 @@ public class Survey extends BaseEntity {
         this.title = title;
         this.boardingDate = boardingDate;
         this.artistName = artistName;
+        this.region = region;
+        this.eddate = eddate;
+        this.maxPassenger = maxPassenger;
+        this.information = information;
+    }
+
+    public void update(String title, List<LocalDate> boardingDate, Region region,
+                       LocalDate eddate, int maxPassenger, String information) {
+        this.title = title;
+        this.boardingDate = boardingDate;
         this.region = region;
         this.eddate = eddate;
         this.maxPassenger = maxPassenger;

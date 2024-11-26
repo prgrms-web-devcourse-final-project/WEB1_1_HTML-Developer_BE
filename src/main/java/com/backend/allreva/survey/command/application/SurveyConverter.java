@@ -20,4 +20,5 @@ public class SurveyConverter {
                 .maxPassenger(request.maxPassenger())
                 .build();
     }
+
 }

@@ -7,6 +7,7 @@ import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
+import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,6 +65,30 @@ class SurveyControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.surveyId").value(1L))
+        ;
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("설문조사 수정에 성공한다.")
+    void updateSurvey() throws Exception {
+        // Given
+        Long surveyId = 1L;
+        UpdateSurveyRequest request = new UpdateSurveyRequest("하현상 콘서트: Elegy [서울]",
+                List.of("2024.11.30(토)", "2024.12.01(일)"),
+                Region.SEOUL, LocalDate.now(),
+                25, "이틀 모두 운영합니다.");
+
+        // Mocking
+        doNothing().when(surveyCommandService).updateSurvey(any(), any(), any());
+
+        // When & Then
+        mockMvc.perform(patch(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("surveyId", String.valueOf(surveyId))
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
         ;
     }
 
