@@ -9,7 +9,8 @@ public record ConcertMain(
         String title,
         String concertHallName,
         LocalDate stdate,
-        LocalDate eddate
+        LocalDate eddate,
+        Long id
 ) {
         public static ConcertMain from(final ConcertDocument concertDocument) {
             return new ConcertMain(
@@ -17,7 +18,8 @@ public record ConcertMain(
                     concertDocument.getTitle(),
                     concertDocument.getConcertHallName(),
                     concertDocument.getStdate(),
-                    concertDocument.getEddate()
+                    concertDocument.getEddate(),
+                    Long.parseLong(concertDocument.getId())
             );
         }
 }
