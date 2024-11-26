@@ -1,0 +1,96 @@
+# 워크플로우 이름
+name: CI/CD
+
+# 어떤 브랜치에서, 어떤 행동이 일어날 때 ci/cd가 일어날 것인지를 설정
+on:
+  push:
+    branches: [ "develop" ]  # develop 브랜치에 push가 발생했을 때
+  pull_request:
+    types: [closed]  # PR이 닫혔을 때
+    branches: [ "develop" ]  # develop 브랜치로의 PR인 경우
+    # PR이 merge된 경우에만 실행되도록 조건 추가
+    if: github.event.pull_request.merged == true
+
+# 워크플로우가 깃 레포에 대한 권한을 읽기 만 가능하게 설정
+permissions:
+  contents: read
+
+# 워크플로우에서 할 작업 정의
+jobs:
+  CI-CD:
+    # 작업 환경 = 우분투 최신 버전
+    runs-on: ubuntu-latest
+
+    # 깃허브에서 제공하는 checkout 액션 사용
+    steps:
+      - uses: actions/checkout@v3
+
+      # jdk 17 설정
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          # temurin = Adoptium에서 제공하는 JDK
+          distribution: 'temurin'
+
+      # gradle caching - 캐싱을 통한 빌드 시간 향상 (젠킨스에서는 기본 동작하지만, 깃액션은 직접 설정해줘야함)
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-  
+
+      # application-prod.yml 생성
+      # touch : 파일을 생성
+      # echo + > : '>'는 기존에 동일한 이름의 파일이 없다면 생성하고, 동일한 파일이 있다면 새로운 파일로 덮어쓰기 한다
+      # echo + >> : '>>'를 사용하면 기존에 파일이 없다면 생성하고, 동일한 파일이 있다면 파일 내부에 새로운 내용을 추가하는 방식으로 동작
+      - name: make application-prod.yml
+        env:
+          YAML_SECRET: ${{ secrets.CD_YML }}
+        run: |
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yml
+          echo $YAML_SECRET | base64 --decode > ./application.yml
+        shell: bash
+
+        # gradle wrapper 파일에 실행 권한을 부여
+        # gradle wrapper = 개발자가 특정 버전의 Gradle을 미리 설치하지 않고도 Gradle 빌드를 실행할 수 있게 해주는 편리한 도구
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Gradle 빌드 액션을 이용해서 프로젝트 빌드
+      - name: Build with Gradle
+        # -x test 옵션을 사용하면, 테스트 없이 빌드
+        run: ./gradlew build -x test
+
+      # 도커 이미지 빌드 & 이미지를 도커허브로 push
+      - name: Docker build & push to dockerhub
+        # -f 뒤에는 도커파일 명을, /뒤에는 도커허브 저장소 명을 적는다
+        # 이메일 회원가입을 진행했다면, DOCKER_PASSWORD에는 token값을 적으면 된다
+        # 도커 유저네임에는 도커허브 이름을 적는다(이메일이 아님)
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/allreva .
+          docker push ${{ secrets.DOCKER_USERNAME }}/allreva
+
+      # ec2에 ssh로 접속하여 도커 이미지 실행
+      - name: Deploy to prod
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        with:
+          host: ${{ secrets.HOST_EC2 }} # EC2 퍼블릭 IPv4 DNS
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker ps
+            sudo docker stop allreva
+            sudo docker rm allreva
+            sudo docker pull "${{ secrets.DOCKER_USERNAME }}"/allreva
+            sudo docker run -d --name allreva -p 8080:8080 --network allreva "${{ secrets.DOCKER_USERNAME }}"/allreva
+            sudo docker image prune -f
