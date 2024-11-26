@@ -6,7 +6,6 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +17,6 @@ public class MemberInfoCommandService {
      * 회원 가입 시 유저정보 입력
      * 회원 성공적으로 가입 시 GUEST에서 USER로 Role 변경
      */
-    @Transactional
     public Member registerMember(
             MemberInfoRequest memberInfoRequest,
             Member member
@@ -35,7 +33,6 @@ public class MemberInfoCommandService {
     /**
      * 회원 정보 수정
      */
-    @Transactional
     public Member updateMemberInfo(
             MemberInfoRequest memberInfoRequest,
             Member member
