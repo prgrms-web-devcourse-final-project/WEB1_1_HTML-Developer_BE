@@ -13,6 +13,7 @@ public record MemberDetail(
         String number
 ) {
 
+    // for querydsl projections
     public MemberDetail(
             String email,
             String nickname,

@@ -1,5 +1,6 @@
 package com.backend.allreva.member.command.application;
 
+import com.backend.allreva.artist.command.ArtistCommandService;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberArtist;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberArtistCommandService {
 
     private final MemberArtistRepository memberArtistRepository;
+    private final ArtistCommandService artistCommandService;
 
     /**
      * 관심 아티스트 업데이트
@@ -23,7 +25,10 @@ public class MemberArtistCommandService {
             List<MemberArtistRequest> memberArtistRequests,
             Member member
     ) {
-        // TODO: 아티스트 Spotify API 검색
+        // 검증
+        memberArtistRequests.forEach(request ->
+                        artistCommandService.getArtistById(request.spotifyArtistId()));
+
         // 전체 삭제
         memberArtistRepository.deleteAllByMemberId(member.getId());
 
