@@ -6,13 +6,18 @@ import com.backend.allreva.concert.query.application.ConcertQueryService;
 import com.backend.allreva.concert.query.application.dto.ConcertDetail;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/concerts")
 @RestController
+@Validated
 public class ConcertController {
 
     private final ConcertQueryService concertQueryService;
@@ -27,11 +32,21 @@ public class ConcertController {
 
     @GetMapping("/list")
     public Response<ConcertMainResponse> getConcertMain(
-            @RequestParam final String region,
-            @RequestParam(defaultValue = "ASC") final SortDirection sortDirection,
-            @RequestParam final int PageSize,
-            @RequestParam final List<Object> searchAfter
+            @RequestParam(defaultValue = "")
+            final String region,
+            @RequestParam(defaultValue = "DATE")
+            final SortDirection sortDirection,
+            @RequestParam(defaultValue = "4")
+            final int PageSize,
+            @RequestParam(required = false)
+            final String searchAfter1,
+            @RequestParam(required = false)
+            final String searchAfter2
+
     ){
+        List<Object> searchAfter = Stream.of(searchAfter1, searchAfter2)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         ConcertMainResponse concertMain = concertQueryService.getConcertMain(region, searchAfter, PageSize, sortDirection);
         return Response.onSuccess(concertMain);
     }
