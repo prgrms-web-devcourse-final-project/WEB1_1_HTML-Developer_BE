@@ -4,6 +4,7 @@ import com.backend.allreva.member.command.domain.value.RefundAccount;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+// TODO: 리팩토링
 @Converter
 public class RefundAccountConverter implements AttributeConverter<RefundAccount, String> {
 
@@ -22,13 +23,14 @@ public class RefundAccountConverter implements AttributeConverter<RefundAccount,
         if (attribute.getNumber() != null) {
             number = attribute.getNumber();
         }
-        return String.join(DELEMETER, attribute.getBank(), attribute.getNumber());
+        return String.join(DELEMETER, bank, number);
     }
 
     @Override
     public RefundAccount convertToEntityAttribute(String dbData) {
         if (dbData.equals(DELEMETER)) {
-            return RefundAccount.builder().build();
+            return RefundAccount.builder()
+                    .build();
         }
         String[] split = dbData.split(",");
         return RefundAccount.builder()
