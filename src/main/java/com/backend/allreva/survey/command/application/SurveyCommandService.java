@@ -34,7 +34,7 @@ public class SurveyCommandService {
                              final Long surveyId,
                              final UpdateSurveyRequest request) {
         Survey survey = findSurvey(surveyId);
-        if (survey.isWriter(memberId)) {
+        if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
         }
 
@@ -50,7 +50,7 @@ public class SurveyCommandService {
     public void removeSurvey(final Long memberId, final Long surveyId) {
         Survey survey = findSurvey(surveyId);
 
-        if (survey.isWriter(memberId)) {
+        if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
         }
 
