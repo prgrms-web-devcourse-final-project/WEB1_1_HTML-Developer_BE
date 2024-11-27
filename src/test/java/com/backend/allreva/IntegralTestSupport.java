@@ -7,7 +7,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @TestPropertySource(properties = {
         "aws.region=us-east-1",
-        "view.count.schedule.rate=50"
+        "view.count.schedule.rate=20"
 })
 @MockBean(JpaAuditingConfig.class)
 @SpringBootTest
