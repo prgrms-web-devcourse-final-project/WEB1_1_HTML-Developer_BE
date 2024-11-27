@@ -101,7 +101,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
 
         switch (sortType) {
             case CLOSING -> {
-                return (survey.endDate.lt(lastEndDate))
+                return (survey.endDate.gt(lastEndDate))
                         .or(survey.endDate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
             }
             case OLDEST -> {
