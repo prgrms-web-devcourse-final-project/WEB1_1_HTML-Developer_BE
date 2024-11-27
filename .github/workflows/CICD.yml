@@ -71,6 +71,25 @@ jobs:
       - name: DockerHub 푸시
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
 
+      - name: Get Github action IP
+        id : ip
+        uses: haythem/public-ip@v1.2
+
+      - name: AWS Credentials 설정
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 보안 그룹에 GitHub Actions IP 추가
+        run: |
+          aws ec2 authorize-security-group-ingress \
+            --group-name ${{ secrets.AWS_SG_NAME }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
       - name: AWS EC2 배포
         uses: appleboy/ssh-action@master
         with:
