@@ -7,10 +7,14 @@ import com.backend.allreva.concert.command.domain.value.*;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.domain.value.Region;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static java.util.List.of;
 
 @SpringBootTest
 public abstract class IntegralTestSupport {
@@ -39,5 +43,18 @@ public abstract class IntegralTestSupport {
                 .detailImages(List.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
                 .sellers(List.of(new Seller("Sample Seller", "http://seller.com")))
                 .build();
+    }
+
+    protected OpenSurveyRequest createOpenSurveyRequest(Long concertId, LocalDate endDate, Region region) {
+        return new OpenSurveyRequest(
+                "하현상 콘서트: Elegy [서울] 수요조사 모집합니다.",
+                concertId,
+                of("2024.11.30(토)", "2024.12.01(일)"),
+                "하현상",
+                region,
+                endDate,
+                25,
+                "이틀 모두 운영합니다."
+        );
     }
 }

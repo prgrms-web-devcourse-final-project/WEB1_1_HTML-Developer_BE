@@ -6,6 +6,7 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.exception.SurveyIllegalParameterException;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
@@ -66,21 +67,29 @@ public class SurveyController {
         return Response.onSuccess(surveyCommandService.createSurveyResponse(member.getId(), surveyId, surveyJoinRequest));
     }
 
-    @Operation(summary = "수요조사 목록 조회 API", description = "수요조사를 목록으로 조회합니다. \n " +
-            "최신순, 오래된 순으로 검색할경우 sort는 LATEST, OLDEST로 주시고, lastId에는 해당페이지의 마지막 id를 주시면 됩니다.\n" +
-            "첫페이지일 경우 lastId 파라미터 주지 않으시면 됩니다. \n" +
-            "마감순으로 검색할 경우 sort는 CLOSING으로 주시고, lastId는 해당 페이지의 마지막 id를 주세요. \n" +
-            "마감순으로 검색할 경우 lastEndDate에는 해당 페이지의 마지막 id의 endDate를 필수로 주셔야합니다." +
-            "마감순으로 검색할 경우 첫페이지일 경우에는 lastId, lastEndDate 둘다 주지 않으시면 됩니다. \n" +
-            "pageSize는 파라미터로 전달하지 않으면 default값 10입니다. \n" +
-            "region은 파라미터로 전달하지 않으면 전체 조회됩니다. sort도 파라미터로 전달하지 않으면 최신순으로 검색됩니다.")
+    @Operation(
+            summary = "수요조사 목록 조회 API",
+            description = "수요조사 목록을 조회합니다.\n\n" +
+                    "- <b>정렬 옵션</b>:\n" +
+                    "  - 최신순 (<b>LATEST</b>): lastId를 마지막 항목의 ID로 전달. lastEndDate는 주지마세요.\n" +
+                    "  - 오래된 순 (<b>OLDEST</b>): lastId를 마지막 항목의 ID로 전달. lastEndDate는 주지마세요.\n" +
+                    "  - 마감 임박순 (<b>CLOSING</b>): 마지막 항목의 lastId와 lastEndDate를 전달하며, 둘 모두 필수입니다.\n\n" +
+                    "- <b>첫 페이지 요청</b>: lastId와 lastEndDate를 전달하지 않으면 됩니다.\n" +
+                    "- <b>기본값</b>:\n" +
+                    "  - <b>sort</b>: 최신순 (LATEST)\n" +
+                    "  - <b>pageSize</b>: 10\n" +
+                    "  - <b>region</b>: 전체 조회"
+    )
     @GetMapping("/list")
     public Response<List<SurveySummaryResponse>> findSurveyList(@RequestParam(name = "region", required = false) Region region,
                                                                 @RequestParam(name = "sort", defaultValue = "LATEST") SortType sortType,
                                                                 @RequestParam(name = "lastId", required = false) Long lastId,
                                                                 @RequestParam(name = "lastEndDate", required = false) LocalDate lastEndDate,
                                                                 @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+        if (pageSize < 10) pageSize = 10;
+        if (lastEndDate != null && lastId == null) {
+            throw new SurveyIllegalParameterException();
+        }
         return Response.onSuccess(surveyQueryService.findSurveyList(region, sortType, lastId, lastEndDate, pageSize));
     }
-
 }

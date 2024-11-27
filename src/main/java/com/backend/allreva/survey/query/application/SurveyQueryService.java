@@ -17,11 +17,15 @@ import java.util.List;
 public class SurveyQueryService {
     private final SurveyQueryRepository surveyQueryRepository;
 
-    public SurveyDetailResponse findSurveyDetail(Long surveyId) {
+    public SurveyDetailResponse findSurveyDetail(final Long surveyId) {
         return surveyQueryRepository.findSurveyDetail(surveyId);
     }
 
-    public List<SurveySummaryResponse> findSurveyList(Region region, SortType sortType, Long lastId, LocalDate lastEndDate, int pageSize) {
+    public List<SurveySummaryResponse> findSurveyList(final Region region,
+                                                      final SortType sortType,
+                                                      final Long lastId,
+                                                      final LocalDate lastEndDate,
+                                                      final int pageSize) {
         return surveyQueryRepository.findSurveyList(region, sortType, lastId, lastEndDate, pageSize);
     }
 }

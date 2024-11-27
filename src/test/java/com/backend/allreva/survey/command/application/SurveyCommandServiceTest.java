@@ -62,16 +62,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     @DisplayName("수요조사 폼 개설에 성공한다.")
     public void openSurvey() {
         // Given
-        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
-                "하현상 콘서트: Elegy [서울]",
-                testConcert.getId(),
-                of("2024.11.30(토)", "2024.12.01(일)"),
-                "하현상",
-                Region.서울,
-                LocalDate.now(),
-                25,
-                "이틀 모두 운영합니다."
-        );
+        OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         // When
         SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
@@ -80,7 +71,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
         // Then
         assertNotNull(response);
         assertNotNull(savedSurvey);
-        assertEquals("하현상 콘서트: Elegy [서울]", savedSurvey.getTitle());
+        assertEquals("하현상 콘서트: Elegy [서울] 수요조사 모집합니다.", savedSurvey.getTitle());
     }
 
     @Test
@@ -109,16 +100,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     @Transactional //softDelete로 인해 tearDown으로 삭제되지 않음
     public void removeSurvey() {
         // Given
-        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
-                "하현상 콘서트: Elegy [서울]",
-                testConcert.getId(),
-                of("2024.11.30(토)", "2024.12.01(일)"),
-                "하현상",
-                Region.서울,
-                LocalDate.now(),
-                25,
-                "이틀 모두 운영합니다."
-        );
+        OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
         surveyCommandRepository.flush();
@@ -135,16 +117,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     @DisplayName("수요조사 폼 수정에 성공한다.")
     public void updateSurvey() {
         // Given
-        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
-                "하현상 콘서트: Elegy [서울]",
-                testConcert.getId(),
-                of("2024.11.30(토)", "2024.12.01(일)"),
-                "하현상",
-                Region.서울,
-                LocalDate.now(),
-                25,
-                "이틀 모두 운영합니다."
-        );
+        OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         UpdateSurveyRequest updateSurveyRequest = new UpdateSurveyRequest(
                 "하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.",
@@ -184,16 +157,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     @DisplayName("작성자와 로그인 멤버가 같지않아 폼 삭제에 실패한다.")
     public void failRemoveSurveyWithNotWriterException() {
         // Given
-        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
-                "하현상 콘서트: Elegy [서울]",
-                testConcert.getId(),
-                of("2024.11.30(토)", "2024.12.01(일)"),
-                "하현상",
-                Region.서울,
-                LocalDate.now(),
-                25,
-                "이틀 모두 운영합니다."
-        );
+        OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         // When & Then
         SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
@@ -208,16 +172,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
     @DisplayName("수요조사 응답에 성공한다.")
     public void createSurveyResponse() {
         // Given
-        OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
-                "하현상 콘서트: Elegy [서울]",
-                testConcert.getId(),
-                of("2024.11.30(토)", "2024.12.01(일)"),
-                "하현상",
-                Region.서울,
-                LocalDate.now(),
-                25,
-                "이틀 모두 운영합니다."
-        );
+        OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(
                 "2024.11.30(토)", BoardingType.DOWN, 2, true

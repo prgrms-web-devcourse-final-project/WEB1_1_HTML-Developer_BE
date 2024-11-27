@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SurveyQueryRepository {
-    SurveyDetailResponse findSurveyDetail(Long surveyId);
+    SurveyDetailResponse findSurveyDetail(final Long surveyId);
 
-    List<SurveySummaryResponse> findSurveyList(Region region, SortType sortType, Long lastId, LocalDate lastEndDate, int pageSize);
+    List<SurveySummaryResponse> findSurveyList(final Region region, final SortType sortType, final Long lastId, final LocalDate lastEndDate, final int pageSize);
 
 }
