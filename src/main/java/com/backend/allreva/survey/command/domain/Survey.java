@@ -82,4 +82,8 @@ public class Survey extends BaseEntity {
         this.maxPassenger = maxPassenger;
         this.information = information;
     }
+
+    public boolean isWriter(Long loginMemberId) {
+        return this.memberId.equals(loginMemberId);
+    }
 }

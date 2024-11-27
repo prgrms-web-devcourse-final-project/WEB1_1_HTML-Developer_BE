@@ -31,7 +31,9 @@ public class SurveyCommandService {
 
     public void updateSurvey(Long memberId, Long surveyId, UpdateSurveyRequest request) {
         Survey survey = findSurvey(surveyId);
-        checkWriter(memberId, survey.getMemberId());
+        if (survey.isWriter(memberId)) {
+            throw new SurveyNotWriterException();
+        }
 
         survey.update(request.title(),
                 request.boardingDate().stream().map(DataConverter::convertToLocalDateFromDateWithDay).toList(),
@@ -44,7 +46,11 @@ public class SurveyCommandService {
 
     public void removeSurvey(Long memberId, Long surveyId) {
         Survey survey = findSurvey(surveyId);
-        checkWriter(memberId, survey.getMemberId());
+
+        if (survey.isWriter(memberId)) {
+            throw new SurveyNotWriterException();
+        }
+
 
         surveyCommandRepository.delete(survey);
     }
@@ -62,14 +68,8 @@ public class SurveyCommandService {
             throw new ConcertNotFoundException();
     }
 
-    private void checkWriter(Long memberId, Long writerId) {
-        if (!memberId.equals(writerId)) {
-            throw new SurveyNotWriterException();
-        }
-    }
-
     private void checkSurvey(Long surveyId) {
-        if(!surveyCommandRepository.existsById(surveyId))
+        if (!surveyCommandRepository.existsById(surveyId))
             throw new SurveyNotFoundException();
     }
 
