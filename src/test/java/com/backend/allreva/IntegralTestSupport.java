@@ -58,3 +58,4 @@ public abstract class IntegralTestSupport {
                 "이틀 모두 운영합니다."
         );
     }
+}
