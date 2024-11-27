@@ -102,4 +102,6 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
             docker stop $(docker ps -a -q) || true
             docker rm $(docker ps -a -q) || true
-            docker run -d -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
+            docker run -d -p 80:8080 \
+            -v /path/to/application.yml:/application.yml \
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
