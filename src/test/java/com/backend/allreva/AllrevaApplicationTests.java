@@ -1,10 +1,8 @@
 package com.backend.allreva;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class AllrevaApplicationTests {
+class AllrevaApplicationTests extends IntegralTestSupport {
 
     @Test
     void contextLoads() {
