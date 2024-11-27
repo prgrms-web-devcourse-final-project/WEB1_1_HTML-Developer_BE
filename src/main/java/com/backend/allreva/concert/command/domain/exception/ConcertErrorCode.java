@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum ConcertErrorCode implements ErrorCodeInterface {
-    CONCERT_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "CONCERT_STATUS_NOT_FOUND", "존재하지 않는 공연상태입니다." )
+    CONCERT_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "CONCERT_STATUS_NOT_FOUND", "존재하지 않는 공연상태입니다." ),
+    CONCERT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "CONCERT_NOT_FOUND", "존재하지 않는 공연입니다." ),
+
     ;
+
     private final Integer status;
     private final String errorCode;
     private final String message;

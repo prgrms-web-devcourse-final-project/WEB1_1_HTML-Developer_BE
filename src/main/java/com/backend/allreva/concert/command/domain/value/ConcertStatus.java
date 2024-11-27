@@ -1,6 +1,7 @@
 package com.backend.allreva.concert.command.domain.value;
 
 import com.backend.allreva.concert.command.domain.exception.ConcertNotFoundException;
+import com.backend.allreva.concert.command.domain.exception.ConcertStatusNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,6 @@ public enum ConcertStatus {
                 return status;
             }
         }
-        throw new ConcertNotFoundException();
+        throw new ConcertStatusNotFoundException();
     }
 }
