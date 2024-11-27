@@ -1,8 +1,8 @@
 package com.backend.allreva.concert.query.application;
 
-import com.backend.allreva.IntegralTestSupport;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
+import com.backend.allreva.support.IntegrationTestSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Slf4j
-class ConcertQueryServiceTest extends IntegralTestSupport {
+class ConcertQueryServiceTest extends IntegrationTestSupport {
 
     @Autowired
     ConcertQueryService concertQueryService;

@@ -3,7 +3,6 @@ package com.backend.allreva.search.infra;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
 import com.backend.allreva.search.query.domain.ConcertDocument;
-import com.backend.allreva.search.query.domain.CustomConcertSearchRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
