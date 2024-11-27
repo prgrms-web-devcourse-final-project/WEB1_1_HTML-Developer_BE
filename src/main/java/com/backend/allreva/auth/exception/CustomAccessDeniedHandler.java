@@ -20,7 +20,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     private final HandlerExceptionResolver resolver;
 
     public CustomAccessDeniedHandler(
-        @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver
+        @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
     ) {
         this.resolver = resolver;
     }
@@ -29,7 +29,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
      * 유효하지 않는 권한일 때 호출되는 메서드
      */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response,
+    public void handle(final HttpServletRequest request, final HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
         Exception exception = (Exception) request.getAttribute("jakarta.servlet.error.exception");
         if (exception != null) {

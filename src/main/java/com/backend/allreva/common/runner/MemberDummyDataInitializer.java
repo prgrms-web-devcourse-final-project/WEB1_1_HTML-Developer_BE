@@ -1,7 +1,7 @@
 package com.backend.allreva.common.runner;
 
 import com.backend.allreva.common.model.Email;
-import com.backend.allreva.member.command.application.MemberRepository;
+import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;

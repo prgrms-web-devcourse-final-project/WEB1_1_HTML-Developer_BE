@@ -22,15 +22,15 @@ public class JwtProvider {
     private final SecretKey secretKey;
 
     public JwtProvider(
-            @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.access.expiration}") long ACCESS_TIME,
-            @Value("${jwt.refresh.expiration}") long REFRESH_TIME) {
+            @Value("${jwt.secret-key}") final String secretKey,
+            @Value("${jwt.access.expiration}") final long ACCESS_TIME,
+            @Value("${jwt.refresh.expiration}") final long REFRESH_TIME) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
         this.ACCESS_TIME = ACCESS_TIME;
         this.REFRESH_TIME = REFRESH_TIME;
     }
 
-    public String generateAccessToken(String subject) {
+    public String generateAccessToken(final String subject) {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + ACCESS_TIME);
 
@@ -42,7 +42,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(String subject) {
+    public String generateRefreshToken(final String subject) {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + REFRESH_TIME);
 

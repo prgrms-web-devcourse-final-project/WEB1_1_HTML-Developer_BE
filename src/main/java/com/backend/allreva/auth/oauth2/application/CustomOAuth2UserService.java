@@ -11,7 +11,7 @@ import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.auth.oauth2.application.dto.OAuth2UserInfo;
 import com.backend.allreva.auth.oauth2.exception.UnsupportedProviderException;
 import com.backend.allreva.common.model.Email;
-import com.backend.allreva.member.command.application.MemberRepository;
+import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.Member;
 
@@ -25,7 +25,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Transactional
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // 1 - OAuth2 Client를 사용하여 Auth Server로부터 유저 정보 가져오기
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -51,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new PrincipalDetails(member, oAuth2User.getAttributes());
     }
 
-    private Member registerTemporaryMember(OAuth2UserInfo oAuth2UserInfo) {
+    private Member registerTemporaryMember(final OAuth2UserInfo oAuth2UserInfo) {
         Member temporaryMember = Member.createTemporary(
                 oAuth2UserInfo.email(),
                 oAuth2UserInfo.nickname(),
