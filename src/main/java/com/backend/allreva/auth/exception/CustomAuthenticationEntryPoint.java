@@ -35,7 +35,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         Exception jwtException = (Exception) request.getAttribute("jakarta.servlet.error.exception");
-        log.info("JWT 인증 예외 발생: {}", jwtException);
-        resolver.resolveException(request, response, null, jwtException);
+        if (jwtException == null) {
+            resolver.resolveException(request, response, null, authException);
+        } else {
+            resolver.resolveException(request, response, null, jwtException);
+        }
     }
 }
