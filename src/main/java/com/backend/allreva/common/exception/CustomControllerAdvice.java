@@ -15,6 +15,7 @@ public class CustomControllerAdvice {
 
     @ExceptionHandler(value = CustomException.class)
     public ResponseEntity<?> handleCustomException(CustomException e) {
+        log.error("error: {}", e.getMessage(), e);
         return ResponseEntity.status(e.getErrorCode().status())
                 .body(
                         Response.onFailure(

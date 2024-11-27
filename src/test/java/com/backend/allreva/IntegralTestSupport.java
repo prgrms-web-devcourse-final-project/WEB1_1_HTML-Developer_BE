@@ -1,5 +1,6 @@
 package com.backend.allreva;
 
+
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
@@ -57,4 +58,3 @@ public abstract class IntegralTestSupport {
                 "이틀 모두 운영합니다."
         );
     }
-}

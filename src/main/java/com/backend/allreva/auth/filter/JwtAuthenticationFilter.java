@@ -1,44 +1,27 @@
 package com.backend.allreva.auth.filter;
 
+import com.backend.allreva.auth.util.JwtParser;
+import com.backend.allreva.auth.util.JwtValidator;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.backend.allreva.auth.exception.code.JwtTokenNotFoundException;
-import com.backend.allreva.auth.util.JwtParser;
-import com.backend.allreva.auth.util.JwtValidator;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    private static final List<RequestMatcher> EXCLUDED_URL_MATCHERS = List.of(
-            new AntPathRequestMatcher("/h2-console/**"),
-
-            new AntPathRequestMatcher("/swagger-ui/**"),
-            new AntPathRequestMatcher("/v3/api-docs/**"),
-            new AntPathRequestMatcher("/swagger-resources/**"),
-
-            // OAuth2 관련 URL
-            new AntPathRequestMatcher("/api/v1/oauth2/login/**"),
-            new AntPathRequestMatcher("/login/oauth2/**"),
-            new AntPathRequestMatcher("/favicon.*"));
 
     private final JwtParser jwtParser;
     private final JwtValidator jwtValidator;
@@ -48,20 +31,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * JWT 토큰을 검증하는 메서드
      */
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        // JWT 인가 과정 필요없는 URL 제외
-        if (isExcluded(request)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        // request로부터 token 받기
+    protected void doFilterInternal(
+            @NonNull final HttpServletRequest request,
+            @NonNull final HttpServletResponse response,
+            @NonNull final FilterChain filterChain
+    ) throws ServletException, IOException {
+        // token이 없다면 ANONYMOUS 로그인
         String refreshToken = jwtParser.getRefreshToken(request);
         String accessToken = jwtParser.getAccessToken(request);
         if (accessToken == null && refreshToken == null) {
-            throw new JwtTokenNotFoundException();
+            log.debug("GUEST login! {}", request.getRequestURI());
+            filterChain.doFilter(request, response);
+            return;
         }
 
         // token 검증 수행
@@ -82,12 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isExcluded(HttpServletRequest request) {
-        return EXCLUDED_URL_MATCHERS.stream()
-                .anyMatch(matcher -> matcher.matches(request));
-    }
-
-    private void setAuthenication(String email, HttpServletRequest request) {
+    private void setAuthenication(final String email, final HttpServletRequest request) {
         // member db 확인
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
