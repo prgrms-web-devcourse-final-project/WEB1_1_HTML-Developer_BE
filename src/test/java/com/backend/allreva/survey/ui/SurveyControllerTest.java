@@ -9,7 +9,9 @@ import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
+import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,9 +22,11 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -119,7 +123,7 @@ class SurveyControllerTest extends ControllerTestSupport {
     void findSurveyDetail() throws Exception {
         // Given
         Long surveyId = 1L;
-        SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.", List.of(LocalDate.now()), "정보정보",false);
+        SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.", List.of(LocalDate.now()), "정보정보", false);
 
         // Mocking
         doReturn(response).when(surveyQueryService).findSurveyDetail(any());
@@ -155,6 +159,38 @@ class SurveyControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.surveyJoinId").value(1L))
+        ;
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("수요조사 목록 조회에 성공한다.")
+    void findSurveyList() throws Exception {
+        // Given
+        List<SurveySummaryResponse> responseList = new ArrayList<>();
+        SurveySummaryResponse response = new SurveySummaryResponse(1L, "title", Region.경기, 20L, LocalDate.now());
+        responseList.add(response);
+
+        Region region = Region.서울;
+        SortType sortType = SortType.LATEST;
+        Long lastId = 1L;
+        LocalDate lastEndDate = LocalDate.now();
+        int pageSize = 10;
+
+        // Mocking
+        doReturn(responseList).when(surveyQueryService).findSurveyList(any(), any(), any(), any(), anyInt());
+
+        // When & Then
+        mockMvc.perform(get(BASE_URI + "/list")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("region", region.toString())
+                        .param("sortType", sortType.toString())
+                        .param("lastId", lastId.toString())
+                        .param("lastEndDate", lastEndDate.toString())
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result[0].surveyId").value(1L))
         ;
     }
 }
