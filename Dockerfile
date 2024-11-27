@@ -20,6 +20,6 @@ FROM openjdk:17-jdk-slim
 
 # 빌드 스테이지에서 생성된 JAR 파일을 복사
 COPY --from=builder build/libs/*.jar app.jar
-
+COPY src/main/resources/application.yml /application.yml
 # 애플리케이션 실행
 ENTRYPOINT ["sh", "-c", "java -jar app.jar --spring.config.location=application.yml"]
