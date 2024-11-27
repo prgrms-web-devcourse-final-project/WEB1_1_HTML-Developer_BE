@@ -58,10 +58,10 @@ public class AdminConcertService {
                                     .doOnNext(concert -> {
                                         if (concert != null) {
                                             // 해당 concertCode가 있는지 확인
-                                            boolean isExist = concertRepository.existsByCodeConcertCode(concert.getConcertcd());
+                                            boolean isExist = concertRepository.existsByConcertCode(concert.getConcertcd());
                                             if (isExist) {
                                                 // 해당 concertCode가 있으면 정보 업데이트
-                                                Concert existingConcert = concertRepository.findByCodeConcertCode(concert.getConcertcd());
+                                                Concert existingConcert = concertRepository.findByConcertCode(concert.getConcertcd());
                                                 existingConcert.updateFrom(concert); // 엔티티에서 정보를 업데이트하는 메소드
                                                 concertRepository.save(existingConcert); // 업데이트된 정보를 저장
                                             } else {
