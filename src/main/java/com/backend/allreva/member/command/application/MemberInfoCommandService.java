@@ -14,12 +14,11 @@ public class MemberInfoCommandService {
     private final MemberRepository memberRepository;
 
     /**
-     * 회원 가입 시 유저정보 입력
-     * 회원 성공적으로 가입 시 GUEST에서 USER로 Role 변경
+     * 회원 가입 시 유저정보 입력 회원 성공적으로 가입 시 GUEST에서 USER로 Role 변경
      */
     public Member registerMember(
-            MemberInfoRequest memberInfoRequest,
-            Member member
+            final MemberInfoRequest memberInfoRequest,
+            final Member member
     ) {
         member.setMemberInfo(
                 memberInfoRequest.nickname(),
@@ -34,8 +33,8 @@ public class MemberInfoCommandService {
      * 회원 정보 수정
      */
     public Member updateMemberInfo(
-            MemberInfoRequest memberInfoRequest,
-            Member member
+            final MemberInfoRequest memberInfoRequest,
+            final Member member
     ) {
         member.setMemberInfo(
                 memberInfoRequest.nickname(),
@@ -49,8 +48,8 @@ public class MemberInfoCommandService {
      * 환불 계좌 등록
      */
     public Member registerRefundAccount(
-            RefundAccountRequest refundAccountRequest,
-            Member member
+            final RefundAccountRequest refundAccountRequest,
+            final Member member
     ) {
         member.setRefundAccount(
                 refundAccountRequest.bank(),
@@ -63,7 +62,7 @@ public class MemberInfoCommandService {
      * 환불 계좌 soft delete
      */
     public Member deleteRefundAccount(
-        Member member
+            final Member member
     ) {
         member.setDefaultRefundAccount();
         return memberRepository.save(member);

@@ -22,8 +22,8 @@ public class MemberArtistCommandService {
      * 관심 아티스트 업데이트
      */
     public void updateMemberArtist(
-            List<MemberArtistRequest> memberArtistRequests,
-            Member member
+            final List<MemberArtistRequest> memberArtistRequests,
+            final Member member
     ) {
         List<MemberArtist> preMemberArtists = memberArtistRepository.findByMemberId(member.getId());
 

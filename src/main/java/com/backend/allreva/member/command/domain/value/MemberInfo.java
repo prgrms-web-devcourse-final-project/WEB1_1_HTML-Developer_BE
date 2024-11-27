@@ -19,7 +19,11 @@ public class MemberInfo {
     private String profileImageUrl;
 
     @Builder
-    private MemberInfo(String nickname, String introduce, String profileImageUrl) {
+    private MemberInfo(
+            final String nickname,
+            final String introduce,
+            final String profileImageUrl
+    ) {
         this.nickname = nickname;
         this.introduce = introduce;
         this.profileImageUrl = profileImageUrl;

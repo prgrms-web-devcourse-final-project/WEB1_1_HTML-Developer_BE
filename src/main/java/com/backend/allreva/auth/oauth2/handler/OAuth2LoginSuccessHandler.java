@@ -32,9 +32,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
      * OAuth2는 OAuth2UserService에서 이미 인증되기 때문에 별도의 인증 filter가 필요없다.
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication)
-            throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Authentication authentication
+    ) throws IOException, ServletException {
         // OAuth2 인증된 사용자 정보 가져오기
         PrincipalDetails oAuth2User = (PrincipalDetails) authentication.getPrincipal();
         Member member = oAuth2User.member();
@@ -61,7 +63,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     // refreshToken 쿠키 설정
-    public void setHeader(HttpServletResponse response, String refreshToken) {
+    public void setHeader(final HttpServletResponse response, final String refreshToken) {
         if (refreshToken != null) {
             response.addHeader("refresh_token", refreshToken);
             response.addHeader("Set-Cookie", createRefreshToken(refreshToken).toString());
@@ -69,7 +71,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     // refreshToken 쿠키 생성
-    public static ResponseCookie createRefreshToken(String refreshToken) {
+    public static ResponseCookie createRefreshToken(final String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
                 .maxAge(14 * 24 * 60 * 60 * 1000)

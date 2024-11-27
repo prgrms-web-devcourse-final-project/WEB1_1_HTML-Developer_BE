@@ -15,12 +15,12 @@ public record MemberDetail(
 
     // for querydsl projections
     public MemberDetail(
-            String email,
-            String nickname,
-            String introduce,
-            String profileImageUrl,
-            List<MemberArtistDetail> artists,
-            RefundAccount refundAccount
+            final String email,
+            final String nickname,
+            final String introduce,
+            final String profileImageUrl,
+            final List<MemberArtistDetail> artists,
+            final RefundAccount refundAccount
     ) {
         this(email, nickname, introduce, profileImageUrl, artists,
                 refundAccount.getBank(), refundAccount.getNumber());

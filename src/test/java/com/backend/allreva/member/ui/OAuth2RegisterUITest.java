@@ -13,7 +13,6 @@ import com.backend.allreva.support.ApiTestSupport;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OAuth2RegisterUITest extends ApiTestSupport {
@@ -21,26 +20,27 @@ public class OAuth2RegisterUITest extends ApiTestSupport {
     @Test
     void oauth2_회원가입_API() throws Exception {
         // given
-        List<MemberArtistRequest> requests = List.of(
+        var memberArtistRequests = List.of(
                 new MemberArtistRequest("spotify_1L"),
                 new MemberArtistRequest("spotify_2L")
         );
-        MemberInfoRequest memberInfoRequest = new MemberInfoRequest(
+        var memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
                 "updated profile image url",
-                requests
+                memberArtistRequests
         );
         willDoNothing().given(memberCommandFacade).registerMember(any(MemberInfoRequest.class), any(Member.class));
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/oauth2/register")
+        var resultActions = mockMvc.perform(post("/api/v1/oauth2/register")
                 .content(objectMapper.writeValueAsString(memberInfoRequest))
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
         // then
-        resultActions.andDo(print())
+        resultActions
+                .andDo(print())
                 .andExpect(status().isNoContent());
     }
 }

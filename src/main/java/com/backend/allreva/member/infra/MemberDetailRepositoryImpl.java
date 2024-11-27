@@ -20,7 +20,7 @@ public class MemberDetailRepositoryImpl implements MemberDetailRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public MemberDetail findById(Long id) {
+    public MemberDetail findById(final Long id) {
         return queryFactory.select(memberDetailProjections())
                 .from(member)
                 .leftJoin(memberArtist).on(memberArtist.memberId.eq(member.id))

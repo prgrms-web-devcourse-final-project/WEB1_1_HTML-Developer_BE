@@ -10,7 +10,7 @@ import com.backend.allreva.member.command.domain.value.LoginProvider;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findByEmail(Email email);
+    Optional<Member> findByEmail(final Email email);
 
-    Optional<Member> findByEmailAndLoginProvider(Email email, LoginProvider loginProvider);
+    Optional<Member> findByEmailAndLoginProvider(final Email email, final LoginProvider loginProvider);
 }

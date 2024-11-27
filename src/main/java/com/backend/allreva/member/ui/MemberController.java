@@ -36,7 +36,7 @@ public class MemberController {
     })
     @GetMapping
     public ResponseEntity<Response<MemberDetail>> getMemberDetail(
-            @AuthMember Member member
+            final @AuthMember Member member
     ) {
         return ResponseEntity.ok()
                 .body(Response.onSuccess(memberQueryService.getById(member.getId())));
@@ -48,8 +48,8 @@ public class MemberController {
     })
     @PatchMapping("/info")
     public ResponseEntity<Void> updateMemberInfo(
-            @AuthMember Member member,
-            @RequestBody MemberInfoRequest memberInfoRequest
+            final @AuthMember Member member,
+            final @RequestBody MemberInfoRequest memberInfoRequest
     ) {
         memberCommandFacade.updateMemberInfo(memberInfoRequest, member);
 
@@ -62,8 +62,8 @@ public class MemberController {
     })
     @PostMapping("/refund-account")
     public ResponseEntity<Void> registerRefundAccount(
-            @AuthMember Member member,
-            @RequestBody RefundAccountRequest refundAccountRequest
+            final @AuthMember Member member,
+            final @RequestBody RefundAccountRequest refundAccountRequest
     ) {
         memberCommandFacade.registerRefundAccount(refundAccountRequest, member);
 
@@ -76,7 +76,7 @@ public class MemberController {
     })
     @DeleteMapping("/refund-account")
     public ResponseEntity<Void> deleteRefundAccount(
-            @AuthMember Member member
+            final @AuthMember Member member
     ) {
         memberCommandFacade.deleteRefundAccount(member);
 

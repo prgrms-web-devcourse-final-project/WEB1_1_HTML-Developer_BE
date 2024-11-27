@@ -28,8 +28,8 @@ public class OAuth2Controller {
     })
     @PostMapping("/register")
     public ResponseEntity<Void> register(
-            @AuthMember Member member,
-            @RequestBody MemberInfoRequest memberInfoRequest) {
+            final @AuthMember Member member,
+            final @RequestBody MemberInfoRequest memberInfoRequest) {
         memberCommandFacade.registerMember(memberInfoRequest, member);
 
         return ResponseEntity.noContent().build();

@@ -15,7 +15,7 @@ public class RefundAccount {
     private String number;
 
     @Builder
-    private RefundAccount(String bank, String number) {
+    private RefundAccount(final String bank, final String number) {
         this.bank = bank;
         this.number = number;
     }

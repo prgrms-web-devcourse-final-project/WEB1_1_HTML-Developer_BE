@@ -23,14 +23,17 @@ public class OAuth2LoginFailureHandler implements AuthenticationFailureHandler {
     private final HandlerExceptionResolver resolver;
 
     public OAuth2LoginFailureHandler(
-        @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver
+        @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
     ) {
         this.resolver = resolver;
     }
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-            throws IOException, ServletException {
+    public void onAuthenticationFailure(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final AuthenticationException exception
+    ) throws IOException, ServletException {
         log.info("OAuth2 로그인 실패 예외 발생: {}", exception.getMessage());
         resolver.resolveException(request, response, null, new CustomException(GlobalErrorCode.UNAUTHORIZED_ERROR));
     }

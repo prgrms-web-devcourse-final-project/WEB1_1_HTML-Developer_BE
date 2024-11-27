@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.backend.allreva.artist.command.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
-import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.backend.allreva.support.DatabaseCleanUpUtil;
@@ -26,10 +26,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,8 +51,10 @@ public class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
                 "https://my_picture");
         ReflectionTestUtils.setField(member, "id", 1L);
 
-        PrincipalDetails principalDetails = new PrincipalDetails(member, null);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null,
+        var principalDetails = new PrincipalDetails(member, null);
+        var authentication = new UsernamePasswordAuthenticationToken(
+                principalDetails,
+                null,
                 principalDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
@@ -69,12 +69,12 @@ public class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
     @Transactional
     void oauth2_회원가입_API_통합_테스트() throws Exception {
         // given
-        Artist artist = Artist.builder()
+        var artist = Artist.builder()
                 .id("spotify_1L")
                 .name("Spotify").build();
         artistRepository.save(artist);
 
-        MemberInfoRequest memberInfoRequest = new MemberInfoRequest(
+        var memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
                 "updated profile image url",
@@ -82,13 +82,14 @@ public class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
         );
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/oauth2/register")
+        var resultActions = mockMvc.perform(post("/api/v1/oauth2/register")
                 .content(objectMapper.writeValueAsString(memberInfoRequest))
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
         // then
-        resultActions.andDo(print())
+        resultActions
+                .andDo(print())
                 .andExpect(status().isNoContent());
         Optional<Member> registeredMember = memberRepository.findById(member.getId());
         registeredMember.ifPresent(registered ->

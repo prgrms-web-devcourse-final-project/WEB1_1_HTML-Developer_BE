@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String memberId) throws UsernameNotFoundException {
         Member member = memberRepository.findById(Long.valueOf(memberId))
                 .orElseThrow(MemberNotFoundException::new);
 

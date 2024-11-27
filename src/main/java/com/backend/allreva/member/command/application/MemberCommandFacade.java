@@ -17,8 +17,8 @@ public class MemberCommandFacade {
 
     @Transactional
     public void registerMember(
-            MemberInfoRequest memberInfoRequest,
-            Member member
+            final MemberInfoRequest memberInfoRequest,
+            final Member member
     ) {
         // TODO: 이미지 S3 등록 및 URL 응답
         memberInfoCommandService.registerMember(memberInfoRequest, member);
@@ -27,8 +27,8 @@ public class MemberCommandFacade {
 
     @Transactional
     public void updateMemberInfo(
-            MemberInfoRequest memberInfoRequest,
-            Member member
+            final MemberInfoRequest memberInfoRequest,
+            final Member member
     ) {
         memberInfoCommandService.updateMemberInfo(memberInfoRequest, member);
         memberArtistCommandService.updateMemberArtist(memberInfoRequest.memberArtistRequests(), member);
@@ -36,15 +36,15 @@ public class MemberCommandFacade {
 
     @Transactional
     public void registerRefundAccount(
-            RefundAccountRequest refundAccountRequest,
-            Member member
+            final RefundAccountRequest refundAccountRequest,
+            final Member member
     ) {
         memberInfoCommandService.registerRefundAccount(refundAccountRequest, member);
     }
 
     @Transactional
     public void deleteRefundAccount(
-            Member member
+            final Member member
     ) {
         memberInfoCommandService.deleteRefundAccount(member);
     }

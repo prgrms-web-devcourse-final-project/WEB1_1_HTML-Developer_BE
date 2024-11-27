@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemberArtistRepository extends JpaRepository<MemberArtist, Long> {
-    List<MemberArtist> findByMemberId(Long memberId);
+    List<MemberArtist> findByMemberId(final Long memberId);
 }

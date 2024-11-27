@@ -51,17 +51,15 @@ public class MemberArtistCommandTest {
     @Test
     void 관심_아티스트를_성공적으로_수정한다() {
         // given
-        Artist artist = Artist.builder()
+        var artist = Artist.builder()
                 .id("spotify_1L")
                 .name("하현상")
                 .build();
         given(artistCommandService.getArtistById(any(String.class))).willReturn(artist);
-        List<MemberArtistRequest> requests = List.of(
-                new MemberArtistRequest("spotify_1L")
-        );
+        var memberArtistRequests = List.of(new MemberArtistRequest("spotify_1L"));
 
         // when
-        memberArtistCommandService.updateMemberArtist(requests, member);
+        memberArtistCommandService.updateMemberArtist(memberArtistRequests, member);
 
         // then
         verify(memberArtistRepository, times(1)).deleteAll(any());

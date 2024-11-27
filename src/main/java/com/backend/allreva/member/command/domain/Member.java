@@ -54,12 +54,12 @@ public class Member extends BaseEntity {
 
     @Builder
     private Member(
-            Email email,
-            MemberRole memberRole,
-            LoginProvider loginProvider,
-            String nickname,
-            String introduce,
-            String profileImageUrl
+            final Email email,
+            final MemberRole memberRole,
+            final LoginProvider loginProvider,
+            final String nickname,
+            final String introduce,
+            final String profileImageUrl
     ) {
         this.email = email;
         this.memberRole = memberRole;
@@ -77,10 +77,10 @@ public class Member extends BaseEntity {
      * 아직 회원가입이 완전히 이루어진 상태가 아니기 때문에 GUEST 권한으로 등록되어 있습니다. 회원가입에 필요한 정보들을 모두 기입할 시 USER 권한으로 승격됩니다. - password 없음
      */
     public static Member createTemporary(
-            String email,
-            String nickname,
-            LoginProvider loginProvider,
-            String profileImageUrl
+            final String email,
+            final String nickname,
+            final LoginProvider loginProvider,
+            final String profileImageUrl
     ) {
         return Member.builder()
                 .email(Email.builder()
@@ -93,7 +93,11 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void setMemberInfo(String nickname, String introduce, String profileImageUrl) {
+    public void setMemberInfo(
+            final String nickname,
+            final String introduce,
+            final String profileImageUrl
+    ) {
         this.memberInfo = MemberInfo.builder()
                 .nickname(nickname)
                 .introduce(introduce)
@@ -101,7 +105,10 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void setRefundAccount(String bank, String number) {
+    public void setRefundAccount(
+            final String bank,
+            final String number
+    ) {
         this.refundAccount = RefundAccount.builder()
                 .bank(bank)
                 .number(number)

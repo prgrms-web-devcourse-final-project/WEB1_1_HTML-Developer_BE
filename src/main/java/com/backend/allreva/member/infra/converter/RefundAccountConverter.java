@@ -11,7 +11,7 @@ public class RefundAccountConverter implements AttributeConverter<RefundAccount,
     private final String DELEMETER = ",";
 
     @Override
-    public String convertToDatabaseColumn(RefundAccount attribute) {
+    public String convertToDatabaseColumn(final RefundAccount attribute) {
         if (attribute == null) {
             return DELEMETER;
         }
@@ -27,7 +27,7 @@ public class RefundAccountConverter implements AttributeConverter<RefundAccount,
     }
 
     @Override
-    public RefundAccount convertToEntityAttribute(String dbData) {
+    public RefundAccount convertToEntityAttribute(final String dbData) {
         if (dbData.equals(DELEMETER)) {
             return RefundAccount.builder()
                     .build();

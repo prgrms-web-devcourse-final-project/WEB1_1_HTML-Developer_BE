@@ -43,14 +43,14 @@ public class RefundAccountCommandTest {
     @Test
     void 환불_계좌_정보를_성공적으로_등록한다() {
         // given
-        RefundAccountRequest refundAccountRequest = new RefundAccountRequest("땡땡은행", "123456789");
+        var refundAccountRequest = new RefundAccountRequest("땡땡은행", "123456789");
         given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        Member registered = memberInfoCommandService.registerRefundAccount(refundAccountRequest, member);
+        var registeredMember = memberInfoCommandService.registerRefundAccount(refundAccountRequest, member);
 
         // then
-        assertThat(registered.getRefundAccount().getBank()).isEqualTo("땡땡은행");
+        assertThat(registeredMember.getRefundAccount().getBank()).isEqualTo("땡땡은행");
     }
 
     @Test
@@ -59,9 +59,9 @@ public class RefundAccountCommandTest {
         given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        Member deleted = memberInfoCommandService.deleteRefundAccount(member);
+        var deletedMember = memberInfoCommandService.deleteRefundAccount(member);
 
         // then
-        assertThat(deleted.getRefundAccount().getBank()).isEqualTo("");
+        assertThat(deletedMember.getRefundAccount().getBank()).isEqualTo("");
     }
 }

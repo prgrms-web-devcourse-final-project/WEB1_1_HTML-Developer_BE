@@ -31,7 +31,7 @@ public class MemberArtist extends BaseEntity {
     private String artistId;
 
     @Builder
-    private MemberArtist(Long memberId, String artistId) {
+    private MemberArtist(final Long memberId, final String artistId) {
         this.memberId = memberId;
         this.artistId = artistId;
     }

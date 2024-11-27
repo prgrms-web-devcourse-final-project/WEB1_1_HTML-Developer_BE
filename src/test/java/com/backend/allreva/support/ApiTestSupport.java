@@ -17,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -54,8 +53,10 @@ public abstract class ApiTestSupport {
                 "https://my_picture");
         ReflectionTestUtils.setField(member, "id", 1L);
 
-        PrincipalDetails principalDetails = new PrincipalDetails(member, null);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null,
+        var principalDetails = new PrincipalDetails(member, null);
+        var authentication = new UsernamePasswordAuthenticationToken(
+                principalDetails,
+                null,
                 principalDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

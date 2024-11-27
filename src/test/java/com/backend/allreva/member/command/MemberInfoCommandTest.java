@@ -43,7 +43,7 @@ public class MemberInfoCommandTest {
     @Test
     void 회원_가입_시_회원_정보를_성공적으로_등록한다() {
         // given
-        MemberInfoRequest memberInfoRequest = new MemberInfoRequest(
+        var memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
                 "updated profile image url",
@@ -52,7 +52,7 @@ public class MemberInfoCommandTest {
         given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
-        Member updatedMember = memberInfoCommandService.updateMemberInfo(memberInfoRequest, member);
+        var updatedMember = memberInfoCommandService.updateMemberInfo(memberInfoRequest, member);
 
         // then
         assertThat(updatedMember.getMemberInfo().getIntroduce()).isEqualTo("test introduce");
@@ -61,7 +61,7 @@ public class MemberInfoCommandTest {
     @Test
     void 회원_정보를_성공적으로_수정한다() {
         // given
-        MemberInfoRequest memberInfoRequest = new MemberInfoRequest(
+        var memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
                 "updated profile image url",
