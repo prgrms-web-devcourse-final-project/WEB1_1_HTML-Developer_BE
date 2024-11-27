@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SurveyConverter {
-    public Survey toSurvey(Long memberId, OpenSurveyRequest request) {
+    public Survey toSurvey(final Long memberId,
+                           final OpenSurveyRequest request) {
         return Survey.builder()
                 .memberId(memberId)
                 .concertId(request.concertId())
@@ -23,7 +24,9 @@ public class SurveyConverter {
                 .build();
     }
 
-    public SurveyJoin toSurveyJoin(Long memberId, Long surveyId, JoinSurveyRequest request) {
+    public SurveyJoin toSurveyJoin(final Long memberId,
+                                   final Long surveyId,
+                                   final JoinSurveyRequest request) {
         return SurveyJoin.builder()
                 .memberId(memberId)
                 .surveyId(surveyId)

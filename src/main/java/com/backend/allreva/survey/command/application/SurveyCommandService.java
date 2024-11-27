@@ -21,7 +21,8 @@ public class SurveyCommandService {
     private final ConcertRepository concertRepository;
     private final SurveyConverter surveyConverter;
 
-    public SurveyIdResponse openSurvey(Long memberId, OpenSurveyRequest openSurveyRequest) {
+    public SurveyIdResponse openSurvey(final Long memberId,
+                                       final OpenSurveyRequest openSurveyRequest) {
         checkConcert(openSurveyRequest);
 
         Survey survey = surveyCommandRepository.save(
@@ -29,7 +30,9 @@ public class SurveyCommandService {
         return new SurveyIdResponse(survey.getId());
     }
 
-    public void updateSurvey(Long memberId, Long surveyId, UpdateSurveyRequest request) {
+    public void updateSurvey(final Long memberId,
+                             final Long surveyId,
+                             final UpdateSurveyRequest request) {
         Survey survey = findSurvey(surveyId);
         if (survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
@@ -44,7 +47,7 @@ public class SurveyCommandService {
         );
     }
 
-    public void removeSurvey(Long memberId, Long surveyId) {
+    public void removeSurvey(final Long memberId, final Long surveyId) {
         Survey survey = findSurvey(surveyId);
 
         if (survey.isWriter(memberId)) {
@@ -55,7 +58,9 @@ public class SurveyCommandService {
         surveyCommandRepository.delete(survey);
     }
 
-    public SurveyJoinIdResponse createSurveyResponse(Long memberId, Long surveyId, JoinSurveyRequest request) {
+    public SurveyJoinIdResponse createSurveyResponse(final Long memberId,
+                                                     final Long surveyId,
+                                                     final JoinSurveyRequest request) {
         checkSurvey(surveyId);
 
         SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
@@ -63,17 +68,17 @@ public class SurveyCommandService {
         return new SurveyJoinIdResponse(surveyJoin.getId());
     }
 
-    private void checkConcert(OpenSurveyRequest request) {
+    private void checkConcert(final OpenSurveyRequest request) {
         if (!concertRepository.existsById(request.concertId()))
             throw new ConcertNotFoundException();
     }
 
-    private void checkSurvey(Long surveyId) {
+    private void checkSurvey(final Long surveyId) {
         if (!surveyCommandRepository.existsById(surveyId))
             throw new SurveyNotFoundException();
     }
 
-    private Survey findSurvey(Long surveyId) {
+    private Survey findSurvey(final Long surveyId) {
         return surveyCommandRepository.findById(surveyId)
                 .orElseThrow(SurveyNotFoundException::new);
     }

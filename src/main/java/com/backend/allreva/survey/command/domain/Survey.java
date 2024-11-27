@@ -59,8 +59,15 @@ public class Survey extends BaseEntity {
 
 
     @Builder
-    public Survey(Long memberId, Long concertId, String title, List<LocalDate> boardingDate, String artistName,
-                  Region region, LocalDate endDate, int maxPassenger, String information) {
+    public Survey(Long memberId,
+                  Long concertId,
+                  String title,
+                  List<LocalDate> boardingDate,
+                  String artistName,
+                  Region region,
+                  LocalDate endDate,
+                  int maxPassenger,
+                  String information) {
         this.memberId = memberId;
         this.concertId = concertId;
         this.title = title;
@@ -73,8 +80,12 @@ public class Survey extends BaseEntity {
         this.isClosed = false;
     }
 
-    public void update(String title, List<LocalDate> boardingDate, Region region,
-                       LocalDate endDate, int maxPassenger, String information) {
+    public void update(String title,
+                       List<LocalDate> boardingDate,
+                       Region region,
+                       LocalDate endDate,
+                       int maxPassenger,
+                       String information) {
         this.title = title;
         this.boardingDate = boardingDate;
         this.region = region;

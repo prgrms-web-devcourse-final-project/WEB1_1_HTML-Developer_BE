@@ -11,6 +11,7 @@ import java.util.List;
 public interface SurveyQueryRepository {
     SurveyDetailResponse findSurveyDetail(final Long surveyId);
 
-    List<SurveySummaryResponse> findSurveyList(final Region region, final SortType sortType, final Long lastId, final LocalDate lastEndDate, final int pageSize);
+    List<SurveySummaryResponse> findSurveyList(final Region region, final SortType sortType,
+                                               final Long lastId, final LocalDate lastEndDate, final int pageSize);
 
 }

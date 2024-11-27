@@ -14,12 +14,15 @@ import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/surveys")
@@ -85,11 +88,11 @@ public class SurveyController {
                                                                 @RequestParam(name = "sort", defaultValue = "LATEST") SortType sortType,
                                                                 @RequestParam(name = "lastId", required = false) Long lastId,
                                                                 @RequestParam(name = "lastEndDate", required = false) LocalDate lastEndDate,
-                                                                @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
-        if (pageSize < 10) pageSize = 10;
+                                                                @Min(10) @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
         if (lastEndDate != null && lastId == null) {
             throw new SurveyIllegalParameterException();
         }
+        
         return Response.onSuccess(surveyQueryService.findSurveyList(region, sortType, lastId, lastEndDate, pageSize));
     }
 }
