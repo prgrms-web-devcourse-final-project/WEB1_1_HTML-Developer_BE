@@ -20,7 +20,7 @@ public class WithCustomMockUserSecurityContextFactory implements WithSecurityCon
 
         Member member = Member.createTemporary("allreva@gmail.com", "닉네임", LoginProvider.KAKAO, ".jpg");
         ReflectionTestUtils.setField(member, "id", 1L);
-        member.updateMemberInfo("닉네임", "소개", ".jpg");
+        member.setMemberInfo("닉네임", "소개", ".jpg");
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 
