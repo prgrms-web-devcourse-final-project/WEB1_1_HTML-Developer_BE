@@ -3,6 +3,7 @@ package com.backend.allreva.search.infra;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
 import com.backend.allreva.search.query.domain.ConcertDocument;
+import com.backend.allreva.search.query.domain.CustomConcertSearchRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -18,11 +19,19 @@ public class CustomConcertSearchRepoImpl implements CustomConcertSearchRepo {
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public SearchHits<ConcertDocument> searchMainConcerts(final String address, final List<Object> searchAfter, final int size, final SortDirection sortDirection) {
+    public SearchHits<ConcertDocument> searchMainConcerts(
+            final String address,
+            final List<Object> searchAfter,
+            final int size,
+            final SortDirection sortDirection) {
         NativeQuery searchQuery = getNativeQuery(address, searchAfter, size, sortDirection);
         return elasticsearchOperations.search(searchQuery, ConcertDocument.class);
     }
-    private static NativeQuery getNativeQuery(final String address, final List<Object> searchAfter, final int size, final SortDirection sortDirection) {
+    private static NativeQuery getNativeQuery(
+            final String address,
+            final List<Object> searchAfter,
+            final int size,
+            final SortDirection sortDirection) {
         NativeQueryBuilder nativeQueryBuilder = NativeQuery.builder()
                 .withQuery(q -> {
                     if (StringUtils.hasText(address)) {

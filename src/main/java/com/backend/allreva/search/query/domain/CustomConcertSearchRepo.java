@@ -1,7 +1,6 @@
-package com.backend.allreva.search.infra;
+package com.backend.allreva.search.query.domain;
 
 import com.backend.allreva.concert.command.domain.value.SortDirection;
-import com.backend.allreva.search.query.domain.ConcertDocument;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.util.List;

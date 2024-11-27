@@ -34,7 +34,11 @@ public class ConcertQueryService {
         return concertRepository.findDetailById(concertId);
     }
 
-    public ConcertMainResponse getConcertMain(final String address, final List<Object> searchAfter, final int size, final SortDirection sortDirection) {
+    public ConcertMainResponse getConcertMain(
+            final String address,
+            final List<Object> searchAfter,
+            final int size,
+            final SortDirection sortDirection) {
 
         try {
             SearchHits<ConcertDocument> searchHits = concertSearchRepository.searchMainConcerts(address, searchAfter, size +1, sortDirection);
