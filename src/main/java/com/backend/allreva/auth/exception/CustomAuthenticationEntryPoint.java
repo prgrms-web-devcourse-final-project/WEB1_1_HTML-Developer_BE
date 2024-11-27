@@ -20,7 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     private final HandlerExceptionResolver resolver;
 
     public CustomAuthenticationEntryPoint(
-        @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver
+        @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
     ) {
         this.resolver = resolver;
     }

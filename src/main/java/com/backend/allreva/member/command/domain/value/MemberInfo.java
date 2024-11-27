@@ -12,13 +12,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MemberInfo {
 
+    @Column(nullable = false)
     private String nickname;
     private String introduce;
-    @Column(name = "profile_image_url")
+    @Column(name = "profile_image_url", nullable = false)
     private String profileImageUrl;
 
     @Builder
-    private MemberInfo(String nickname, String introduce, String profileImageUrl) {
+    private MemberInfo(
+            final String nickname,
+            final String introduce,
+            final String profileImageUrl
+    ) {
         this.nickname = nickname;
         this.introduce = introduce;
         this.profileImageUrl = profileImageUrl;

@@ -21,11 +21,11 @@ public class JwtValidator {
 
     private final SecretKey secretKey;
 
-    public JwtValidator(@Value("${jwt.secret-key}") String secretKey) {
+    public JwtValidator(@Value("${jwt.secret-key}") final String secretKey) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public void validateToken(String token) {
+    public void validateToken(final String token) {
         try {
             Jwts.parser()
                     .verifyWith(secretKey)

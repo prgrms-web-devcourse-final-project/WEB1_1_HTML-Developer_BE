@@ -48,9 +48,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * JWT 토큰을 검증하는 메서드
      */
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull final HttpServletRequest request,
+            @NonNull final HttpServletResponse response,
+            @NonNull final FilterChain filterChain
+    ) throws ServletException, IOException {
         // JWT 인가 과정 필요없는 URL 제외
         if (isExcluded(request)) {
             filterChain.doFilter(request, response);
@@ -82,12 +84,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isExcluded(HttpServletRequest request) {
+    private boolean isExcluded(final HttpServletRequest request) {
         return EXCLUDED_URL_MATCHERS.stream()
                 .anyMatch(matcher -> matcher.matches(request));
     }
 
-    private void setAuthenication(String email, HttpServletRequest request) {
+    private void setAuthenication(final String email, final HttpServletRequest request) {
         // member db 확인
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
