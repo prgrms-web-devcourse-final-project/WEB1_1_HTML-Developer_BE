@@ -17,8 +17,7 @@ public class AdminConcertController {     //TODO : 추후 관리자 권한 설�
 
     @PostMapping
     public Response<Void> fetchConcertInfoList() {
-        adminConcertService.fetchConcertInfoList(LocalDate.of(2024,10,01),
-                LocalDate.of(2025,01,31));
+        adminConcertService.fetchConcertInfoList();
         return Response.onSuccess();
     }
 }

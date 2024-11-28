@@ -2,8 +2,8 @@ package com.backend.allreva.concert.infra.dto;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlRootElement(name = "dbs")
@@ -25,16 +24,13 @@ public class KopisConcertCodeResponse {
         return dbList == null ? new ArrayList<>() : dbList;
     }
 
-    @Setter
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Db {
-        private String id;
-
         @XmlElement(name = "mt20id")
-        public String getId() {
-            return id;
-        }
+        private String id;
 
     }
 }

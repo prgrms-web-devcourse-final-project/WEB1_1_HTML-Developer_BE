@@ -2,63 +2,108 @@ package com.backend.allreva.concert.infra.dto;
 
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.common.model.Image;
-
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.value.*;
-import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.concert.command.domain.value.ConcertStatus;
-import com.backend.allreva.concert.command.domain.value.Seller;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class KopisConcertResponse {
-    private String concertcd; //공연 code
-    private String fcltycd; //공연시설 kopis code
-    private String prfnm; //공연명
-    private String prfpdfrom; //시작 날짜
-    private String prfpdto; //종료 날짜
-    private String hallcd; //공연장소 kopis code
-    private String poster; //포스터
-    private String pcseguidance; //가격
-    private String prfstate; //공연상태
-    private String dtguidance; //공연 타임테이블
-    private String entrpsnmH; //주최
-    private List<String> styurls; //소개이미지 list
-    private List<Relate> relates; //판매처 list
+import static com.backend.allreva.concert.infra.dto.KopisConcertResponse.Db.Relate;
 
-    public static Concert toEntity(final KopisConcertResponse response) {
-        return com.backend.allreva.concert.command.domain.Concert.builder()
-                .concertInfo(toConcertInfo(response))
-                .poster(toIntroduceImage(response.poster))
-                .detailImages(toDetailImages(response.styurls))
-                .sellers(toSellers(response.relates))
-                .code(Code.builder()
-                        .concertCode(response.concertcd)
-                        .hallCode(response.getHallcd())
-                        .build()
-                )
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement(name = "dbs")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class KopisConcertResponse {
+    @XmlElement(name = "db")
+    private List<KopisConcertResponse.Db> dbList;
+
+    public List<KopisConcertResponse.Db> getDbList() {
+        return dbList == null ? new ArrayList<>() : dbList;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class Db {
+        @XmlElement(name = "mt20id")
+        private String concertCode; //공연 code
+        @XmlElement(name = "prfnm")
+        private String prfnm; //공연명
+        @XmlElement(name = "prfpdfrom")
+        private String prfpdfrom; //시작 날짜
+        @XmlElement(name = "prfpdto")
+        private String prfpdto; //종료 날짜
+        @XmlElement(name = "poster")
+        private String poster; //포스터
+        @XmlElement(name = "pcseguidance")
+        private String pcseguidance; //가격
+        @XmlElement(name = "prfstate")
+        private String prfstate; //공연상태
+        @XmlElement(name = "dtguidance")
+        private String dtguidance; //공연 타임테이블
+        @XmlElement(name = "entrpsnmH")
+        private String entrpsnmH; //주최
+        @XmlElement(name = "styurls")
+        private List<String> styurls; //소개이미지 list
+        @XmlElement(name = "relates")
+        private List<Relate> relates; //판매처 list
+
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @XmlAccessorType(XmlAccessType.FIELD)
+        public static class Styurls {
+            @XmlElement(name = "styurl")
+            private String styurl;
+        }
+
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @XmlAccessorType(XmlAccessType.FIELD)
+        public static class Relate {
+            @XmlElement(name = "relatenm")
+            private String relatenm;
+            @XmlElement(name = "relateurl")
+            private String relateurl;
+        }
+    }
+
+
+    public static Concert toEntity(final String hallCode,
+                                   final KopisConcertResponse response) {
+        Db db = response.getDbList().get(0);
+        return Concert.builder()
+                .concertInfo(toConcertInfo(db))
+                .poster(toIntroduceImage(db.poster))
+                .detailImages(toDetailImages(db.styurls))
+                .sellers(toSellers(db.relates))
+                .code(Code.builder().concertCode(db.concertCode).hallCode(hallCode).build())
                 .build();
     }
 
-    public static ConcertInfo toConcertInfo(final KopisConcertResponse response) {
+    public static ConcertInfo toConcertInfo(final KopisConcertResponse.Db db) {
         return ConcertInfo.builder()
-                .title(response.prfnm)
-                .price(response.pcseguidance)
+                .title(db.prfnm)
+                .host(db.entrpsnmH)
+                .price(db.pcseguidance)
+                .prfstate(ConcertStatus.convertToConcertStatus(db.prfstate))
                 .dateInfo(
                         new DateInfo(
-                                DataConverter.convertToLocalDate(response.prfpdfrom),
-                                DataConverter.convertToLocalDate(response.prfpdto),
-                                response.getDtguidance()
+                                DataConverter.convertToLocalDate(db.prfpdfrom),
+                                DataConverter.convertToLocalDate(db.prfpdto),
+                                db.getDtguidance()
                         )
                 )
-                .prfstate(ConcertStatus.convertToConcertStatus(response.prfstate))
-                .host(response.entrpsnmH)
                 .build();
     }
 

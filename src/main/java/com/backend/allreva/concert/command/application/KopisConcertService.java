@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface KopisConcertService {
 
-    List<String> fetchConcertCodes(String hallCode, LocalDate startDate, LocalDate endDate);
+    List<String> fetchConcertCodes(String hallCode, String startDate, String endDate);
 
-    List<String> fetchDailyConcertCodes(String hallCode, LocalDate today);
+    List<String> fetchDailyConcertCodes(String hallCode, String startDate, String endDate, String today);
 
     KopisConcertResponse fetchConcertDetail(String concertCode);
 }

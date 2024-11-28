@@ -1,13 +1,16 @@
 package com.backend.allreva.concert.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -45,15 +48,15 @@ public class Concert extends BaseEntity {
     )
     private List<Seller> sellers;
 
-    public void updateFrom(KopisConcertResponse response) {
-        this.concertInfo = KopisConcertResponse.toConcertInfo(response);
+    public void updateFrom(String hallCode, KopisConcertResponse.Db db) {
+        this.concertInfo = KopisConcertResponse.toConcertInfo(db);
+        this.detailImages = KopisConcertResponse.toDetailImages(db.getStyurls());
+        this.sellers = KopisConcertResponse.toSellers(db.getRelates());
+        this.poster = KopisConcertResponse.toIntroduceImage(db.getPoster());
         this.code = Code.builder()
-                .hallCode(response.getHallcd())
-                .concertCode(response.getConcertcd())
+                .concertCode(db.getConcertCode())
+                .hallCode(hallCode)
                 .build();
-        this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
-        this.sellers = KopisConcertResponse.toSellers(response.getRelates());
-        this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
     }
 
 

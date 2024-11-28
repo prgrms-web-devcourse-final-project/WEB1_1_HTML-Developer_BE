@@ -1,13 +1,14 @@
 package com.backend.allreva.concert.command.application;
 
 import com.backend.allreva.common.util.CsvUtil;
-import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
+import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
+import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,27 +18,59 @@ public class AdminConcertService {
     private final KopisConcertService kopisConcertService;
     private final ConcertRepository concertRepository;
 
-    public void fetchConcertInfoList(LocalDate startDate, LocalDate endDate) {
+    @Value("${public-data.kopis.stdate}")
+    private String startDate;
+
+    @Value("${public-data.kopis.eddate}")
+    private String endDate;
+
+
+    public void fetchConcertInfoList() {
         List<String> hallCodes = CsvUtil.readConcertHallCodes();
         hallCodes.parallelStream().forEach(hallCode -> {
-            List<String> concertCodes = kopisConcertService.fetchConcertCodes(hallCode,startDate,endDate);
+            List<String> concertCodes = kopisConcertService.fetchConcertCodes(hallCode, startDate, endDate);
+
             concertCodes.forEach(concertCode -> {
                 KopisConcertResponse response = kopisConcertService.fetchConcertDetail(concertCode);
-                concertRepository.save(KopisConcertResponse.toEntity(response));
+                concertRepository.save(KopisConcertResponse.toEntity(hallCode, response));
+                log.info("All concert details processed for hall Code: {}", hallCode);
             });
         });
     }
 
-    public void fetchDailyConcertInfoList(LocalDate today) {
+    // 매일 업데이트 함수
+    public void fetchDailyConcertInfoList(String today) {
         List<String> hallCodes = CsvUtil.readConcertHallCodes();
+
         hallCodes.parallelStream().forEach(hallCode -> {
-            List<String> concertCodes = kopisConcertService.fetchDailyConcertCodes(hallCode, today);
+            List<String> concertCodes = kopisConcertService.fetchDailyConcertCodes(hallCode, startDate, endDate, today);
+
             concertCodes.forEach(concertCode -> {
                 KopisConcertResponse response = kopisConcertService.fetchConcertDetail(concertCode);
-                concertRepository.save(KopisConcertResponse.toEntity(response));
+                if (!response.getDbList().isEmpty()) {
+                    processConcertUpdateOrInsert(hallCode, response);
+                    log.info("All concert details updated for hall Code: {}", hallCode);
+                }
             });
         });
+    }
+
+    // 공연 정보 업데이트 혹은 새로 추가
+    private void processConcertUpdateOrInsert(String hallCode, KopisConcertResponse response) {
+        String tempConcertCode = response.getDbList().get(0).getConcertCode();
+        boolean isExist = concertRepository.existsByCodeConcertCode(tempConcertCode);
+
+        if (isExist) {
+            updateConcert(hallCode, response, tempConcertCode);
+        } else {
+            concertRepository.save(KopisConcertResponse.toEntity(hallCode, response));
+        }
+    }
+
+    // 기존 공연 정보 업데이트
+    private void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
+        Concert existingConcert = concertRepository.findByCodeConcertCode(concertCode);
+        existingConcert.updateFrom(hallCode, response.getDbList().get(0));
+        concertRepository.save(existingConcert);
     }
 }
-
-

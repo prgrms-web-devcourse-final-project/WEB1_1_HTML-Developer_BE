@@ -19,9 +19,9 @@ import java.time.LocalDate;
 public interface OpenFeignClient {
     @GetMapping("${public-data.kopis.prfplc-url}")
     KopisConcertCodeResponse fetchConcertCodes(@RequestParam(value = "prfplccd") String hallCode,
-                                               @RequestParam(value = "stdate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate startDate,
-                                               @RequestParam(value = "eddate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate endDate,
-                                               @RequestParam(value = "afterDate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate today);
+                                               @RequestParam(value = "stdate")String startDate,
+                                               @RequestParam(value = "eddate")String endDate,
+                                               @RequestParam(value = "afterDate", required = false) String today);
 
     @GetMapping("${public-data.kopis.prf-url}")
     KopisConcertResponse fetchConcertDetail(@PathVariable(value = "concertCode") String concertCode);

@@ -15,7 +15,7 @@ public class AdminHallController {     //TODO : 추후 관리자 권한 설정
 
     @PostMapping
     public Response<Void> fetchConcertHallInfoList() {
-        adminHallService.fetchConcertHallInfoList();
+      //  adminHallService.fetchConcertHallInfoList();
         return Response.onSuccess();
     }
 }

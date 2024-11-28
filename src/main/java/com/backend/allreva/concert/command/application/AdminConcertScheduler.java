@@ -14,12 +14,12 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class AdminConcertScheduler {
     private final AdminConcertService adminConcertService;
-    @Scheduled(cron = "0 0 4 * * *") //초 분 시 일 월 요일
-    public void saveBestSeller() {
+   @Scheduled(cron = "0 0 4 * * *") //초 분 시 일 월 요일
+    public void fetchDailyConcertInfoList() {
         try {
-            adminConcertService.fetchDailyConcertInfoList(LocalDate.now());
             LocalDate today = LocalDate.now();
-            String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            adminConcertService.fetchDailyConcertInfoList(formattedDate);
             log.info(" {} :daily concert info update complete", formattedDate);
         } catch (Exception e) {
             log.info("can't update daily concert info. Message: {}", e.getMessage());
