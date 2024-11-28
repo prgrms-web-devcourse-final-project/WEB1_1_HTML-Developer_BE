@@ -75,7 +75,7 @@ class RentFormWriteTest extends IntegrationTestSupport {
                         .title("title")
                         .artistName("artistName")
                         .depositAccount("depositAccount")
-                        .region(Region.SEOUL)
+                        .region(Region.서울)
                         .build())
                 .operationInfo(OperationInfo.builder()
                         .boardingArea("boardingArea")

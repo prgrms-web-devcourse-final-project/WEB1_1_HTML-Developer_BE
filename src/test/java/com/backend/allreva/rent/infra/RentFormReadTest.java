@@ -1,6 +1,7 @@
 package com.backend.allreva.rent.infra;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.rent.command.application.RentFormReadService;
@@ -15,6 +16,7 @@ import com.backend.allreva.rent.command.domain.value.OperationInfo;
 import com.backend.allreva.rent.command.domain.value.Price;
 import com.backend.allreva.rent.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
+import com.backend.allreva.rent.exception.RentFormNotFoundException;
 import com.backend.allreva.support.IntegrationTestSupport;
 import java.time.LocalDate;
 import java.util.List;
@@ -52,6 +54,15 @@ class RentFormReadTest extends IntegrationTestSupport {
         });
     }
 
+    @Test
+    void 차량_대절_폼이_없을_경우_예외를_발생시킨다() {
+        // given
+        var rentFormId = 2L;
+
+        // when & then
+        assertThrows(RentFormNotFoundException.class, () -> rentFormReadService.getRentFormById(rentFormId));
+    }
+
     private RentForm createRentFormFixture() {
         return RentForm.builder()
                 .memberId(1L)
@@ -61,7 +72,7 @@ class RentFormReadTest extends IntegrationTestSupport {
                         .title("title")
                         .artistName("artistName")
                         .depositAccount("depositAccount")
-                        .region(Region.SEOUL)
+                        .region(Region.서울)
                         .build())
                 .operationInfo(OperationInfo.builder()
                         .boardingArea("boardingArea")
