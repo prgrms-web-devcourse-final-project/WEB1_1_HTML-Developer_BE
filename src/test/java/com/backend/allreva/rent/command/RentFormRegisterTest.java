@@ -40,7 +40,7 @@ class RentFormRegisterTest {
     @Test
     void 차량_대절_폼_개설을_성공한다() {
         // given
-        var user = createMockUser(1l);
+        var user = createMockUser(1L);
         var rentFormRequest = createRentFormRegisterRequestFixture();
         given(rentFormWriteService.saveRentForm(any(RentForm.class))).willAnswer(invocation -> invocation.getArgument(0));
 

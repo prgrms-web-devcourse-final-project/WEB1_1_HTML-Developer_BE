@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 class RentFormWriteTest extends IntegrationTestSupport {
@@ -31,6 +32,7 @@ class RentFormWriteTest extends IntegrationTestSupport {
     private RentFormRepository rentFormRepository;
 
     @Test
+    @Transactional
     void 차량_대절_폼을_성공적으로_저장한다() {
         // given
         var rentForm = createRentFormFixture();

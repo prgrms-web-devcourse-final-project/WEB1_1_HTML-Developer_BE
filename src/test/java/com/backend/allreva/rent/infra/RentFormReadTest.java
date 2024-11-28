@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 class RentFormReadTest extends IntegrationTestSupport {
@@ -40,6 +41,7 @@ class RentFormReadTest extends IntegrationTestSupport {
     }
 
     @Test
+    @Transactional
     void 차량_대절_폼_조회를_성공한다() {
         // given
         var rentFormId = 1L;
@@ -55,6 +57,7 @@ class RentFormReadTest extends IntegrationTestSupport {
     }
 
     @Test
+    @Transactional
     void 차량_대절_폼이_없을_경우_예외를_발생시킨다() {
         // given
         var rentFormId = 2L;

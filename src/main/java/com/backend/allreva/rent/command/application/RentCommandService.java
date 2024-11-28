@@ -16,16 +16,16 @@ public class RentCommandService {
     private final RentFormWriteService rentFormWriteService;
 
     @Transactional
-    public RentForm registerRentForm(
+    public void registerRentForm(
             final RentFormRegisterRequest rentFormRegisterRequest,
             final Member member
     ) {
         RentForm rentForm = rentFormRegisterRequest.toEntity(member.getId());
-        return rentFormWriteService.saveRentForm(rentForm);
+        rentFormWriteService.saveRentForm(rentForm);
     }
 
     @Transactional
-    public RentForm updateRentForm(
+    public void updateRentForm(
             final RentFormUpdateRequest rentFormUpdateRequest,
             final Member member
     ) {
@@ -35,6 +35,5 @@ public class RentCommandService {
         rentForm.updateRentForm(rentFormUpdateRequest);
 
         rentFormWriteService.saveRentForm(rentForm);
-        return rentForm;
     }
 }
