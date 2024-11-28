@@ -61,7 +61,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         return queryFactory
                 .select(surveySummaryProjections())
                 .from(survey)
-                .where(survey.endDate.goe(LocalDate.now()),
+                .where(survey.eddate.goe(LocalDate.now()),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate))
                 .orderBy(orderSpecifiers(sortType))
@@ -77,7 +77,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 ExpressionUtils.as(
                         getParticipantCount(survey.id), "participantCount"
                 ),
-                survey.endDate
+                survey.eddate
         );
     }
 
@@ -101,8 +101,8 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
 
         switch (sortType) {
             case CLOSING -> {
-                return (survey.endDate.gt(lastEndDate))
-                        .or(survey.endDate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
+                return (survey.eddate.gt(lastEndDate))
+                        .or(survey.eddate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
             }
             case OLDEST -> {
                 return survey.id.gt(lastId);
@@ -117,7 +117,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         switch (sortType) {
             case CLOSING -> {
                 return new OrderSpecifier[]{
-                        survey.endDate.asc(),
+                        survey.eddate.asc(),
                         survey.id.asc()
                 };
             }

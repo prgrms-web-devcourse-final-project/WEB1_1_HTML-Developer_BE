@@ -48,7 +48,7 @@ public class Concert extends BaseEntity {
     )
     private List<Seller> sellers;
 
-    public void updateFrom(KopisConcertResponse response) {
+    public void updateFrom(final KopisConcertResponse response) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(response);
         this.code = Code.builder()
                 .hallCode(response.getHallcd())

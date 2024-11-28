@@ -41,7 +41,7 @@ public class Survey extends BaseEntity {
     private Region region;
 
     @Column(nullable = false)
-    private LocalDate endDate;
+    private LocalDate eddate;
 
     @Column(nullable = false)
     private int maxPassenger;
@@ -65,7 +65,7 @@ public class Survey extends BaseEntity {
                   List<LocalDate> boardingDate,
                   String artistName,
                   Region region,
-                  LocalDate endDate,
+                  LocalDate eddate,
                   int maxPassenger,
                   String information) {
         this.memberId = memberId;
@@ -74,7 +74,7 @@ public class Survey extends BaseEntity {
         this.boardingDate = boardingDate;
         this.artistName = artistName;
         this.region = region;
-        this.endDate = endDate;
+        this.eddate = eddate;
         this.maxPassenger = maxPassenger;
         this.information = information;
         this.isClosed = false;
@@ -83,13 +83,13 @@ public class Survey extends BaseEntity {
     public void update(String title,
                        List<LocalDate> boardingDate,
                        Region region,
-                       LocalDate endDate,
+                       LocalDate eddate,
                        int maxPassenger,
                        String information) {
         this.title = title;
         this.boardingDate = boardingDate;
         this.region = region;
-        this.endDate = endDate;
+        this.eddate = eddate;
         this.maxPassenger = maxPassenger;
         this.information = information;
     }
