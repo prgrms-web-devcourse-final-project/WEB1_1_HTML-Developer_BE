@@ -3,7 +3,7 @@ package com.backend.allreva.survey.command.application;
 import com.backend.allreva.IntegralTestSupport;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
-import com.backend.allreva.concert.command.domain.exception.ConcertNotFoundException;
+import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.survey.command.application.dto.*;

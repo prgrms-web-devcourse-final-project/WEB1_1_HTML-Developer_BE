@@ -1,16 +1,14 @@
 package com.backend.allreva.concert.query.application;
 
 
-import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import com.backend.allreva.common.exception.CustomException;
-import com.backend.allreva.common.exception.code.GlobalErrorCode;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
+import com.backend.allreva.concert.exception.ConcertSearchNotFoundException;
+import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertMain;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.search.infra.ConcertSearchRepository;
 import com.backend.allreva.search.query.domain.ConcertDocument;
-import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -40,23 +38,22 @@ public class ConcertQueryService {
             final int size,
             final SortDirection sortDirection) {
 
-        try {
-            SearchHits<ConcertDocument> searchHits = concertSearchRepository.searchMainConcerts(address, searchAfter, size +1, sortDirection);
-            List<ConcertMain> concerts = searchHits.getSearchHits().stream()
-                    .map(SearchHit::getContent)
-                    .map(ConcertMain::from)
-                    .limit(size)
-                    .toList();
+        SearchHits<ConcertDocument> searchHits = concertSearchRepository.searchMainConcerts(address, searchAfter, size +1, sortDirection);
+        List<ConcertMain> concerts = searchHits.getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .map(ConcertMain::from)
+                .limit(size)
+                .toList();
 
-            boolean hasNext = searchHits.getSearchHits().size() > size;
-            List<Object> nextSearchAfter = hasNext ?
-                    searchHits.getSearchHits().get(size - 1).getSortValues() : null;
-            return ConcertMainResponse.from(concerts, nextSearchAfter);
-
-        } catch (ElasticsearchException e) {
-            log.error("ElasticsearchException : {}", e.getMessage());
-            throw new CustomException(GlobalErrorCode.SERVER_ERROR);
+        if(concerts.isEmpty()){
+            throw new ConcertSearchNotFoundException();
         }
+
+        boolean hasNext = searchHits.getSearchHits().size() > size;
+        List<Object> nextSearchAfter = hasNext ?
+                searchHits.getSearchHits().get(size - 1).getSortValues() : null;
+        return ConcertMainResponse.from(concerts, nextSearchAfter);
+
     }
 
 }

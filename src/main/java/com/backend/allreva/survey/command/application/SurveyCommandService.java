@@ -2,7 +2,7 @@ package com.backend.allreva.survey.command.application;
 
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
-import com.backend.allreva.concert.command.domain.exception.ConcertNotFoundException;
+import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.SurveyJoin;
