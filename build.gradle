@@ -39,8 +39,11 @@ dependencies {
 
     //jaxb
     implementation 'io.github.openfeign:feign-jaxb:11.0'
+
+    // JAXB API 의존성 추가
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+    implementation 'javax.activation:activation:1.1.1'
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
@@ -75,7 +78,7 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.8'
 
     // jackson XML
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2'
+    //implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'

@@ -13,12 +13,12 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class AdminHallService {
-    private final KopisHallService kopisHallService;
+    //private final KopisHallService kopisHallService;
     private final ConcertHallRepository concertHallRepository;
 
-    //공연장 정보 받아오기
+/*    //공연장 정보 받아오기
     public void fetchConcertHallInfoList() {
-        List<String> hallIds = CsvUtil.readConcertHallIds();
+        List<String> hallIds = CsvUtil.readConcertHallCodes();
         hallIds.parallelStream()
                 .forEach(hallId -> {
                     KopisHallResponse response = kopisHallService.fetchConcertHallDetail(hallId).block();
@@ -27,5 +27,5 @@ public class AdminHallService {
                     log.info("hall detail fetch complete for hall Code: {}", hallId);
                 });
         log.info("All hall detail fetch complete");
-    }
+    }*/
 }

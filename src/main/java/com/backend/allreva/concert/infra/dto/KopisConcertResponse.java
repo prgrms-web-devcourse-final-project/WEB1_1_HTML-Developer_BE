@@ -1,14 +1,13 @@
-package com.backend.allreva.concert.command.application.dto;
+package com.backend.allreva.concert.infra.dto;
 
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.concert.command.domain.Concert;
 
+import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.value.*;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.ConcertStatus;
 import com.backend.allreva.concert.command.domain.value.Seller;
-import com.backend.allreva.concert.infra.dto.Relate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,7 @@ public class KopisConcertResponse {
     private List<Relate> relates; //판매처 list
 
     public static Concert toEntity(final KopisConcertResponse response) {
-        return Concert.builder()
+        return com.backend.allreva.concert.command.domain.Concert.builder()
                 .concertInfo(toConcertInfo(response))
                 .poster(toIntroduceImage(response.poster))
                 .detailImages(toDetailImages(response.styurls))

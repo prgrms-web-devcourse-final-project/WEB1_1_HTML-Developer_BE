@@ -17,7 +17,7 @@ public class AdminConcertScheduler {
     @Scheduled(cron = "0 0 4 * * *") //초 분 시 일 월 요일
     public void saveBestSeller() {
         try {
-            adminConcertService.fetchDailyConcertInfoList();
+            adminConcertService.fetchDailyConcertInfoList(LocalDate.now());
             LocalDate today = LocalDate.now();
             String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             log.info(" {} :daily concert info update complete", formattedDate);
