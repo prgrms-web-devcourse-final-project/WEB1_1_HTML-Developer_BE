@@ -1,6 +1,6 @@
 package com.backend.allreva.artist.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
