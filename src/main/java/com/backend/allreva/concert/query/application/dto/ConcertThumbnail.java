@@ -4,7 +4,7 @@ import com.backend.allreva.search.query.domain.ConcertDocument;
 
 import java.time.LocalDate;
 
-public record ConcertMain(
+public record ConcertThumbnail(
         String poster,
         String title,
         String concertHallName,
@@ -12,8 +12,8 @@ public record ConcertMain(
         LocalDate eddate,
         Long id
 ) {
-        public static ConcertMain from(final ConcertDocument concertDocument) {
-            return new ConcertMain(
+        public static ConcertThumbnail from(final ConcertDocument concertDocument) {
+            return new ConcertThumbnail(
                     concertDocument.getPoster(),
                     concertDocument.getTitle(),
                     concertDocument.getConcertHallName(),
