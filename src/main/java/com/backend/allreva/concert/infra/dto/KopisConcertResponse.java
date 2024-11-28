@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.backend.allreva.concert.infra.dto.KopisConcertResponse.Db.Relate;
 
@@ -111,16 +113,16 @@ public class KopisConcertResponse {
                 .build();
     }
 
-    public static List<Seller> toSellers(final List<Relate> relates) {
-        return relates.stream().map(KopisConcertResponse::toSeller).toList();
+    public static Set<Seller> toSellers(final List<Relate> relates) {
+        return relates.stream().map(KopisConcertResponse::toSeller).collect(Collectors.toSet());
     }
 
     public static Image toIntroduceImage(final String image) {
         return new Image(image);
     }
 
-    public static List<Image> toDetailImages(final List<String> styurls) {
-        return styurls.stream().map(KopisConcertResponse::toIntroduceImage).toList();
+    public static Set<Image> toDetailImages(final List<String> styurls) {
+        return styurls.stream().map(KopisConcertResponse::toIntroduceImage).collect(Collectors.toSet());
     }
 
 }

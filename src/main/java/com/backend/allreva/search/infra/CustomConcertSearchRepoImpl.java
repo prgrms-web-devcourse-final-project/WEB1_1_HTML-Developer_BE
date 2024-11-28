@@ -2,6 +2,7 @@ package com.backend.allreva.search.infra;
 
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
+import com.backend.allreva.search.exception.ElasticSearchException;
 import com.backend.allreva.search.query.domain.ConcertDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,12 @@ public class CustomConcertSearchRepoImpl implements CustomConcertSearchRepo {
             final List<Object> searchAfter,
             final int size,
             final SortDirection sortDirection) {
-        NativeQuery searchQuery = getNativeQuery(address, searchAfter, size, sortDirection);
-        return elasticsearchOperations.search(searchQuery, ConcertDocument.class);
+        try {
+            NativeQuery searchQuery = getNativeQuery(address, searchAfter, size, sortDirection);
+            return elasticsearchOperations.search(searchQuery, ConcertDocument.class);
+        }catch (ElasticSearchException e){
+            throw new ElasticSearchException();
+        }
     }
     private static NativeQuery getNativeQuery(
             final String address,

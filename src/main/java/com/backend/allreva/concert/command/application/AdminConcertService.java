@@ -56,7 +56,7 @@ public class AdminConcertService {
     // 공연 정보 업데이트 혹은 새로 추가
     private void processConcertUpdateOrInsert(String hallCode, KopisConcertResponse response) {
         String tempConcertCode = response.getDb().getConcertCode();
-        boolean isExist = concertRepository.existsByCodeConcertCode(tempConcertCode);
+        boolean isExist = concertRepository.existsByConcertCode(tempConcertCode);
 
         if (isExist) {
             updateConcert(hallCode, response, tempConcertCode);
@@ -67,7 +67,7 @@ public class AdminConcertService {
 
     // 기존 공연 정보 업데이트
     private void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
-        Concert existingConcert = concertRepository.findByCodeConcertCode(concertCode);
+        Concert existingConcert = concertRepository.findByConcertCode(concertCode);
         existingConcert.updateFrom(hallCode, response.getDb());
         concertRepository.save(existingConcert);
     }
