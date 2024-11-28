@@ -1,10 +1,9 @@
 package com.backend.allreva.rent.command.application;
 
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.rent.command.application.dto.RentFormRequest;
+import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
+import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
 import com.backend.allreva.rent.command.domain.RentForm;
-import com.backend.allreva.rent.command.domain.RentFormRepository;
-import com.backend.allreva.rent.exception.RentFormNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,19 +12,29 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RentCommandService {
 
-    private final RentFormRepository rentFormRepository;
+    private final RentFormReadService rentFormReadService;
+    private final RentFormWriteService rentFormWriteService;
 
     @Transactional
-    public void registerRentForm(
-            final RentFormRequest rentFormRequest,
+    public RentForm registerRentForm(
+            final RentFormRegisterRequest rentFormRegisterRequest,
             final Member member
     ) {
-        RentForm rentForm = rentFormRequest.toEntity(member.getId());
-        rentFormRepository.save(rentForm);
+        RentForm rentForm = rentFormRegisterRequest.toEntity(member.getId());
+        return rentFormWriteService.saveRentForm(rentForm);
     }
 
-    @Transactional(readOnly = true)
-    public RentForm getRentFormById(final Long id) {
-        return rentFormRepository.findById(id).orElseThrow(RentFormNotFoundException::new);
+    @Transactional
+    public RentForm updateRentForm(
+            final RentFormUpdateRequest rentFormUpdateRequest,
+            final Member member
+    ) {
+        RentForm rentForm = rentFormReadService.getRentFormById(rentFormUpdateRequest.rentFormId());
+
+        rentForm.validateMine(member.getId());
+        rentForm.updateRentForm(rentFormUpdateRequest);
+
+        rentFormWriteService.saveRentForm(rentForm);
+        return rentForm;
     }
 }

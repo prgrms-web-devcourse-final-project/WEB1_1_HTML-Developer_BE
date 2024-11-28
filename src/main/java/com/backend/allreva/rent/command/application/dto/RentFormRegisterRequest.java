@@ -14,7 +14,7 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import java.time.LocalDate;
 import java.util.List;
 
-public record RentFormRequest(
+public record RentFormRegisterRequest(
         Long concertId,
         String imageUrl,
         String title,
@@ -24,7 +24,7 @@ public record RentFormRequest(
         String boardingArea,
         String upTime,
         String downTime,
-        List<RentBoardingDateRequest> rentBoardingDateRequests,
+        List<RentBoardingDateRegisterRequest> rentBoardingDateRequests,
         BusSize busSize, // enum
         BusType busType, // enum
         int maxPassenger,
@@ -52,7 +52,7 @@ public record RentFormRequest(
                 .operationInfo(OperationInfo.builder()
                         .boardingArea(boardingArea)
                         .boardingDates(rentBoardingDateRequests.stream()
-                                .map(rentBoardingDateRequest -> rentBoardingDateRequest.date)
+                                .map(RentBoardingDateRegisterRequest::date)
                                 .toList())
                         .upTime(upTime)
                         .downTime(downTime)
@@ -77,7 +77,7 @@ public record RentFormRequest(
                 .build();
     }
 
-    public record RentBoardingDateRequest(
+    public record RentBoardingDateRegisterRequest(
             LocalDate date
     ) {
 
