@@ -1,4 +1,4 @@
-package com.backend.allreva.concert.command.domain.exception;
+package com.backend.allreva.concert.exception;
 
 import com.backend.allreva.common.exception.CustomException;
 
