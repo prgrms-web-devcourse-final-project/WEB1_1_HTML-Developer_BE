@@ -159,10 +159,10 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
-        // When & Then
         SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
         surveyCommandRepository.flush();
 
+        // When & Then
         assertThrows(SurveyNotWriterException.class, () -> {
             surveyCommandService.removeSurvey(999999999L, response.surveyId());
         });

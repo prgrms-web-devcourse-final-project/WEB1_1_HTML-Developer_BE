@@ -43,12 +43,12 @@ public class SurveyJoin extends BaseEntity {
     private Long memberId;
 
     @Builder
-    public SurveyJoin(Long memberId,
-                      Long surveyId,
-                      LocalDate boardingDate,
-                      BoardingType boardingType,
-                      int passengerNum,
-                      boolean notified) {
+    public SurveyJoin(final Long memberId,
+                      final Long surveyId,
+                      final LocalDate boardingDate,
+                      final BoardingType boardingType,
+                      final int passengerNum,
+                      final boolean notified) {
         this.memberId = memberId;
         this.surveyId = surveyId;
         this.boardingDate = boardingDate;

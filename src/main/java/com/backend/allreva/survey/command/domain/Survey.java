@@ -59,15 +59,15 @@ public class Survey extends BaseEntity {
 
 
     @Builder
-    public Survey(Long memberId,
-                  Long concertId,
-                  String title,
-                  List<LocalDate> boardingDate,
-                  String artistName,
-                  Region region,
-                  LocalDate eddate,
-                  int maxPassenger,
-                  String information) {
+    public Survey(final Long memberId,
+                  final Long concertId,
+                  final String title,
+                  final List<LocalDate> boardingDate,
+                  final String artistName,
+                  final Region region,
+                  final LocalDate eddate,
+                  final int maxPassenger,
+                  final String information) {
         this.memberId = memberId;
         this.concertId = concertId;
         this.title = title;
@@ -80,12 +80,12 @@ public class Survey extends BaseEntity {
         this.isClosed = false;
     }
 
-    public void update(String title,
-                       List<LocalDate> boardingDate,
-                       Region region,
-                       LocalDate eddate,
-                       int maxPassenger,
-                       String information) {
+    public void update(final String title,
+                       final List<LocalDate> boardingDate,
+                       final Region region,
+                       final LocalDate eddate,
+                       final int maxPassenger,
+                       final String information) {
         this.title = title;
         this.boardingDate = boardingDate;
         this.region = region;
@@ -94,7 +94,7 @@ public class Survey extends BaseEntity {
         this.information = information;
     }
 
-    public boolean isWriter(Long loginMemberId) {
+    public boolean isWriter(final Long loginMemberId) {
         return this.memberId.equals(loginMemberId);
     }
 }

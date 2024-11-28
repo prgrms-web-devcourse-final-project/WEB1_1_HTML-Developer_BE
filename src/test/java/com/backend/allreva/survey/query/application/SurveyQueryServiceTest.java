@@ -112,7 +112,7 @@ public class SurveyQueryServiceTest extends IntegralTestSupport {
     }
 
     @Test
-    @DisplayName("수요조사 목록을 Closing 순으로 조회에 성공한다.")
+    @DisplayName("수요조사 목록을 마감임박 순으로 조회에 성공한다.")
     public void findSurveyListClosing() {
         // Given
         SurveyIdResponse secondId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(2), Region.서울)); // 두번째
