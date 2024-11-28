@@ -3,6 +3,7 @@ package com.backend.allreva.search.infra;
 import com.backend.allreva.search.query.domain.ConcertDocument;
 import com.backend.allreva.support.IntegrationTestSupport;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,8 @@ class ConcertRepositoryTest extends IntegrationTestSupport {
 
 
     @Test
-    void test1(){
+    @DisplayName("검색어 에 따라 연관성 상위 2개가 출력")
+    void findByTitleMixedTest(){
         PageRequest pageRequest = PageRequest.of(0, 2);
 
         List<ConcertDocument> day6 = concertSearchRepository.findByTitleMixed("day6", pageRequest).getContent();
