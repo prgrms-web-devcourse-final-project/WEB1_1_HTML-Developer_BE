@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class ConcertSummary {
+public class ConcertSummaryResponse {
 
     // 포스터, 제목, DateInfo(시작, 종료), 장소
     private Image poster;
@@ -15,7 +15,7 @@ public class ConcertSummary {
     private LocalDate endDate;
     private String address;
 
-    public ConcertSummary(
+    public ConcertSummaryResponse(
             Image poster,
             String title,
             LocalDate startDate,

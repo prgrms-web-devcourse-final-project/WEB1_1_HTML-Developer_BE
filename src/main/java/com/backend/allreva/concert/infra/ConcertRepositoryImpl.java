@@ -1,53 +1,73 @@
 package com.backend.allreva.concert.infra;
 
-import com.backend.allreva.common.model.Image;
-import com.backend.allreva.concert.command.domain.value.Seller;
-import com.backend.allreva.concert.query.application.ConcertRepositoryCustom;
-import com.backend.allreva.concert.query.application.dto.ConcertDetail;
-import com.querydsl.core.group.GroupBy;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.backend.allreva.concert.command.domain.Concert;
+import com.backend.allreva.concert.command.domain.ConcertRepository;
+import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.allreva.common.model.QImage.image;
-import static com.backend.allreva.concert.command.domain.QConcert.concert;
-import static com.backend.allreva.concert.command.domain.value.QSeller.seller;
-import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Repository
-public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
+public class ConcertRepositoryImpl implements ConcertRepository {
 
-    private final JPAQueryFactory queryFactory;
+    private final Map<Long, ConcertDetailResponse> cache = new ConcurrentHashMap<>();
+    private final Map<Long, Integer> viewCountCache = new ConcurrentHashMap<>();
+
+    private final ConcertJpaRepository concertJpaRepository;
 
     @Override
-    public ConcertDetail findDetailById(Long concertId) {
-        return queryFactory
-                .from(concert)
-                .join(concertHall).on(concertHall.id.eq(concert.code.hallCode))
-                .leftJoin(concert.detailImages, image)
-                .leftJoin(concert.sellers, seller)
-                .where(concert.id.eq(concertId))
-                .transform(GroupBy.groupBy(concert.id)
-                        .list(concertDetailProjection()))
-                .get(0);
+    public void save(final Concert concert) {
+        concertJpaRepository.save(concert);
+        ConcertDetailResponse response = concertJpaRepository.findDetailById(concert.getId());
+        cache.put(concert.getId(), response);
     }
 
-    private Expression<ConcertDetail> concertDetailProjection() {
-        return Projections.constructor(ConcertDetail.class,
-                concert.poster,
-                Projections.list(Projections.constructor(Image.class, image.url)),
-                concert.concertInfo,
-                Projections.list(Projections.constructor(Seller.class, seller.relateName, seller.relateUrl)),
-                concertHall.id,
-                concertHall.name,
-                concertHall.seatScale,
-                concertHall.convenienceInfo,
-                concertHall.location.address
-        );
+    @Override
+    public ConcertDetailResponse findDetailById(final Long concertId) {
+        return cache.get(concertId);
+    }
+
+    @Override
+    public void increaseViewCount(final Long concertId) {
+        viewCountCache.merge(concertId, 1, Integer::sum);
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+        concertJpaRepository.deleteAllInBatch();
+        cache.clear();
+    }
+
+    @Override
+    public boolean existsByConcertCode(final String concertCode) {
+        return concertJpaRepository.existsByCodeConcertCode(concertCode);
+    }
+
+    @Override
+    public Concert findByConcertCode(final String concertCode) {
+        return concertJpaRepository.findByCodeConcertCode(concertCode);
+    }
+
+    @Override
+    public boolean existsById(Long concertId) {
+        return concertJpaRepository.existsById(concertId);
+    }
+
+
+    @Transactional
+    @Scheduled(fixedRateString = "${view.count.schedule.rate}")
+    public void addViewCounts() {
+        viewCountCache.entrySet().stream()
+                .filter(entry -> entry.getValue() > 0)
+                .forEach(entry ->
+                        concertJpaRepository.findById(entry.getKey())
+                                .ifPresent(concert -> concert.addViewCount(entry.getValue()))
+                );
+        viewCountCache.clear();
     }
 }
-

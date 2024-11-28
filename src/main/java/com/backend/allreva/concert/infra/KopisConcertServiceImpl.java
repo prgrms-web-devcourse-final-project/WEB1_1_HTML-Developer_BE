@@ -2,7 +2,7 @@ package com.backend.allreva.concert.infra;
 
 import com.backend.allreva.concert.command.application.KopisConcertService;
 import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
-import com.backend.allreva.concert.infra.dto.Relate;
+import com.backend.allreva.concert.command.domain.value.Seller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,9 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -120,11 +122,11 @@ public class KopisConcertServiceImpl implements KopisConcertService {
         String dtguidance = node.get("dtguidance").asText();
         String poster = node.get("poster").asText();
         String entrpsnmH = node.get("entrpsnmH").asText();
-        List<String> styurl = getStyurls(node);
-        List<Relate> relate = getRelates(node);
+        Set<String> styurl = getStyurls(node);
+        Set<Seller> sellers = getSellers(node);
 
         return new KopisConcertResponse(concertcd, getFacilityId(hallId), prfnm, prfpdfrom, prfpdto, hallId, poster,
-                pcseguidance, prfstate, dtguidance, entrpsnmH, styurl, relate);
+                pcseguidance, prfstate, dtguidance, entrpsnmH, styurl,sellers);
     }
 
     private String getFacilityId(final String hallId) {
@@ -132,30 +134,30 @@ public class KopisConcertServiceImpl implements KopisConcertService {
     }
 
 
-    private List<Relate> getRelates(final JsonNode node) {
-        List<Relate> relates = new ArrayList<>();
+    private Set<Seller> getSellers(final JsonNode node) {
+        Set<Seller> sellers = new HashSet<>();
         JsonNode relatesNode = node.get("relates").get("relate");
 
         if (relatesNode.isArray()) {
             for (JsonNode one : relatesNode) {
                 String relatenm = one.path("relatenm").asText();
                 String relateurl = one.path("relateurl").asText();
-                relates.add(new Relate(relatenm, relateurl));
+                sellers.add(new Seller(relatenm, relateurl));
 
             }
         } else {
             String relatenm = relatesNode.get("relatenm").asText();
             String relateurl = relatesNode.get("relateurl").asText();
-            relates.add(new Relate(relatenm, relateurl));
+            sellers.add(new Seller(relatenm, relateurl));
         }
 
-        return relates;
+        return sellers;
     }
 
-    private List<String> getStyurls(final JsonNode node) {
+    private Set<String> getStyurls(final JsonNode node) {
         JsonNode styurlsNode = node.get("styurls");
-        if (styurlsNode == null) return new ArrayList<>();
-        List<String> styurlList = new ArrayList<>();
+        if (styurlsNode == null) return new HashSet<>();
+        Set<String> styurlList = new HashSet<>();
 
         if (styurlsNode.get("styurl").isArray()) {
             for (JsonNode one : styurlsNode.get("styurl")) {

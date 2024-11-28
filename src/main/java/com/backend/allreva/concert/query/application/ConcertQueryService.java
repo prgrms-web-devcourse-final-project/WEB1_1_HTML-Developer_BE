@@ -6,11 +6,11 @@ import com.backend.allreva.common.exception.CustomException;
 import com.backend.allreva.common.exception.code.GlobalErrorCode;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
-import com.backend.allreva.concert.query.application.dto.ConcertDetail;
 import com.backend.allreva.concert.query.application.dto.ConcertMain;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.search.infra.ConcertSearchRepository;
 import com.backend.allreva.search.query.domain.ConcertDocument;
+import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -27,10 +27,10 @@ import java.util.List;
 public class ConcertQueryService {
 
     private final ConcertRepository concertRepository;
-
     private final ConcertSearchRepository concertSearchRepository;
 
-    public ConcertDetail findDetailById(Long concertId) {
+    public ConcertDetailResponse findDetailById(final Long concertId) {
+        concertRepository.increaseViewCount(concertId);
         return concertRepository.findDetailById(concertId);
     }
 

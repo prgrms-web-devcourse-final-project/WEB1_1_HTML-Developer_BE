@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,34 +39,23 @@ public class Concert extends BaseEntity {
             name = "concert_image",
             joinColumns = @JoinColumn(name = "id")
     )
-    private List<Image> detailImages;
+    private Set<Image> detailImages;
 
     @ElementCollection
     @CollectionTable(
             name = "concert_seller",
             joinColumns = @JoinColumn(name = "id")
     )
-    private List<Seller> sellers;
-
-    public void updateFrom(final KopisConcertResponse response) {
-        this.concertInfo = KopisConcertResponse.toConcertInfo(response);
-        this.code = Code.builder()
-                .hallCode(response.getHallcd())
-                .concertCode(response.getConcertcd())
-                .build();
-        this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
-        this.sellers = KopisConcertResponse.toSellers(response.getRelates());
-        this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
-    }
+    private Set<Seller> sellers;
 
 
     @Builder
     public Concert(
-            Code code,
-            ConcertInfo concertInfo,
-            Image poster,
-            List<Image> detailImages,
-            List<Seller> sellers
+            final Code code,
+            final ConcertInfo concertInfo,
+            final Image poster,
+            final Set<Image> detailImages,
+            final Set<Seller> sellers
     ) {
         this.code = code;
         this.concertInfo = concertInfo;
@@ -75,5 +64,20 @@ public class Concert extends BaseEntity {
         this.sellers = sellers;
 
         this.viewCount = 0L;
+    }
+
+    public void updateFrom(final KopisConcertResponse response) {
+        this.concertInfo = KopisConcertResponse.toConcertInfo(response);
+        this.code = Code.builder()
+                .hallCode(response.getHallcd())
+                .concertCode(response.getConcertcd())
+                .build();
+        this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
+        this.sellers = response.getSellers();
+        this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
+    }
+
+    public void addViewCount(final int count) {
+        this.viewCount += count;
     }
 }

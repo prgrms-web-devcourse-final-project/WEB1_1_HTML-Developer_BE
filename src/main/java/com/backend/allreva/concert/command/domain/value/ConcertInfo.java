@@ -3,8 +3,6 @@ package com.backend.allreva.concert.command.domain.value;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @Builder
 @AllArgsConstructor
