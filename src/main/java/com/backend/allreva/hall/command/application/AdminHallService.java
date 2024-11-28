@@ -1,8 +1,9 @@
 package com.backend.allreva.hall.command.application;
 
 import com.backend.allreva.common.util.CsvUtil;
-import com.backend.allreva.hall.command.application.dto.KopisHallResponse;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
+import com.backend.allreva.hall.infra.dto.KopisHallResponse;
+import com.backend.allreva.hall.infra.dto.KopisHallResponse.Mt13;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,26 @@ public class AdminHallService {
 
     //공연장 정보 받아오기
     public void fetchConcertHallInfoList() {
-        List<String> hallIds = CsvUtil.readConcertHallIds();
-        hallIds.parallelStream()
-                .forEach(hallId -> {
-                    KopisHallResponse response = kopisHallService.fetchConcertHallDetail(hallId).block();
-                    if (response != null)
-                        concertHallRepository.save(KopisHallResponse.toEntity(response));
-                    log.info("hall detail fetch complete for hall Code: {}", hallId);
+        List<String> hallCodes = CsvUtil.readConcertHallCodes();
+        hallCodes.parallelStream()
+                .forEach(hallCode -> {
+                    KopisHallResponse response = kopisHallService.fetchConcertHallInfoList(getFacilityCode(hallCode));
+                    List<Mt13> mt13List = response.getDb().getMt13s().getMt13List();
+
+                    for (int i = 0; i < mt13List.size(); i++) {
+                        Mt13 mt13 = mt13List.get(i);
+                        if (mt13.getMt13id().equals(hallCode)) {
+                            concertHallRepository.save(KopisHallResponse.toEntity(response, i));
+                        }
+                    }
+
+                    log.info("hall detail fetch complete for hall Code: {}", hallCode);
                 });
-        log.info("All hall detail fetch complete");
     }
+
+    private String getFacilityCode(final String hallCode) {
+        return hallCode.split("-")[0];
+    }
+
 }
+
