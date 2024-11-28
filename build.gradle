@@ -75,9 +75,6 @@ dependencies {
     // csv
     implementation 'com.opencsv:opencsv:5.8'
 
-    // jackson XML
-    //implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2'
-
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
