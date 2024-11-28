@@ -1,4 +1,4 @@
-package com.backend.allreva.rent.command.domain.value;
+package com.backend.allreva.survey.command.domain.value;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

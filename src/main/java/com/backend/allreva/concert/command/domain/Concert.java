@@ -1,13 +1,16 @@
 package com.backend.allreva.concert.command.domain;
 
 import com.backend.allreva.common.application.BaseEntity;
-import com.backend.allreva.concert.command.domain.value.Code;
-import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
+import com.backend.allreva.concert.command.domain.value.Code;
+import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -45,7 +48,7 @@ public class Concert extends BaseEntity {
     )
     private List<Seller> sellers;
 
-    public void updateFrom(KopisConcertResponse response) {
+    public void updateFrom(final KopisConcertResponse response) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(response);
         this.code = Code.builder()
                 .hallCode(response.getHallcd())
