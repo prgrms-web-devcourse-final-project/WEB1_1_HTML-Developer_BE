@@ -49,6 +49,20 @@ public class Concert extends BaseEntity {
     )
     private Set<Seller> sellers;
 
+    private List<Seller> sellers;
+
+    public void updateFrom(final KopisConcertResponse response) {
+        this.concertInfo = KopisConcertResponse.toConcertInfo(response);
+        this.code = Code.builder()
+                .hallCode(response.getHallcd())
+                .concertCode(response.getConcertcd())
+                .build();
+        this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
+        this.sellers = KopisConcertResponse.toSellers(response.getRelates());
+        this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
+    }
+
+
     @Builder
     public Concert(
             final Code code,

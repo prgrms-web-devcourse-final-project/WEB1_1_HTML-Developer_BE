@@ -16,7 +16,7 @@ public class Email {
     private String email;
 
     @Builder
-    private Email(final String email) {
+    public Email(final String email) {
         this.email = email;
     }
 }
