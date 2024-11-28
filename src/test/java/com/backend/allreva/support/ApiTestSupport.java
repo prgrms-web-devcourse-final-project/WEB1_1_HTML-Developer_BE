@@ -6,7 +6,7 @@ import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
-import com.backend.allreva.member.ui.OAuth2Controller;
+import com.backend.allreva.auth.ui.OAuth2Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
