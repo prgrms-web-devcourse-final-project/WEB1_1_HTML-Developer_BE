@@ -31,6 +31,4 @@ public class AdditionalInfo {
     private RefundType refundType; //환불 정책
 
     private String information; //안내 사항
-
-    private boolean isClosed; //마감 여부
 }

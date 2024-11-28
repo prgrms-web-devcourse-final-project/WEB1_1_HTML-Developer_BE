@@ -42,6 +42,9 @@ public class RentForm extends BaseEntity {
     @Embedded
     private AdditionalInfo additionalInfo;
 
+    @Column(nullable = false)
+    private boolean isClosed; //마감 여부
+
     public void updateRentForm(RentFormUpdateRequest request) {
         this.detailInfo = DetailInfo.builder()
                 .image(new Image(request.imageUrl()))
@@ -72,11 +75,16 @@ public class RentForm extends BaseEntity {
                 .information(request.information())
                 .endDate(request.endDate())
                 .build();
+        isClosed = false;
     }
 
     public void validateMine(Long memberId) {
         if (!this.memberId.equals(memberId)) {
             throw new RentFormAccessDeniedException();
         }
+    }
+
+    public void close() {
+        isClosed = true;
     }
 }

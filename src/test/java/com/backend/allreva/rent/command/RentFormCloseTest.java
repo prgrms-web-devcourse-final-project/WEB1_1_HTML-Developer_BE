@@ -1,11 +1,9 @@
 package com.backend.allreva.rent.command;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,8 +12,7 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
 import com.backend.allreva.rent.command.application.RentFormReadService;
 import com.backend.allreva.rent.command.application.RentFormWriteService;
-import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
-import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest.RentBoardingDateUpdateRequest;
+import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
 import com.backend.allreva.rent.command.domain.RentForm;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
 import com.backend.allreva.rent.command.domain.value.Bus;
@@ -26,9 +23,9 @@ import com.backend.allreva.rent.command.domain.value.OperationInfo;
 import com.backend.allreva.rent.command.domain.value.Price;
 import com.backend.allreva.rent.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.exception.RentFormAccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -37,9 +34,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
-class RentFormUpdateTest {
+class RentFormCloseTest {
 
     @InjectMocks
     private RentCommandService rentCommandService;
@@ -49,38 +47,25 @@ class RentFormUpdateTest {
     private RentFormWriteService rentFormWriteService;
 
     @Test
-    void 차량_대절_폼_수정을_성공한다() {
+    void 차량_대절_폼_마감을_성공한다() {
         // given
         var user = createMockUser(1L);
-        var rentFormRequest = createRentFormUpdateRequestFixture();
+        var rentFormIdRequest = new RentFormIdRequest(1L);
         given(rentFormReadService.getRentFormById(anyLong())).willReturn(createRentFormFixture());
         given(rentFormWriteService.saveRentForm(any(RentForm.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        rentCommandService.updateRentForm(rentFormRequest, user);
+        rentCommandService.closeRentForm(rentFormIdRequest, user);
 
         // then
         var capturedRentForm = getArgumentCaptorValue();
         assertSoftly(softly -> {
             softly.assertThat(capturedRentForm.getMemberId()).isEqualTo(user.getId());
-            softly.assertThat(capturedRentForm.getAdditionalInfo().getInformation()).isEqualTo(rentFormRequest.information());
+            softly.assertThat(capturedRentForm.isClosed()).isTrue();
         });
     }
 
-    @Test
-    void 차량_대절_폼이_작성자_본인이_아니라면_예외를_발생시킨다() {
-        // given
-        var user = createMockUser(2L);
-        var rentFormUpdateRequest = createRentFormUpdateRequestFixture();
-        given(rentFormReadService.getRentFormById(anyLong())).willReturn(createRentFormFixture());
-
-        // when & then
-        assertThrows(RentFormAccessDeniedException.class,
-                () -> rentCommandService.updateRentForm(rentFormUpdateRequest, user));
-        verify(rentFormReadService, times(1)).getRentFormById(anyLong());
-    }
-
-    private Member createMockUser(Long userId) {
+    private Member createMockUser(final Long userId) {
         var user = Mockito.mock(Member.class);
         when(user.getId()).thenReturn(userId);
         return user;
@@ -92,34 +77,6 @@ class RentFormUpdateTest {
         return rentFormCaptor.getValue();
     }
 
-    public RentFormUpdateRequest createRentFormUpdateRequestFixture() {
-        return new RentFormUpdateRequest(
-                1L,
-                "imageUrl",
-                Region.서울,
-                "영주",
-                "09:00",
-                "23:00",
-                List.of(
-                        new RentBoardingDateUpdateRequest(LocalDate.of(2024, 9, 20)),
-                        new RentBoardingDateUpdateRequest(LocalDate.of(2024, 9, 21)),
-                        new RentBoardingDateUpdateRequest(LocalDate.of(2024, 9, 22))
-                ),
-                BusSize.LARGE,
-                BusType.STANDARD,
-                28,
-                30000,
-                30000,
-                30000,
-                30,
-                LocalDate.of(2024, 9, 13),
-                "charUrl",
-                RefundType.BOTH,
-                "information"
-        );
-    }
-
-    // update 시 처음에 RentForm 조회
     private RentForm createRentFormFixture() {
         return RentForm.builder()
                 .memberId(1L)

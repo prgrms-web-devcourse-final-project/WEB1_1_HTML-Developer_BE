@@ -1,6 +1,7 @@
 package com.backend.allreva.rent.command.application;
 
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
 import com.backend.allreva.rent.command.application.dto.RentFormIdResponse;
 import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
@@ -35,6 +36,19 @@ public class RentCommandService {
 
         rentForm.validateMine(member.getId());
         rentForm.updateRentForm(rentFormUpdateRequest);
+
+        rentFormWriteService.saveRentForm(rentForm);
+    }
+
+    @Transactional
+    public void closeRentForm(
+            final RentFormIdRequest rentFormId,
+            final Member member
+    ) {
+        RentForm rentForm = rentFormReadService.getRentFormById(rentFormId.rentFormId());
+
+        rentForm.validateMine(member.getId());
+        rentForm.close();
 
         rentFormWriteService.saveRentForm(rentForm);
     }
