@@ -5,6 +5,7 @@ import com.backend.allreva.concert.command.domain.value.SortDirection;
 import com.backend.allreva.concert.query.application.ConcertQueryService;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,11 @@ public class ConcertController {
         return Response.onSuccess(detail);
     }
 
+    @Operation(
+            summary = "메인 화면 콘서트 api 입니다.",
+            description = "searchAfter1, searchAfter2에 " +
+                    "이전 SearchAfter에 있는 값들을 순서대로 넣어주어야 합니다."
+    )
     @GetMapping("/list")
     public Response<ConcertMainResponse> getConcertMain(
             @RequestParam(defaultValue = "")

@@ -23,10 +23,13 @@ class ConcertRepositoryTest extends IntegrationTestSupport {
     @Test
     @DisplayName("검색어 에 따라 연관성 상위 2개가 출력")
     void findByTitleMixedTest(){
+        //given
         PageRequest pageRequest = PageRequest.of(0, 2);
 
+        //when
         List<ConcertDocument> day6 = concertSearchRepository.findByTitleMixed("day6", pageRequest).getContent();
 
+        //then
         assertThat(day6.size(), is(2));
     }
 }
