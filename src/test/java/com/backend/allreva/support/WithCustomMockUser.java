@@ -1,4 +1,4 @@
-package com.backend.allreva;
+package com.backend.allreva.support;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

@@ -25,8 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(
         controllers = {OAuth2Controller.class},
         excludeFilters = @ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            classes = {JwtAuthenticationFilter.class, SecurityConfig.class}
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {JwtAuthenticationFilter.class, SecurityConfig.class}
         )
 )
 @ActiveProfiles("test")
