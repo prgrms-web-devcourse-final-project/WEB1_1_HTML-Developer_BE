@@ -3,6 +3,7 @@ package com.backend.allreva.hall.command.application;
 import com.backend.allreva.common.util.CsvUtil;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
 import com.backend.allreva.hall.infra.dto.KopisHallResponse;
+import com.backend.allreva.hall.infra.dto.KopisHallResponse.Mt13;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,15 @@ public class AdminHallService {
         hallCodes.parallelStream()
                 .forEach(hallCode -> {
                     KopisHallResponse response = kopisHallService.fetchConcertHallInfoList(getFacilityCode(hallCode));
-                    for (int i = 0; i < response.getDb().getMt13s().getMt13List().size(); i++) {
-                        if (response.getDb().getMt13s().getMt13List().get(i).getMt13id().equals(hallCode)) {
+                    List<Mt13> mt13List = response.getDb().getMt13s().getMt13List();
+
+                    for (int i = 0; i < mt13List.size(); i++) {
+                        Mt13 mt13 = mt13List.get(i);
+                        if (mt13.getMt13id().equals(hallCode)) {
                             concertHallRepository.save(KopisHallResponse.toEntity(response, i));
                         }
                     }
+
                     log.info("hall detail fetch complete for hall Code: {}", hallCode);
                 });
     }
