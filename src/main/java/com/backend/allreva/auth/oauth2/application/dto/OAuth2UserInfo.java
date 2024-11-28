@@ -14,7 +14,7 @@ public record OAuth2UserInfo(
         String email,
         String profile) {
 
-    public static OAuth2UserInfo ofGoogle(Map<String, Object> attributes) {
+    public static OAuth2UserInfo ofGoogle(final Map<String, Object> attributes) {
         return OAuth2UserInfo.builder()
                 .loginProvider(LoginProvider.GOOGLE)
                 .providerId((String) attributes.get("sub"))
@@ -24,7 +24,7 @@ public record OAuth2UserInfo(
                 .build();
     }
 
-    public static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
+    public static OAuth2UserInfo ofKakao(final Map<String, Object> attributes) {
         @SuppressWarnings("unchecked")
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
         @SuppressWarnings("unchecked")

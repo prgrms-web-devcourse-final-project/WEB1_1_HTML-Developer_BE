@@ -1,4 +1,4 @@
-package com.backend.allreva.aop.log;
+package com.backend.allreva.common.aop.log;
 
 import lombok.Getter;
 

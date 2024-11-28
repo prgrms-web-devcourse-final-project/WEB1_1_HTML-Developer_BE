@@ -10,9 +10,9 @@ public record TokenResponse(
 ) {
 
     public static TokenResponse of(
-            String accessToken,
-            String refreshToken,
-            Long refreshTokenExpirationTime
+            final String accessToken,
+            final String refreshToken,
+            final Long refreshTokenExpirationTime
     ) {
         return TokenResponse.builder()
                 .accessToken(accessToken)
