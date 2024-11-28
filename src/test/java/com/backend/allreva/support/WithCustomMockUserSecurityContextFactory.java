@@ -1,8 +1,9 @@
-package com.backend.allreva;
+package com.backend.allreva.support;
 
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
+import com.backend.allreva.support.WithCustomMockUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

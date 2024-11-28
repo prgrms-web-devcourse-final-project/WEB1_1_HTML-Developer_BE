@@ -14,7 +14,7 @@ import java.util.Objects;
 @Component
 public class CsvUtil {
 
-    public static List<String> readConcertHallIds() {
+    public static List<String> readConcertHallCodes() {
         ClassLoader classLoader = CsvUtil.class.getClassLoader();
         File file = new File(
                 Objects.requireNonNull(classLoader.getResource("kopis/performance_hall_list.csv")).getFile());

@@ -1,12 +1,15 @@
 package com.backend.allreva.survey.command.application;
 
-import com.backend.allreva.IntegralTestSupport;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.survey.command.application.dto.*;
+import com.backend.allreva.support.IntegrationTestSupport;
+import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
+import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.SurveyJoin;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
@@ -27,7 +30,7 @@ import static java.util.List.of;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SurveyCommandServiceTest extends IntegralTestSupport {
+class SurveyCommandServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
@@ -139,7 +142,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
         assertNotNull(savedSurvey);
         assertEquals("하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.", savedSurvey.getTitle());
         assertEquals(1, savedSurvey.getBoardingDate().size());
-        assertEquals(LocalDate.of(2024,12,1), savedSurvey.getBoardingDate().get(0));
+        assertEquals(LocalDate.of(2024, 12, 1), savedSurvey.getBoardingDate().get(0));
 
 
     }
@@ -187,7 +190,7 @@ class SurveyCommandServiceTest extends IntegralTestSupport {
         assertNotNull(surveyJoinId);
         assertNotNull(savedSurveyJoin);
         assertEquals(response.surveyId(), savedSurveyJoin.getSurveyId());
-        assertEquals(LocalDate.of(2024,11,30), savedSurveyJoin.getBoardingDate());
+        assertEquals(LocalDate.of(2024, 11, 30), savedSurveyJoin.getBoardingDate());
     }
 
 }

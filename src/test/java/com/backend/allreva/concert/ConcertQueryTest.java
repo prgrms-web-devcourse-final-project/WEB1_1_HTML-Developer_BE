@@ -1,6 +1,6 @@
 package com.backend.allreva.concert;
 
-import com.backend.allreva.IntegralTestSupport;
+
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
@@ -12,6 +12,7 @@ import com.backend.allreva.hall.command.domain.ConcertHall;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
 import com.backend.allreva.hall.command.domain.value.Location;
+import com.backend.allreva.support.IntegrationTestSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.Set;
 
-class ConcertQueryTest extends IntegralTestSupport {
+class ConcertQueryTest extends IntegrationTestSupport {
 
     @Autowired
     private ConcertQueryService concertQueryService;

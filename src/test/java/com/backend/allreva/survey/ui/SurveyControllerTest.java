@@ -1,9 +1,9 @@
 package com.backend.allreva.survey.ui;
 
-import com.backend.allreva.ControllerTestSupport;
-import com.backend.allreva.WithCustomMockUser;
+import com.backend.allreva.support.WithCustomMockUser;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
 import com.backend.allreva.common.config.SecurityConfig;
+import com.backend.allreva.support.ApiTestSupport;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         )
 )
 @AutoConfigureMockMvc(addFilters = false)
-class SurveyControllerTest extends ControllerTestSupport {
+class SurveyControllerTest extends ApiTestSupport {
 
     @MockBean
     private SurveyCommandService surveyCommandService;

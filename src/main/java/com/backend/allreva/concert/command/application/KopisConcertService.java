@@ -1,13 +1,14 @@
 package com.backend.allreva.concert.command.application;
 
-import com.backend.allreva.hall.command.application.dto.KopisHallResponse;
-import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
-import reactor.core.publisher.Mono;
+import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
 
 import java.util.List;
 
 public interface KopisConcertService {
 
-    Mono<List<String>> fetchConcertCodes(String hallId, boolean isDaily);
-    Mono<KopisConcertResponse> fetchConcertDetail(String hallId, String concertcd);
+    List<String> fetchConcertCodes(String hallCode, String startDate, String endDate);
+
+    List<String> fetchDailyConcertCodes(String hallCode, String startDate, String endDate, String today);
+
+    KopisConcertResponse fetchConcertDetail(String concertCode);
 }

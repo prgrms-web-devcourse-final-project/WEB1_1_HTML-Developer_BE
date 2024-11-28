@@ -1,10 +1,10 @@
 package com.backend.allreva.survey.query.application;
 
-import com.backend.allreva.IntegralTestSupport;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
+import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.command.application.SurveyCommandRepository;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
@@ -27,7 +27,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class SurveyQueryServiceTest extends IntegralTestSupport {
+public class SurveyQueryServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
