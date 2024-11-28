@@ -26,24 +26,24 @@ class ConcertQueryServiceTest extends IntegrationTestSupport {
         List<Object> searchAfter = new ArrayList<>();
         ConcertMainResponse concertMain = concertQueryService.getConcertMain("서울", searchAfter, 3, SortDirection.VIEWS);
 
-        concertMain.concertMain().forEach(
+        concertMain.concertThumbnails().forEach(
                 concertMain1 -> log.info("concertMain1: {}", concertMain1)
         );
         log.info("concertMain.searchAfter: {}", concertMain.searchAfter());
 
         ConcertMainResponse concertMain1 = concertQueryService.getConcertMain("서울", concertMain.searchAfter(), 3, SortDirection.VIEWS);
 
-        concertMain1.concertMain().forEach(
+        concertMain1.concertThumbnails().forEach(
                 concertMain2 -> log.info("concertMain2: {}", concertMain2)
         );
 
 
 
         ConcertMainResponse concertMain2 = concertQueryService.getConcertMain("서울", searchAfter, 6, SortDirection.VIEWS);
-        concertMain2.concertMain().forEach(
+        concertMain2.concertThumbnails().forEach(
                 concertMain3 -> log.info("concertMain3: {}", concertMain3)
         );
 
-        assertThat(concertMain2.concertMain().get(3), Matchers.samePropertyValuesAs(concertMain2.concertMain().get(0)));
+        assertThat(concertMain2.concertThumbnails().get(3), Matchers.samePropertyValuesAs(concertMain2.concertThumbnails().get(0)));
     }
 }

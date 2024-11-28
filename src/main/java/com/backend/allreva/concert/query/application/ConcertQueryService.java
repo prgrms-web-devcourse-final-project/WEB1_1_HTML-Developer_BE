@@ -5,8 +5,8 @@ import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.command.domain.value.SortDirection;
 import com.backend.allreva.concert.exception.ConcertSearchNotFoundException;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
-import com.backend.allreva.concert.query.application.dto.ConcertMain;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
+import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import com.backend.allreva.search.infra.ConcertSearchRepository;
 import com.backend.allreva.search.query.domain.ConcertDocument;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +39,9 @@ public class ConcertQueryService {
             final SortDirection sortDirection) {
 
         SearchHits<ConcertDocument> searchHits = concertSearchRepository.searchMainConcerts(address, searchAfter, size +1, sortDirection);
-        List<ConcertMain> concerts = searchHits.getSearchHits().stream()
+        List<ConcertThumbnail> concerts = searchHits.getSearchHits().stream()
                 .map(SearchHit::getContent)
-                .map(ConcertMain::from)
+                .map(ConcertThumbnail::from)
                 .limit(size)
                 .toList();
 
