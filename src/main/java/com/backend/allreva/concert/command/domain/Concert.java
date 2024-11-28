@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = @Index(name = "idx_hall_code", columnList = "concert_hall_code"))
+@Table(indexes = @Index(name = "idx_hall_code", columnList = "hall_code"))
 @Entity
 public class Concert extends BaseEntity {
     @Id
