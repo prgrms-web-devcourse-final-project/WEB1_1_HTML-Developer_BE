@@ -20,7 +20,7 @@ import com.backend.allreva.rent.exception.RentFormNotFoundException;
 import com.backend.allreva.support.IntegrationTestSupport;
 import java.time.LocalDate;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,21 +33,20 @@ class RentFormReadTest extends IntegrationTestSupport {
     @Autowired
     private RentFormRepository rentFormRepository;
 
-    @BeforeEach
-    void setUp() {
-        var rentForm = createRentFormFixture();
-        rentFormRepository.save(rentForm);
-        rentFormRepository.flush();
+    @AfterEach
+    void cleanUp() {
+        rentFormRepository.deleteAll();
     }
 
     @Test
     @Transactional
     void 차량_대절_폼_조회를_성공한다() {
         // given
-        var rentFormId = 1L;
+        RentForm savedRentForm = rentFormRepository.save(createRentFormFixture());
+        rentFormRepository.flush();
 
         // when
-        var rentForm = rentFormReadService.getRentFormById(rentFormId);
+        var rentForm = rentFormReadService.getRentFormById(savedRentForm.getId());
 
         // then
         assertSoftly(softly -> {
@@ -60,10 +59,12 @@ class RentFormReadTest extends IntegrationTestSupport {
     @Transactional
     void 차량_대절_폼이_없을_경우_예외를_발생시킨다() {
         // given
-        var rentFormId = 2L;
+        RentForm savedRentForm = rentFormRepository.save(createRentFormFixture());
+        rentFormRepository.flush();
 
         // when & then
-        assertThrows(RentFormNotFoundException.class, () -> rentFormReadService.getRentFormById(rentFormId));
+        assertThrows(RentFormNotFoundException.class,
+                () -> rentFormReadService.getRentFormById(savedRentForm.getId() + 1L));
     }
 
     private RentForm createRentFormFixture() {
