@@ -20,7 +20,7 @@ public class AdditionalInfo {
     @Column(nullable = false)
     private int recruitmentCount; //모집인원
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "eddate")
     private LocalDate endDate; //모집마감날짜
 
     @Column(nullable = false)
