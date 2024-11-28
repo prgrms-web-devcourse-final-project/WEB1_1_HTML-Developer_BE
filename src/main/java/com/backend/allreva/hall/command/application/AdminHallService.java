@@ -1,8 +1,8 @@
 package com.backend.allreva.hall.command.application;
 
 import com.backend.allreva.common.util.CsvUtil;
-import com.backend.allreva.hall.command.application.dto.KopisHallResponse;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
+import com.backend.allreva.hall.infra.dto.KopisHallResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,19 +13,27 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class AdminHallService {
-    //private final KopisHallService kopisHallService;
+    private final KopisHallService kopisHallService;
     private final ConcertHallRepository concertHallRepository;
 
-/*    //공연장 정보 받아오기
+    //공연장 정보 받아오기
     public void fetchConcertHallInfoList() {
-        List<String> hallIds = CsvUtil.readConcertHallCodes();
-        hallIds.parallelStream()
-                .forEach(hallId -> {
-                    KopisHallResponse response = kopisHallService.fetchConcertHallDetail(hallId).block();
-                    if (response != null)
-                        concertHallRepository.save(KopisHallResponse.toEntity(response));
-                    log.info("hall detail fetch complete for hall Code: {}", hallId);
+        List<String> hallCodes = CsvUtil.readConcertHallCodes();
+        hallCodes.parallelStream()
+                .forEach(hallCode -> {
+                    KopisHallResponse response = kopisHallService.fetchConcertHallInfoList(getFacilityCode(hallCode));
+                    for (int i = 0; i < response.getDb().getMt13s().getMt13List().size(); i++) {
+                        if (response.getDb().getMt13s().getMt13List().get(i).getMt13id().equals(hallCode)) {
+                            concertHallRepository.save(KopisHallResponse.toEntity(response, i));
+                        }
+                    }
+                    log.info("hall detail fetch complete for hall Code: {}", hallCode);
                 });
-        log.info("All hall detail fetch complete");
-    }*/
+    }
+
+    private String getFacilityCode(final String hallCode) {
+        return hallCode.split("-")[0];
+    }
+
 }
+

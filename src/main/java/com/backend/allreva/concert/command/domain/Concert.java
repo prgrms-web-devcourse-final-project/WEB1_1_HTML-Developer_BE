@@ -50,8 +50,8 @@ public class Concert extends BaseEntity {
 
     public void updateFrom(String hallCode, KopisConcertResponse.Db db) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(db);
-        this.detailImages = KopisConcertResponse.toDetailImages(db.getStyurls());
-        this.sellers = KopisConcertResponse.toSellers(db.getRelates());
+        this.detailImages = KopisConcertResponse.toDetailImages(db.getStyurls().getStyurl());
+        this.sellers = KopisConcertResponse.toSellers(db.getRelates().getRelate());
         this.poster = KopisConcertResponse.toIntroduceImage(db.getPoster());
         this.code = Code.builder()
                 .concertCode(db.getConcertCode())

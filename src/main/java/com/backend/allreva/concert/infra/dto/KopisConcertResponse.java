@@ -12,26 +12,20 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.backend.allreva.concert.infra.dto.KopisConcertResponse.Db.Relate;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlRootElement(name = "dbs")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KopisConcertResponse {
     @XmlElement(name = "db")
-    private List<KopisConcertResponse.Db> dbList;
-
-    public List<KopisConcertResponse.Db> getDbList() {
-        return dbList == null ? new ArrayList<>() : dbList;
-    }
+    private Db db;
 
     @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Db {
         @XmlElement(name = "mt20id")
@@ -53,22 +47,25 @@ public class KopisConcertResponse {
         @XmlElement(name = "entrpsnmH")
         private String entrpsnmH; //주최
         @XmlElement(name = "styurls")
-        private List<String> styurls; //소개이미지 list
+        private Styurls styurls; //소개이미지 list
         @XmlElement(name = "relates")
-        private List<Relate> relates; //판매처 list
+        private Relates relates; //판매처 list
 
         @Getter
-        @AllArgsConstructor
-        @NoArgsConstructor
         @XmlAccessorType(XmlAccessType.FIELD)
         public static class Styurls {
             @XmlElement(name = "styurl")
-            private String styurl;
+            private List<String> styurl;
         }
 
         @Getter
-        @AllArgsConstructor
-        @NoArgsConstructor
+        @XmlAccessorType(XmlAccessType.FIELD)
+        public static class Relates {
+            @XmlElement(name = "relate")
+            private List<Relate> relate;
+        }
+
+        @Getter
         @XmlAccessorType(XmlAccessType.FIELD)
         public static class Relate {
             @XmlElement(name = "relatenm")
@@ -81,12 +78,12 @@ public class KopisConcertResponse {
 
     public static Concert toEntity(final String hallCode,
                                    final KopisConcertResponse response) {
-        Db db = response.getDbList().get(0);
+        Db db = response.getDb();
         return Concert.builder()
                 .concertInfo(toConcertInfo(db))
                 .poster(toIntroduceImage(db.poster))
-                .detailImages(toDetailImages(db.styurls))
-                .sellers(toSellers(db.relates))
+                .detailImages(toDetailImages(db.styurls.styurl))
+                .sellers(toSellers(db.relates.relate))
                 .code(Code.builder().concertCode(db.concertCode).hallCode(hallCode).build())
                 .build();
     }

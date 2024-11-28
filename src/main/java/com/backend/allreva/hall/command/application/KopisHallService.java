@@ -1,7 +1,7 @@
 package com.backend.allreva.hall.command.application;
 
-import com.backend.allreva.hall.command.application.dto.KopisHallResponse;
-import reactor.core.publisher.Mono;
+import com.backend.allreva.hall.infra.dto.KopisHallResponse;
 
 public interface KopisHallService {
+    KopisHallResponse fetchConcertHallInfoList(String HallCode);
 }

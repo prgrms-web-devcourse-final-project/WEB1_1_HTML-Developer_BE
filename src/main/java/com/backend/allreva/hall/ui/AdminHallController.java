@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/admin/halls")
 @RequiredArgsConstructor
-public class AdminHallController {     //TODO : 추후 관리자 권한 설정
+public class AdminHallController {
     private final AdminHallService adminHallService;
 
     @PostMapping
     public Response<Void> fetchConcertHallInfoList() {
-      //  adminHallService.fetchConcertHallInfoList();
+        adminHallService.fetchConcertHallInfoList();
         return Response.onSuccess();
     }
 }

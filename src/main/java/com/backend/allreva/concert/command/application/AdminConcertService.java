@@ -47,17 +47,15 @@ public class AdminConcertService {
 
             concertCodes.forEach(concertCode -> {
                 KopisConcertResponse response = kopisConcertService.fetchConcertDetail(concertCode);
-                if (!response.getDbList().isEmpty()) {
-                    processConcertUpdateOrInsert(hallCode, response);
-                    log.info("All concert details updated for hall Code: {}", hallCode);
-                }
+                processConcertUpdateOrInsert(hallCode, response);
+                log.info("All concert details updated for hall Code: {}", hallCode);
             });
         });
     }
 
     // 공연 정보 업데이트 혹은 새로 추가
     private void processConcertUpdateOrInsert(String hallCode, KopisConcertResponse response) {
-        String tempConcertCode = response.getDbList().get(0).getConcertCode();
+        String tempConcertCode = response.getDb().getConcertCode();
         boolean isExist = concertRepository.existsByCodeConcertCode(tempConcertCode);
 
         if (isExist) {
@@ -70,7 +68,7 @@ public class AdminConcertService {
     // 기존 공연 정보 업데이트
     private void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
         Concert existingConcert = concertRepository.findByCodeConcertCode(concertCode);
-        existingConcert.updateFrom(hallCode, response.getDbList().get(0));
+        existingConcert.updateFrom(hallCode, response.getDb());
         concertRepository.save(existingConcert);
     }
 }

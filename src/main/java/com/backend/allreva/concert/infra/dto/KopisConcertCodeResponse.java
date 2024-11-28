@@ -25,8 +25,6 @@ public class KopisConcertCodeResponse {
     }
 
     @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Db {
         @XmlElement(name = "mt20id")

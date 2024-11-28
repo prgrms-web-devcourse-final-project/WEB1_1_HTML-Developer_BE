@@ -1,5 +1,6 @@
 package com.backend.allreva.concert.infra;
 
+import com.backend.allreva.common.feign.OpenFeignClient;
 import com.backend.allreva.concert.command.application.KopisConcertService;
 import com.backend.allreva.concert.infra.dto.KopisConcertCodeResponse.Db;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
@@ -13,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class KopisOpenFeignClient implements KopisConcertService {
+public class KopisConcertOpenFeignClient implements KopisConcertService {
     private final OpenFeignClient openFeignClient;
 
     @Override
