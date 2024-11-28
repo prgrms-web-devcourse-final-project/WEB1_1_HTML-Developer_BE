@@ -1,6 +1,7 @@
 package com.backend.allreva.rent.command.application;
 
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.rent.command.application.dto.RentFormIdResponse;
 import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
 import com.backend.allreva.rent.command.domain.RentForm;
@@ -16,12 +17,13 @@ public class RentCommandService {
     private final RentFormWriteService rentFormWriteService;
 
     @Transactional
-    public void registerRentForm(
+    public RentFormIdResponse registerRentForm(
             final RentFormRegisterRequest rentFormRegisterRequest,
             final Member member
     ) {
         RentForm rentForm = rentFormRegisterRequest.toEntity(member.getId());
-        rentFormWriteService.saveRentForm(rentForm);
+        RentForm savedRentForm = rentFormWriteService.saveRentForm(rentForm);
+        return new RentFormIdResponse(savedRentForm.getId());
     }
 
     @Transactional

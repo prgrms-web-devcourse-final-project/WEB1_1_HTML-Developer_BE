@@ -38,17 +38,17 @@ class RentFormWriteTest extends IntegrationTestSupport {
         var rentForm = createRentFormFixture();
 
         // when
-        rentFormWriteService.saveRentForm(rentForm);
+        var savedRentForm = rentFormWriteService.saveRentForm(rentForm);
         rentFormRepository.flush();
 
         // then
-        var savedRentForm = rentFormRepository.findById(1L).orElse(null);
+        var expectRentForm = rentFormRepository.findById(savedRentForm.getId()).orElse(null);
+        assertThat(expectRentForm).isNotNull();
         assertSoftly(softly -> {
-            softly.assertThat(savedRentForm).isNotNull();
-            softly.assertThat(savedRentForm.getMemberId()).isEqualTo(1L);
-            softly.assertThat(savedRentForm.getConcertId()).isEqualTo(1L);
-            softly.assertThat(savedRentForm.getDetailInfo().getTitle()).isEqualTo("title");
-            softly.assertThat(savedRentForm.getDetailInfo().getArtistName()).isEqualTo("artistName");
+            softly.assertThat(expectRentForm.getMemberId()).isEqualTo(1L);
+            softly.assertThat(expectRentForm.getConcertId()).isEqualTo(1L);
+            softly.assertThat(expectRentForm.getDetailInfo().getTitle()).isEqualTo("title");
+            softly.assertThat(expectRentForm.getDetailInfo().getArtistName()).isEqualTo("artistName");
         });
     }
 
@@ -56,7 +56,7 @@ class RentFormWriteTest extends IntegrationTestSupport {
     void 차량_대절_폼을_성공적으로_삭제한다() {
         // given
         var rentForm = createRentFormFixture();
-        rentFormRepository.save(rentForm);
+        RentForm savedRentForm = rentFormRepository.save(rentForm);
         rentFormRepository.flush();
 
         // when
@@ -64,7 +64,7 @@ class RentFormWriteTest extends IntegrationTestSupport {
         rentFormRepository.flush();
 
         // then
-        var deletedRentForm = rentFormRepository.findById(1L).orElse(null);
+        var deletedRentForm = rentFormRepository.findById(savedRentForm.getId()).orElse(null);
         assertThat(deletedRentForm).isNull();
     }
 
