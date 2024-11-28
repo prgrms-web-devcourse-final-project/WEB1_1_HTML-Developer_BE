@@ -3,17 +3,13 @@ package com.backend.allreva.concert.command.application.dto;
 import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
-
 import com.backend.allreva.concert.command.domain.value.*;
-import com.backend.allreva.concert.command.domain.value.ConcertInfo;
-import com.backend.allreva.concert.command.domain.value.ConcertStatus;
-import com.backend.allreva.concert.command.domain.value.Seller;
-import com.backend.allreva.concert.infra.dto.Relate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -30,15 +26,15 @@ public class KopisConcertResponse {
     private String prfstate; //공연상태
     private String dtguidance; //공연 타임테이블
     private String entrpsnmH; //주최
-    private List<String> styurls; //소개이미지 list
-    private List<Relate> relates; //판매처 list
+    private Set<String> styurls; //소개이미지 list
+    private Set<Seller> sellers; //판매처 list
 
     public static Concert toEntity(final KopisConcertResponse response) {
         return Concert.builder()
                 .concertInfo(toConcertInfo(response))
                 .poster(toIntroduceImage(response.poster))
                 .detailImages(toDetailImages(response.styurls))
-                .sellers(toSellers(response.relates))
+                .sellers(response.sellers)
                 .code(Code.builder()
                         .concertCode(response.concertcd)
                         .hallCode(response.getHallcd())
@@ -63,23 +59,12 @@ public class KopisConcertResponse {
                 .build();
     }
 
-    public static Seller toSeller(final Relate relate) {
-        return Seller.builder()
-                .relateName(relate.getRelatenm())
-                .relateUrl(relate.getRelateurl())
-                .build();
-    }
-
-    public static List<Seller> toSellers(final List<Relate> relates) {
-        return relates.stream().map(KopisConcertResponse::toSeller).toList();
-    }
-
     public static Image toIntroduceImage(final String image) {
         return new Image(image);
     }
 
-    public static List<Image> toDetailImages(final List<String> styurls) {
-        return styurls.stream().map(KopisConcertResponse::toIntroduceImage).toList();
+    public static Set<Image> toDetailImages(final Set<String> styurls) {
+        return styurls.stream().map(KopisConcertResponse::toIntroduceImage).collect(Collectors.toSet());
     }
 
 }

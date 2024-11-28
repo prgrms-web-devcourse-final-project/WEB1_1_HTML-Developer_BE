@@ -1,5 +1,6 @@
 package com.backend.allreva;
 
+import com.backend.allreva.common.config.JpaAuditingConfig;
 
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.common.model.Image;
@@ -11,12 +12,21 @@ import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.List.of;
 
+
+@TestPropertySource(properties = {
+        "aws.region=us-east-1",
+        "view.count.schedule.rate=20"
+})
+@MockBean(JpaAuditingConfig.class)
 @SpringBootTest
 public abstract class IntegralTestSupport {
     // 테스트용 Member 객체 생성
@@ -41,8 +51,8 @@ public abstract class IntegralTestSupport {
                 .concertInfo(new ConcertInfo("Sample Concert", "2024-12-01", ConcertStatus.IN_PROGRESS, "host",
                         new DateInfo(LocalDate.of(2024, 11, 30), LocalDate.of(2024, 12, 1), "timetable")))
                 .poster(new Image("http://example.com/poster.jpg"))
-                .detailImages(List.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
-                .sellers(List.of(new Seller("Sample Seller", "http://seller.com")))
+                .detailImages(Set.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
+                .sellers(Set.of(new Seller("Sample Seller", "http://seller.com")))
                 .build();
     }
 

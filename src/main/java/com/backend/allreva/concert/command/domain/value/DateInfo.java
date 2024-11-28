@@ -1,6 +1,5 @@
 package com.backend.allreva.concert.command.domain.value;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,25 +1,26 @@
 package com.backend.allreva.concert.query.application.dto;
 
 
-import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.common.model.Image;
+import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
-
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
-public final class ConcertDetail {
+public final class ConcertDetailResponse {
+
+    public static final ConcertDetailResponse EMPTY = new ConcertDetailResponse();
 
     private Image poster;
-    private List<Image> detailImages;
+    private Set<Image> detailImages;
     private ConcertInfo concertInfo;
-    private List<Seller> sellers;
+    private Set<Seller> sellers;
 
     private String hallCode;
     private String hallName;
@@ -28,17 +29,17 @@ public final class ConcertDetail {
     private String address;
 
     @Builder
-    public ConcertDetail(
-            Image poster,
-            List<Image> detailImages,
-            ConcertInfo concertInfo,
-            List<Seller> sellers,
+    public ConcertDetailResponse(
+            final Image poster,
+            final Set<Image> detailImages,
+            final ConcertInfo concertInfo,
+            final Set<Seller> sellers,
 
-            String hallCode,
-            String hallName,
-            Integer seatScale,
-            ConvenienceInfo convenienceInfo,
-            String address
+            final String hallCode,
+            final String hallName,
+            final Integer seatScale,
+            final ConvenienceInfo convenienceInfo,
+            final String address
     ) {
         this.poster = poster;
         this.detailImages = detailImages;
