@@ -1,6 +1,6 @@
 package com.backend.allreva.diary.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +32,8 @@ public class ConcertDiary extends BaseEntity {
     private Date date; //날짜
 
     private String episode; //회차
+
+    private String content;
 
     @Builder.Default
     @ElementCollection

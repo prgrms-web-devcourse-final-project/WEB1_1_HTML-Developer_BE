@@ -1,6 +1,6 @@
 package com.backend.allreva.concert.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.application.dto.KopisConcertResponse;
 import com.backend.allreva.concert.command.domain.value.Code;
@@ -16,6 +16,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = @Index(name = "idx_hall_code", columnList = "concert_hall_code"))
 @Entity
 public class Concert extends BaseEntity {
     @Id

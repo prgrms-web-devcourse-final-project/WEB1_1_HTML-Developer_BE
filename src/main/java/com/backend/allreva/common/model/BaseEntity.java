@@ -1,4 +1,4 @@
-package com.backend.allreva.common.application;
+package com.backend.allreva.common.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
