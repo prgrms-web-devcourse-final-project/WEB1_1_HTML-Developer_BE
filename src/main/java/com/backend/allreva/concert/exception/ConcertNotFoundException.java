@@ -1,11 +1,10 @@
-package com.backend.allreva.concert.command.domain.exception;
+package com.backend.allreva.concert.exception;
 
 import com.backend.allreva.common.exception.CustomException;
-import com.backend.allreva.member.exception.MemberErrorCode;
 
 public class ConcertNotFoundException extends CustomException {
     public ConcertNotFoundException() {
-        super(ConcertErrorCode.CONCERT_NOT_FOUND);
+        super(com.backend.allreva.concert.exception.ConcertErrorCode.CONCERT_NOT_FOUND);
     }
 
 }

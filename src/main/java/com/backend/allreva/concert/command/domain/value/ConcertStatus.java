@@ -1,7 +1,6 @@
 package com.backend.allreva.concert.command.domain.value;
 
-import com.backend.allreva.concert.command.domain.exception.ConcertNotFoundException;
-import com.backend.allreva.concert.command.domain.exception.ConcertStatusNotFoundException;
+import com.backend.allreva.concert.exception.ConcertStatusNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
