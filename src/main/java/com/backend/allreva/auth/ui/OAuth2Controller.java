@@ -23,8 +23,11 @@ public class OAuth2Controller {
 
     private final MemberCommandFacade memberCommandFacade;
 
-    @Operation(summary = "oauth2 로그인", description = """
+    @Operation(
+            summary = "oauth2 로그인",
+            description = """
             <b>oauth2 로그인 API</b>
+            
             먼저 로그인을 다음 주소로 login한 후 token 주소를 얻습니다.
             - `http://{host}:{port}/api/v1/oauth2/login/{provider}`
             
