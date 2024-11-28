@@ -1,6 +1,6 @@
 package com.backend.allreva.member.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberInfo;

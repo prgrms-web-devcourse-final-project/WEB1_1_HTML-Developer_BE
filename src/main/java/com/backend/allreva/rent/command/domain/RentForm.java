@@ -1,6 +1,6 @@
 package com.backend.allreva.rent.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
 import com.backend.allreva.rent.command.domain.value.DetailInfo;
 import com.backend.allreva.rent.command.domain.value.OperationInfo;

@@ -5,6 +5,7 @@ import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConcertDetailResponse {
 
     public static final ConcertDetailResponse EMPTY = new ConcertDetailResponse();

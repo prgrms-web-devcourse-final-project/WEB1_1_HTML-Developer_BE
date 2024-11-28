@@ -1,6 +1,6 @@
 package com.backend.allreva.survey.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.Region;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

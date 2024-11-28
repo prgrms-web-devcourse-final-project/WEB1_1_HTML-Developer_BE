@@ -1,6 +1,6 @@
 package com.backend.allreva.rent.command.domain;
 
-import com.backend.allreva.common.application.BaseEntity;
+import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.rent.command.domain.value.BoardingType;
 import com.backend.allreva.rent.command.domain.value.Depositor;
 import com.backend.allreva.rent.command.domain.value.RefundType;
