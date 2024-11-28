@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.List.of;
 
@@ -50,8 +51,8 @@ public abstract class IntegralTestSupport {
                 .concertInfo(new ConcertInfo("Sample Concert", "2024-12-01", ConcertStatus.IN_PROGRESS, "host",
                         new DateInfo(LocalDate.of(2024, 11, 30), LocalDate.of(2024, 12, 1), "timetable")))
                 .poster(new Image("http://example.com/poster.jpg"))
-                .detailImages(List.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
-                .sellers(List.of(new Seller("Sample Seller", "http://seller.com")))
+                .detailImages(Set.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
+                .sellers(Set.of(new Seller("Sample Seller", "http://seller.com")))
                 .build();
     }
 

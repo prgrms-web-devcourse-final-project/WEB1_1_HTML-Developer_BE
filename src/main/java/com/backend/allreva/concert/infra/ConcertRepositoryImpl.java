@@ -53,6 +53,11 @@ public class ConcertRepositoryImpl implements ConcertRepository {
         return concertJpaRepository.findByCodeConcertCode(concertCode);
     }
 
+    @Override
+    public boolean existsById(Long concertId) {
+        return concertJpaRepository.existsById(concertId);
+    }
+
 
     @Transactional
     @Scheduled(fixedRateString = "${view.count.schedule.rate}")

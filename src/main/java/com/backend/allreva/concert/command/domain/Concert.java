@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -48,19 +47,6 @@ public class Concert extends BaseEntity {
             joinColumns = @JoinColumn(name = "id")
     )
     private Set<Seller> sellers;
-
-    private List<Seller> sellers;
-
-    public void updateFrom(final KopisConcertResponse response) {
-        this.concertInfo = KopisConcertResponse.toConcertInfo(response);
-        this.code = Code.builder()
-                .hallCode(response.getHallcd())
-                .concertCode(response.getConcertcd())
-                .build();
-        this.detailImages = KopisConcertResponse.toDetailImages(response.getStyurls());
-        this.sellers = KopisConcertResponse.toSellers(response.getRelates());
-        this.poster = KopisConcertResponse.toIntroduceImage(response.getPoster());
-    }
 
 
     @Builder

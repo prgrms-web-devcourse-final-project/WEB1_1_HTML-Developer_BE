@@ -14,4 +14,6 @@ public interface ConcertRepository {
     boolean existsByConcertCode(String concertCode);
 
     Concert findByConcertCode(String concertCode);
+
+    boolean existsById(Long concertId);
 }
