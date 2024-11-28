@@ -98,7 +98,7 @@ class ConcertQueryTest extends IntegralTestSupport {
 
     @AfterEach
     void tearDown() {
-        concertRepository.deleteAll();
+        concertRepository.deleteAllInBatch();
         concertHallRepository.deleteAll();
     }
 

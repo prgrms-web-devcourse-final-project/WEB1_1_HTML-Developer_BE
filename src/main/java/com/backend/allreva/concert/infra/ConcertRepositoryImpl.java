@@ -38,8 +38,8 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     }
 
     @Override
-    public void deleteAll() {
-        concertJpaRepository.deleteAll();
+    public void deleteAllInBatch() {
+        concertJpaRepository.deleteAllInBatch();
         cache.clear();
     }
 

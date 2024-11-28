@@ -9,7 +9,7 @@ public interface ConcertRepository {
 
     void increaseViewCount(Long concertId);
 
-    void deleteAll();
+    void deleteAllInBatch();
 
     boolean existsByConcertCode(String concertCode);
 
