@@ -1,6 +1,6 @@
 package com.backend.allreva.concert.query.application;
 
-import com.backend.allreva.concert.command.domain.value.SortDirection;
+import com.backend.allreva.search.query.domain.value.SortDirection;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.support.IntegrationTestSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +36,7 @@ class ConcertQueryServiceTest extends IntegrationTestSupport {
         concertMain1.concertThumbnails().forEach(
                 concertMain2 -> log.info("concertMain2: {}", concertMain2)
         );
-
-
+        log.info("concertMain1.searchAfter: {}", concertMain1.searchAfter());
 
         ConcertMainResponse concertMain2 = concertQueryService.getConcertMain("서울", searchAfter, 6, SortDirection.VIEWS);
         concertMain2.concertThumbnails().forEach(
