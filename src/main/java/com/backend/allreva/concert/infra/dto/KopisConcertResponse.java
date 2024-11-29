@@ -90,6 +90,7 @@ public class KopisConcertResponse {
                 .detailImages(toDetailImages(db.styurls.styurl))
                 .sellers(toSellers(db.relates.relate))
                 .code(Code.builder().concertCode(db.concertCode).hallCode(hallCode).build())
+                .episodes(toEpisodes(db.dtguidance))
                 .build();
     }
 
@@ -111,11 +112,16 @@ public class KopisConcertResponse {
 
     public static Set<String> toEpisodes(final String timeTable) {
         Set<String> episodes = new HashSet<>();
-
         Pattern pattern = Pattern.compile("\\(([^)]+)\\)");
         Matcher matcher = pattern.matcher(timeTable);
+
         while (matcher.find()) {
-            episodes.add(matcher.group(1));
+            String content = matcher.group(1);
+
+            String[] episodeContents = content.split(",");
+            for (String episode : episodeContents) {
+                episodes.add(episode.trim());
+            }
         }
         return episodes;
     }
