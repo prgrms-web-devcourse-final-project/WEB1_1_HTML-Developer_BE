@@ -1,5 +1,8 @@
 package com.backend.allreva.rent.query;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
@@ -28,7 +31,6 @@ import com.backend.allreva.support.IntegrationTestSupport;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +59,28 @@ class RentFormDetailReadTest extends IntegrationTestSupport {
         var rentFormDetail = rentFormQueryService.getRentFormDetailById(rentForm.getId());
 
         // then
-        Assertions.assertThat(rentFormDetail).isNotNull();
+        assertThat(rentFormDetail).isNotNull();
+        assertSoftly(softly -> {
+            softly.assertThat(rentFormDetail.getTitle()).isEqualTo(rentForm.getDetailInfo().getTitle());
+            softly.assertThat(rentFormDetail.getConcertName()).isEqualTo(concert.getConcertInfo().getTitle());
+            softly.assertThat(rentFormDetail.getDropOffArea()).isEqualTo(concertHall.getName());
+        });
+    }
+
+    @Test
+    @Transactional
+    void 입금_계좌_조회를_성공한다() {
+        // given
+        var concertHall = concertHallRepository.save(createConcertHallFixture());
+        var concert = concertRepository.save(createConcertFixture(concertHall.getId()));
+        var rentForm = rentFormRepository.save(createRentFormFixture(concert.getId()));
+
+        // when
+        var depositAccount = rentFormQueryService.getDepositAccountById(rentForm.getId());
+
+        // then
+        assertThat(depositAccount).isNotNull();
+        assertThat(depositAccount.depositAccount()).isEqualTo("depositAccount");
     }
 
     private RentForm createRentFormFixture(final Long concertId) {
@@ -97,11 +120,11 @@ class RentFormDetailReadTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Concert createConcertFixture(final String concertCode) {
+    private Concert createConcertFixture(final String hallCode) {
         return Concert.builder()
                 .code(Code.builder()
-                        .hallCode("123")
-                        .concertCode(concertCode)
+                        .hallCode(hallCode)
+                        .concertCode("concertCode")
                         .build())
                 .concertInfo(new ConcertInfo("Sample Concert", "2024-12-01", ConcertStatus.IN_PROGRESS, "host",
                         new DateInfo(LocalDate.of(2024, 11, 30), LocalDate.of(2024, 12, 1), "timetable")))
