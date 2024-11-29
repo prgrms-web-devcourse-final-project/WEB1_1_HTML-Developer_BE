@@ -2,26 +2,29 @@ package com.backend.allreva.member.query.application.dto;
 
 import com.backend.allreva.survey.command.domain.value.Region;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@RequiredArgsConstructor
-public class SurveyResponse {
-    Long surveyId;
-    String title;
-    LocalDate boardingDate;
-    Region region;
-    LocalDate surveyStartDate;
-    LocalDate surveyEndDate;
-    int participationCount;
-    int maxPassenger;
+public final class SurveyResponse {
+    private final Long surveyId;
+    private final String title;
+    private final LocalDate boardingDate;
+    private final Region region;
+    private final LocalDate surveyStartDate;
+    private final LocalDate surveyEndDate;
+    private final Integer participationCount;
+    private final Integer maxPassenger;
 
-    public SurveyResponse(Long surveyId, String title, LocalDate boardingDate, Region region, LocalDateTime surveyStartDate, LocalDate surveyEndDate, int participationCount, int maxPassenger) {
+    public SurveyResponse(final Long surveyId,
+                          final String title,
+                          final LocalDate boardingDate,
+                          final Region region,
+                          final LocalDateTime surveyStartDate,
+                          final LocalDate surveyEndDate,
+                          final Integer participationCount,
+                          final Integer maxPassenger) {
         this.surveyId = surveyId;
         this.title = title;
         this.boardingDate = boardingDate;
@@ -30,19 +33,5 @@ public class SurveyResponse {
         this.surveyEndDate = surveyEndDate;
         this.participationCount = participationCount;
         this.maxPassenger = maxPassenger;
-    }
-
-    @Override
-    public String toString() {
-        return "SurveyResponse{" +
-                "surveyId=" + surveyId +
-                ", title='" + title + '\'' +
-                ", boardingDate=" + boardingDate +
-                ", region=" + region +
-                ", surveyStartDate=" + surveyStartDate +
-                ", surveyEndDate=" + surveyEndDate +
-                ", participationCount=" + participationCount +
-                ", maxPassenger=" + maxPassenger +
-                '}';
     }
 }

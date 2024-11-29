@@ -1,6 +1,7 @@
 package com.backend.allreva.member.query.application;
 
 import com.backend.allreva.member.query.application.dto.CreatedSurveyResponse;
+import com.backend.allreva.member.query.application.dto.JoinSurveyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,5 +16,9 @@ public class MemberSurveyQueryService {
 
     public List<CreatedSurveyResponse> getCreatedSurveyList(final Long memberId, final Long lastId, final int pageSize) {
         return memberSurveyRepository.getCreatedSurveyList(memberId, lastId, pageSize);
+    }
+
+    public List<JoinSurveyResponse> getJoinSurveyList(final Long memberId, final Long lastId, final int pageSize) {
+        return memberSurveyRepository.getJoinSurveyList(memberId, lastId, pageSize);
     }
 }

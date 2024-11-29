@@ -2,8 +2,10 @@ package com.backend.allreva.member.infra;
 
 import com.backend.allreva.member.query.application.MemberSurveyRepository;
 import com.backend.allreva.member.query.application.dto.CreatedSurveyResponse;
+import com.backend.allreva.member.query.application.dto.JoinSurveyResponse;
 import com.backend.allreva.member.query.application.dto.SurveyResponse;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
+import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -22,27 +24,16 @@ import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
 public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
+
     @Override
     public List<CreatedSurveyResponse> getCreatedSurveyList(final Long memberId,
                                                             final Long lastId,
                                                             final int pageSize) {
 
-        return jpaQueryFactory.select(
-                        Projections.constructor(CreatedSurveyResponse.class,
-                                Projections.constructor(SurveyResponse.class,
-                                        survey.id,
-                                        survey.title,
-                                        surveyJoin.boardingDate,
-                                        survey.region,
-                                        survey.createdAt,
-                                        survey.eddate,
-                                        surveyJoin.passengerNum.sum(),
-                                        survey.maxPassenger),
-                                getPassengerSumByBoardingType(BoardingType.UP),
-                                getPassengerSumByBoardingType(BoardingType.DOWN),
-                                getPassengerSumByBoardingType(BoardingType.ROUND))
-                )
+        return jpaQueryFactory
+                .select(CreatedSurveyProjections())
                 .from(survey)
+                .join(survey.boardingDate)
                 .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
                 .where(survey.memberId.eq(memberId),
                         getPagingCondition(lastId))
@@ -54,32 +45,23 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
 
     }
 
-/*    public List<CreatedSurveyResponse> getCreatedSurveyList22(final Long memberId,
-                                                            final Long lastId,
-                                                            final int pageSize) {
+    private ConstructorExpression<CreatedSurveyResponse> CreatedSurveyProjections() {
 
-        return jpaQueryFactory.select(
-                        Projections.constructor(CreatedSurveyResponse.class,
-                                survey.id,
-                                survey.title,
-                                survey.boardingDate,
-                                survey.region,
-                                survey.createdAt,
-                                survey.eddate,
-                                surveyJoin.passengerNum.sum(),
-                                survey.maxPassenger,
-                                getPassengerSumByBoardingType(BoardingType.UP),
-                                getPassengerSumByBoardingType(BoardingType.DOWN),
-                                getPassengerSumByBoardingType(BoardingType.ROUND)))
-                .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
-                .where(survey.memberId.eq(memberId),
-                        survey.boardingDate.contains(surveyJoin.boardingDate),
-                        getPagingCondition(lastId))
-                .groupBy(survey.id, surveyJoin.boardingDate)
-                .orderBy(survey.id.desc())
-                .limit(pageSize)
-                .fetch();
-    }*/
+        return Projections.constructor(CreatedSurveyResponse.class,
+                Projections.constructor(SurveyResponse.class,
+                        survey.id,
+                        survey.title,
+                        survey.boardingDate,
+                        survey.region,
+                        survey.createdAt,
+                        survey.eddate,
+                        surveyJoin.passengerNum.sum(),
+                        survey.maxPassenger),
+                getPassengerSumByBoardingType(BoardingType.UP),
+                getPassengerSumByBoardingType(BoardingType.DOWN),
+                getPassengerSumByBoardingType(BoardingType.ROUND));
+    }
+
 
     private BooleanExpression getPagingCondition(final Long lastId) {
         if (lastId == null) {
@@ -98,4 +80,45 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
                 .sum();
     }
 
+
+    @Override
+    public List<JoinSurveyResponse> getJoinSurveyList(final Long memberId,
+                                                      final Long lastId,
+                                                      final int pageSize) {
+        return jpaQueryFactory
+                .select(JoinSurveyProjections())
+                .from(survey)
+                .join(survey.boardingDate)
+                .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
+                .where(surveyJoin.memberId.eq(memberId),
+                        getPagingCondition(lastId))
+                .groupBy(survey.id,
+                        surveyJoin.id,
+                        surveyJoin.boardingDate,
+                        surveyJoin.createdAt,
+                        surveyJoin.boardingType,
+                        surveyJoin.passengerNum)
+                .orderBy(surveyJoin.id.desc())
+                .limit(pageSize)
+                .fetch();
+    }
+
+    private ConstructorExpression<JoinSurveyResponse> JoinSurveyProjections() {
+
+        return Projections.constructor(JoinSurveyResponse.class,
+                Projections.constructor(SurveyResponse.class,
+                        survey.id,
+                        survey.title,
+                        surveyJoin.boardingDate,
+                        survey.region,
+                        survey.createdAt,
+                        survey.eddate,
+                        surveyJoin.passengerNum.sum(),
+                        survey.maxPassenger),
+                surveyJoin.id,
+                surveyJoin.createdAt,
+                surveyJoin.boardingType,
+                surveyJoin.passengerNum
+        );
+    }
 }
