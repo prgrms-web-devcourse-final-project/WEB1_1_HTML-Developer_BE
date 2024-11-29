@@ -6,6 +6,7 @@ import static com.backend.allreva.rent.command.domain.QRentForm.rentForm;
 import static com.querydsl.core.types.Projections.list;
 
 import com.backend.allreva.rent.query.application.RentFormQueryRepository;
+import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
 import com.backend.allreva.rent.query.application.dto.RentFormDetailResponse;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
@@ -29,7 +30,7 @@ public class RentFormQueryRepositoryImpl implements RentFormQueryRepository {
                 .leftJoin(concert).on(rentForm.concertId.eq(concert.id))
                 .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
                 .fetchOne();
-        return Optional.of(rentFormDetailResponse);
+        return Optional.ofNullable(rentFormDetailResponse);
     }
 
     public ConstructorExpression<RentFormDetailResponse> rentFormDetailProjections() {
@@ -56,5 +57,16 @@ public class RentFormQueryRepositoryImpl implements RentFormQueryRepository {
                 rentForm.additionalInfo.refundType,
                 rentForm.additionalInfo.information
         );
+    }
+
+    @Override
+    public Optional<DepositAccountResponse> findDepositAccountById(final Long rentFormId) {
+        DepositAccountResponse depositAccountResponse = queryFactory
+                .select(Projections.constructor(DepositAccountResponse.class,
+                        rentForm.detailInfo.depositAccount))
+                .from(rentForm)
+                .where(rentForm.id.eq(rentFormId))
+                .fetchOne();
+        return Optional.ofNullable(depositAccountResponse);
     }
 }

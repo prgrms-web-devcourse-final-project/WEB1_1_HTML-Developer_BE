@@ -1,4 +1,4 @@
-package com.backend.allreva.rent.infra;
+package com.backend.allreva.rent.query;
 
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-class RentFormDetailReadTest extends IntegrationTestSupport {
+class DepositAccountReadTest extends IntegrationTestSupport {
 
     @Autowired
     private RentFormQueryService rentFormQueryService;
@@ -125,4 +125,5 @@ class RentFormDetailReadTest extends IntegrationTestSupport {
                         .build())
                 .build();
     }
+
 }
