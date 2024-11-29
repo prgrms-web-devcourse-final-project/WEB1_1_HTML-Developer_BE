@@ -1,9 +1,14 @@
 package com.backend.allreva.rent.command.domain.value;
 
+import com.backend.allreva.rent.command.domain.RentFormBoardingDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.OneToMany;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -14,8 +19,8 @@ public class OperationInfo {
     @Column(nullable = false)
     private String boardingArea;
 
-    @Column(nullable = false)
-    private String boardingDate;
+    @OneToMany(mappedBy = "rentForm")
+    private List<RentFormBoardingDate> boardingDates = new ArrayList<>();
 
     @Column(nullable = false)
     private String upTime;
