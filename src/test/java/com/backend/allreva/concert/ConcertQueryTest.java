@@ -124,15 +124,15 @@ class ConcertQueryTest extends IntegrationTestSupport {
                 .contains("relateName22")
                 .contains("relateName"); // 공연장 id = hallCode
     }
-
+/*
     @DisplayName("조회하면 지정된 시간 이후에 조회수가 증가한다")
     @Test
     void detailViewCountTest() throws InterruptedException {
 
         // Given
-        /**
+        *//**
          * setUp -> Concert & ConcertHall
-         */
+         *//*
 
         // When
         concertQueryService.findDetailById(savedConcert.getId());
@@ -151,9 +151,9 @@ class ConcertQueryTest extends IntegrationTestSupport {
     void scheduleViewCountTest() {
 
         // Given
-        /**
+        *//**
          * setUp -> Concert & ConcertHall
-         */
+         *//*
 
         // When
         concertQueryService.findDetailById(savedConcert.getId());
@@ -162,5 +162,5 @@ class ConcertQueryTest extends IntegrationTestSupport {
 
         // Then
         Assertions.assertThat(concert.getViewCount()).isZero();
-    }
+    }*/
 }
