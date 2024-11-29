@@ -1,9 +1,6 @@
 package com.backend.allreva.concert.command.domain.value;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,9 +17,12 @@ import java.util.regex.Pattern;
 @Embeddable
 public class DateInfo {
 
+    @Column(nullable = false)
     private LocalDate stdate;
+    @Column(nullable = false)
     private LocalDate eddate;
 
+    @Column(nullable = false)
     private String timeTable;
 
     @Builder

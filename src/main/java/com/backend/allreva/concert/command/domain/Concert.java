@@ -6,6 +6,7 @@ import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,7 +37,8 @@ public class Concert extends BaseEntity {
             name = "concert_episode",
             joinColumns = @JoinColumn(name = "id")
     )
-    private Set<String> episode;
+    @Column(name = "episode")
+    private Set<String> episodes;
 
 
     @Embedded
@@ -68,7 +70,7 @@ public class Concert extends BaseEntity {
                 .concertCode(db.getConcertCode())
                 .hallCode(hallCode)
                 .build();
-        this.episode = KopisConcertResponse.toEpisodes(db.getDtguidance());
+        this.episodes = KopisConcertResponse.toEpisodes(db.getDtguidance());
     }
 
 
@@ -83,7 +85,7 @@ public class Concert extends BaseEntity {
     ) {
         this.code = code;
         this.concertInfo = concertInfo;
-        this.episode = episodes;
+        this.episodes = episodes;
         this.poster = poster;
         this.detailImages = detailImages;
         this.sellers = sellers;
