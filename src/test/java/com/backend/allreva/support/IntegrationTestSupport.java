@@ -1,17 +1,25 @@
 package com.backend.allreva.support;
 
+import static java.util.List.of;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+
 import com.backend.allreva.common.config.JpaAuditingConfig;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
-import com.backend.allreva.concert.command.domain.value.*;
+import com.backend.allreva.concert.command.domain.value.Code;
+import com.backend.allreva.concert.command.domain.value.ConcertInfo;
+import com.backend.allreva.concert.command.domain.value.ConcertStatus;
+import com.backend.allreva.concert.command.domain.value.DateInfo;
+import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManager;
+import java.time.LocalDate;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,12 +27,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDate;
-import java.util.Set;
-
-import static java.util.List.of;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -41,9 +43,6 @@ public abstract class IntegrationTestSupport {
 
     @Autowired
     protected ObjectMapper objectMapper;
-
-    @Autowired
-    protected EntityManager entityManager;
 
     // 테스트용 Member 객체 생성
     protected Member createTestMember() {
@@ -67,7 +66,8 @@ public abstract class IntegrationTestSupport {
                 .concertInfo(new ConcertInfo("Sample Concert", "2024-12-01", ConcertStatus.IN_PROGRESS, "host",
                         new DateInfo(LocalDate.of(2024, 11, 30), LocalDate.of(2024, 12, 1), "timetable")))
                 .poster(new Image("http://example.com/poster.jpg"))
-                .detailImages(Set.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
+                .detailImages(Set.of(new Image("http://example.com/detail1.jpg"),
+                        new Image("http://example.com/detail2.jpg")))
                 .sellers(Set.of(new Seller("Sample Seller", "http://seller.com")))
                 .build();
     }
