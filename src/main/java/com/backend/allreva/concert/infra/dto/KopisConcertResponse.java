@@ -12,8 +12,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.backend.allreva.concert.infra.dto.KopisConcertResponse.Db.Relate;
@@ -104,6 +107,17 @@ public class KopisConcertResponse {
                         )
                 )
                 .build();
+    }
+
+    public static Set<String> toEpisodes(final String timeTable) {
+        Set<String> episodes = new HashSet<>();
+
+        Pattern pattern = Pattern.compile("\\(([^)]+)\\)");
+        Matcher matcher = pattern.matcher(timeTable);
+        while (matcher.find()) {
+            episodes.add(matcher.group(1));
+        }
+        return episodes;
     }
 
     public static Seller toSeller(final Relate relate) {

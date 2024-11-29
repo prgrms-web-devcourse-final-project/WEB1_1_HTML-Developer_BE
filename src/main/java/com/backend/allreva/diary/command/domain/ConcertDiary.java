@@ -20,7 +20,7 @@ import java.util.Set;
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE concert_diary SET deleted_at = NOW() WHERE id = ?")
 @Table(indexes = {
-        @Index(name = "idx_diary_member_date", columnList = "member_id, date")
+        @Index(name = "idx_diary_member_date", columnList = "member_id, diary_date")
 })
 @Entity
 public class ConcertDiary extends BaseEntity {
