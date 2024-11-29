@@ -28,9 +28,9 @@ public class DiaryController {
     private final DiaryCommandService diaryCommandService;
     private final DiaryQueryService diaryQueryService;
 
-    @Operation(summary = "공연 기록 등록", description = "Multipart_Form_Data 로 설정하고 넣어주셔야 합니다")
+    @Operation(summary = "공연 기록 등록", description = "multipart/form-data 로 설정하고 넣어주셔야 합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "multipart/form-data"))
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
     })
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Long> addDiary(
@@ -42,9 +42,9 @@ public class DiaryController {
         return Response.onSuccess(diaryId);
     }
 
-    @Operation(summary = "공연 기록 수정", description = "Multipart_Form_Data 로 설정하고 넣어주셔야 합니다")
+    @Operation(summary = "공연 기록 수정", description = "multipart/form-data 로 설정하고 넣어주셔야 합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "multipart/form-data"))
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
     })
     @PatchMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Void> updateDiary(
@@ -57,9 +57,6 @@ public class DiaryController {
     }
 
     @Operation(summary = "공연 기록 상세 조회", description = "공연 기록 상세 조회 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
-    })
     @GetMapping("/{diaryId}")
     public Response<DiaryDetailResponse> findDiaryDetail(
             @PathVariable("diaryId") final Long diaryId,
@@ -70,9 +67,6 @@ public class DiaryController {
     }
 
     @Operation(summary = "공연 기록 목록 조회", description = "공연 기록 목록 조회 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
-    })
     @GetMapping("/list")
     public Response<List<DiarySummaryResponse>> findSummaries(
             @RequestParam(name = "year") final int year,

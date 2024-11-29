@@ -21,7 +21,7 @@ public record AddDiaryRequest(
     public ConcertDiary to() {
         return ConcertDiary.builder()
                 .concertId(concertId)
-                .date(date)
+                .diaryDate(date)
                 .episode(episode)
                 .content(content)
                 .seatName(seatName)

@@ -40,7 +40,7 @@ public class DiaryDslRepositoryImpl implements DiaryDslRepository {
         return Projections.constructor(DiaryDetailResponse.class,
                 concert.concertInfo.title,
                 concert.poster,
-                concertDiary.date,
+                concertDiary.diaryDate,
                 concertDiary.episode,
                 concertDiary.seatName,
                 GroupBy.set(image),
@@ -58,14 +58,14 @@ public class DiaryDslRepositoryImpl implements DiaryDslRepository {
                 .from(concertDiary)
                 .leftJoin(concert).on(concert.id.eq(concertDiary.concertId))
                 .where(concertDiary.memberId.eq(memberId))
-                .where(concertDiary.date.between(startDate, endDate))
+                .where(concertDiary.diaryDate.between(startDate, endDate))
                 .fetch();
     }
 
     private ConstructorExpression<DiarySummaryResponse> summaryProjection() {
         return Projections.constructor(DiarySummaryResponse.class,
                 concert.poster,
-                concertDiary.date
+                concertDiary.diaryDate
         );
     }
 }

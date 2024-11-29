@@ -34,17 +34,15 @@ public class ConcertDiary extends BaseEntity {
 
     @Column(nullable = false)
     private Long concertId;
-    private Image concertPoster;
-
-    @Column(nullable = false)
-    private LocalDate date; //날짜
 
     @Column(nullable = false)
     private String episode; //회차
 
+    @Column(nullable = false)
+    private LocalDate diaryDate; //날짜
+
     private String content;
     private String seatName;
-
 
     @ElementCollection
     @CollectionTable(
@@ -53,18 +51,19 @@ public class ConcertDiary extends BaseEntity {
     )
     private Set<Image> diaryImages = new HashSet<>();
 
+
     @Builder
     public ConcertDiary(
             Long memberId,
             Long concertId,
-            LocalDate date,
+            LocalDate diaryDate,
             String episode,
             String content,
             String seatName
     ) {
         this.memberId = memberId;
         this.concertId = concertId;
-        this.date = date;
+        this.diaryDate = diaryDate;
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
@@ -85,7 +84,7 @@ public class ConcertDiary extends BaseEntity {
     public void update(
             Long memberId,
             Long concertId,
-            LocalDate date,
+            LocalDate diaryDate,
             String episode,
             String content,
             String seatName,
@@ -93,7 +92,7 @@ public class ConcertDiary extends BaseEntity {
     ) {
         this.memberId = memberId;
         this.concertId = concertId;
-        this.date = date;
+        this.diaryDate = diaryDate;
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
