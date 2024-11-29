@@ -11,6 +11,7 @@ import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
 import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
+import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
 import com.backend.allreva.survey.command.domain.SurveyJoin;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
@@ -41,6 +42,8 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
     @Autowired
     private SurveyJoinCommandRepository surveyJoinCommandRepository;
     @Autowired
+    private SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
+    @Autowired
     private ConcertRepository concertRepository;
     private Member testMember;
     private Concert testConcert;
@@ -56,6 +59,7 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         memberRepository.deleteAllInBatch();
+        surveyBoardingDateCommandRepository.deleteAllInBatch();
         surveyCommandRepository.deleteAllInBatch();
         surveyJoinCommandRepository.deleteAllInBatch();
         concertRepository.deleteAllInBatch();
@@ -100,7 +104,6 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("수요조사 폼 삭제에 성공한다.")
-    @Transactional //softDelete로 인해 tearDown으로 삭제되지 않음
     public void removeSurvey() {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
@@ -111,9 +114,11 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         // When
         surveyCommandService.removeSurvey(testMember.getId(), response.surveyId());
         Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
+        List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
 
         // Then
         assertNull(savedSurvey);
+        assertEquals(0, boardingDates.size());
     }
 
     @Test
@@ -137,12 +142,12 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         // When
         surveyCommandService.updateSurvey(testMember.getId(), response.surveyId(), updateSurveyRequest);
         Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
-
+        List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
         // Then
         assertNotNull(savedSurvey);
         assertEquals("하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.", savedSurvey.getTitle());
-        assertEquals(1, savedSurvey.getBoardingDate().size());
-        assertEquals(LocalDate.of(2024, 12, 1), savedSurvey.getBoardingDate().get(0));
+        assertEquals(1, boardingDates.size());
+        assertEquals(LocalDate.of(2024, 12, 1), boardingDates.get(0).getDate());
 
 
     }
