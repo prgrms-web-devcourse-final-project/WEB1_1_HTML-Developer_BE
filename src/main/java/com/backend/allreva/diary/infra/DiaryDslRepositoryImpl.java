@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
+import static com.backend.allreva.common.model.QImage.image;
 import static com.backend.allreva.concert.command.domain.QConcert.concert;
 import static com.backend.allreva.diary.command.domain.QConcertDiary.concertDiary;
 
@@ -26,6 +27,7 @@ public class DiaryDslRepositoryImpl implements DiaryDslRepository {
     public DiaryDetailResponse findDetail(Long diaryId, Long memberId) {
         return queryFactory
                 .from(concertDiary)
+                .leftJoin(concertDiary.diaryImages, image)
                 .join(concert).on(concert.id.eq(concertDiary.concertId))
                 .where(concertDiary.id.eq(diaryId))
                 .where(concertDiary.memberId.eq(memberId))
@@ -41,7 +43,7 @@ public class DiaryDslRepositoryImpl implements DiaryDslRepository {
                 concertDiary.date,
                 concertDiary.episode,
                 concertDiary.seatName,
-                GroupBy.set(concertDiary.diaryImages),
+                GroupBy.set(image),
                 concertDiary.content
                 );
     }

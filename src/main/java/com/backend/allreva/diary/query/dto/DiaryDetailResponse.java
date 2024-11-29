@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public final class DiaryDetailResponse {
@@ -16,7 +17,7 @@ public final class DiaryDetailResponse {
     private final String episode;
     private final String seatName;
 
-    private final List<Image> diaryImages;
+    private final Set<Image> diaryImages;
     private final String content;
 
     public DiaryDetailResponse(
@@ -25,7 +26,7 @@ public final class DiaryDetailResponse {
             final LocalDate date,
             final String episode,
             final String seatName,
-            final List<Image> diaryImages,
+            final Set<Image> diaryImages,
             final String content
     ) {
         this.concertTitle = concertTitle;
