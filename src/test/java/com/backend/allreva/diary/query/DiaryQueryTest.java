@@ -63,8 +63,8 @@ class DiaryQueryTest extends IntegrationTestSupport {
         DiaryDetailResponse detail = diaryQueryService.findDetailById(savedDiaryId, savedMember.getId());
 
         // Then
-        Assertions.assertThat(detail.getContent()).isEqualTo(diaryRepository.findById(savedDiaryId).get().getContent());
-        Assertions.assertThat(detail.getConcertPoster()).isEqualTo(savedConcert.getPoster());
+        Assertions.assertThat(detail.content()).isEqualTo(diaryRepository.findById(savedDiaryId).get().getContent());
+        Assertions.assertThat(detail.concertPoster()).isEqualTo(savedConcert.getPoster());
     }
 
     @Transactional
@@ -81,7 +81,7 @@ class DiaryQueryTest extends IntegrationTestSupport {
 
         // Then
         Assertions.assertThat(summaries.size()).isEqualTo(1);
-        Assertions.assertThat(summaries.get(0).getConcertPoster()).isEqualTo(savedConcert.getPoster());
-        Assertions.assertThat(summaries.get(0).getDate()).isEqualTo(LocalDate.now());
+        Assertions.assertThat(summaries.get(0).concertPoster()).isEqualTo(savedConcert.getPoster());
+        Assertions.assertThat(summaries.get(0).date()).isEqualTo(LocalDate.now());
     }
 }

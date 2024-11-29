@@ -2,6 +2,7 @@ package com.backend.allreva.diary.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
+import com.backend.allreva.diary.exception.DiaryNotWriterException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -77,8 +78,10 @@ public class ConcertDiary extends BaseEntity {
         this.memberId = memberId;
     }
 
-    public boolean isWriter(Long memberId) {
-        return this.memberId.equals(memberId);
+    public void validateWriter(Long memberId) {
+        if (!this.memberId.equals(memberId)) {
+            throw new DiaryNotWriterException();
+        }
     }
 
     public void update(

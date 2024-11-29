@@ -2,8 +2,12 @@ package com.backend.allreva.diary.exception;
 
 import com.backend.allreva.common.exception.code.ErrorCode;
 import com.backend.allreva.common.exception.code.ErrorCodeInterface;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@Getter
+@RequiredArgsConstructor
 public enum DiaryErrorCode implements ErrorCodeInterface {
 
     DIARY_NOT_WRITER(HttpStatus.FORBIDDEN.value(), "DIARY_NOT_WRITER", "삭제할 권한이 없습니다"),
@@ -12,12 +16,6 @@ public enum DiaryErrorCode implements ErrorCodeInterface {
     private final Integer status;
     private final String errorCode;
     private final String message;
-
-    DiaryErrorCode(Integer status, String errorCode, String message) {
-        this.status = status;
-        this.errorCode = errorCode;
-        this.message = message;
-    }
 
     @Override
     public ErrorCode getErrorCode() {

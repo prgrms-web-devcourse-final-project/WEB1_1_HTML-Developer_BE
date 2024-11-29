@@ -7,7 +7,6 @@ import com.backend.allreva.diary.command.application.dto.UpdateDiaryRequest;
 import com.backend.allreva.diary.command.domain.ConcertDiary;
 import com.backend.allreva.diary.command.domain.DiaryRepository;
 import com.backend.allreva.diary.exception.DiaryNotFoundException;
-import com.backend.allreva.diary.exception.DiaryNotWriterException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +41,10 @@ public class DiaryCommandService {
             final Long memberId
     ) {
         List<Image> uploadedImages = s3ImageService.upload(images);
-
         ConcertDiary diary = diaryRepository.findById(request.diaryId())
                 .orElseThrow(DiaryNotFoundException::new);
+
+        diary.validateWriter(memberId);
         diary.update(
                 memberId,
                 request.concertId(),
@@ -59,9 +59,8 @@ public class DiaryCommandService {
     public void delete(final Long diaryId, final Long memberId) {
         ConcertDiary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(DiaryNotFoundException::new);
-        if (!diary.isWriter(memberId)) {
-            throw new DiaryNotWriterException();
-        }
+        diary.validateWriter(memberId);
+
         diaryRepository.deleteById(diaryId);
     }
 }
