@@ -9,6 +9,10 @@ import com.backend.allreva.diary.query.DiaryQueryService;
 import com.backend.allreva.diary.query.dto.DiaryDetailResponse;
 import com.backend.allreva.diary.query.dto.DiarySummaryResponse;
 import com.backend.allreva.member.command.domain.Member;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,10 @@ public class DiaryController {
     private final DiaryCommandService diaryCommandService;
     private final DiaryQueryService diaryQueryService;
 
+    @Operation(summary = "공연 기록 등록", description = "Multipart_Form_Data 로 설정하고 넣어주셔야 합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "Multipart_Form_Data"))
+    })
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Long> addDiary(
             @RequestPart(value = "request") final AddDiaryRequest request,
@@ -34,6 +42,10 @@ public class DiaryController {
         return Response.onSuccess(diaryId);
     }
 
+    @Operation(summary = "공연 기록 수정", description = "Multipart_Form_Data 로 설정하고 넣어주셔야 합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "Multipart_Form_Data"))
+    })
     @PatchMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Void> updateDiary(
             @RequestPart(value = "request") final UpdateDiaryRequest request,
@@ -44,6 +56,10 @@ public class DiaryController {
         return Response.onSuccess();
     }
 
+    @Operation(summary = "공연 기록 상세 조회", description = "공연 기록 상세 조회 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/{diaryId}")
     public Response<DiaryDetailResponse> findDiaryDetail(
             @PathVariable("diaryId") final Long diaryId,
@@ -53,6 +69,10 @@ public class DiaryController {
         return Response.onSuccess(detail);
     }
 
+    @Operation(summary = "공연 기록 목록 조회", description = "공연 기록 목록 조회 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/list")
     public Response<List<DiarySummaryResponse>> findSummaries(
             @RequestParam(name = "year") final int year,
@@ -68,6 +88,10 @@ public class DiaryController {
     }
 
 
+    @Operation(summary = "공연 기록 삭제", description = "공연 기록 삭제 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
+    })
     @DeleteMapping("/{diaryId}")
     public Response<Void> deleteDiary(
             @PathVariable("diaryId") final Long diaryId,
