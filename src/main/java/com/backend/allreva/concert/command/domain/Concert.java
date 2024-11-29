@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -37,7 +36,7 @@ public class Concert extends BaseEntity {
             name = "concert_episode",
             joinColumns = @JoinColumn(name = "id")
     )
-    private Set<String> episodes;
+    private Set<String> episode;
 
 
     @Embedded
@@ -69,7 +68,7 @@ public class Concert extends BaseEntity {
                 .concertCode(db.getConcertCode())
                 .hallCode(hallCode)
                 .build();
-        this.episodes = KopisConcertResponse.toEpisodes(db.getDtguidance());
+        this.episode = KopisConcertResponse.toEpisodes(db.getDtguidance());
     }
 
 
@@ -84,7 +83,7 @@ public class Concert extends BaseEntity {
     ) {
         this.code = code;
         this.concertInfo = concertInfo;
-        this.episodes = episodes;
+        this.episode = episodes;
         this.poster = poster;
         this.detailImages = detailImages;
         this.sellers = sellers;
