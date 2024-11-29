@@ -125,6 +125,7 @@ class ConcertQueryTest extends IntegrationTestSupport {
                 .contains("relateName"); // 공연장 id = hallCode
     }
 /*
+
     @DisplayName("조회하면 지정된 시간 이후에 조회수가 증가한다")
     @Test
     void detailViewCountTest() throws InterruptedException {
