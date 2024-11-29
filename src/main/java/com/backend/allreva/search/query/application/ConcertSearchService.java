@@ -1,6 +1,5 @@
 package com.backend.allreva.search.query.application;
 
-import com.backend.allreva.concert.exception.ConcertSearchNotFoundException;
 import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import com.backend.allreva.search.exception.ElasticSearchException;
 import com.backend.allreva.search.exception.SearchResultNotFoundException;
@@ -50,7 +49,7 @@ public class ConcertSearchService {
                 .toList();
 
         if(concertThumbnails.isEmpty()) {
-            throw new ConcertSearchNotFoundException();
+            throw new SearchResultNotFoundException();
         }
 
         boolean hasNext = searchHits.getSearchHits().size() > size;
