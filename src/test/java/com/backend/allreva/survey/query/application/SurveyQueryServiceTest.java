@@ -53,6 +53,7 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         memberRepository.deleteAllInBatch();
+        concertRepository.deleteAllInBatch();
         surveyCommandRepository.deleteAllInBatch();
     }
 
@@ -129,5 +130,4 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         assertEquals(secondId.surveyId(), responseList.get(1).surveyId());
         assertEquals(lastId.surveyId(), responseList.get(2).surveyId());
     }
-
 }

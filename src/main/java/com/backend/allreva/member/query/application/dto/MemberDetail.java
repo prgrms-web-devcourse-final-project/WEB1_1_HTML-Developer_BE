@@ -1,4 +1,4 @@
-package com.backend.allreva.member.query;
+package com.backend.allreva.member.query.application.dto;
 
 import com.backend.allreva.member.command.domain.value.RefundAccount;
 import java.util.List;
