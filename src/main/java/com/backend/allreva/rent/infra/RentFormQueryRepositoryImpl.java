@@ -5,12 +5,17 @@ import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
 import static com.backend.allreva.rent.command.domain.QRentForm.rentForm;
 import static com.querydsl.core.types.Projections.list;
 
+import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentFormQueryRepository;
 import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
 import com.backend.allreva.rent.query.application.dto.RentFormDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentFormSummaryResponse;
+import com.backend.allreva.survey.query.application.dto.SortType;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,7 +27,7 @@ public class RentFormQueryRepositoryImpl implements RentFormQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<RentFormDetailResponse> findById(final Long rentFormId) {
+    public Optional<RentFormDetailResponse> findRentFormDetailById(final Long rentFormId) {
         RentFormDetailResponse rentFormDetailResponse = queryFactory
                 .select(rentFormDetailProjections())
                 .from(rentForm)
@@ -68,5 +73,17 @@ public class RentFormQueryRepositoryImpl implements RentFormQueryRepository {
                 .where(rentForm.id.eq(rentFormId))
                 .fetchOne();
         return Optional.ofNullable(depositAccountResponse);
+    }
+
+    @Override
+    public List<RentFormSummaryResponse> findRentFormSummaries(
+            final Region region,
+            final SortType sortType,
+            final LocalDate lastEndDate,
+            final Long lastId,
+            final int pageSize
+    ) {
+        // TODO: 가용 날짜 구현 후 수정
+        return List.of();
     }
 }
