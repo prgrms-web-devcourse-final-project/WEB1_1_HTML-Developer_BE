@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.backend.allreva.survey.command.domain.QSurvey.survey;
+import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
 import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
 
 @Repository
@@ -33,6 +34,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
     public SurveyDetailResponse findSurveyDetail(final Long surveyId) {
         return queryFactory
                 .from(survey)
+                .join(surveyBoardingDate).on(survey.id.eq(surveyBoardingDate.survey.id))
                 .where(survey.id.eq(surveyId))
                 .transform(
                         GroupBy.groupBy(survey.id).as(
@@ -45,7 +47,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         return Projections.constructor(SurveyDetailResponse.class,
                 survey.id,
                 survey.title,
-                GroupBy.list(survey.boardingDate), // 그룹화하여 List로 반환
+                GroupBy.list(surveyBoardingDate.date),
                 survey.information,
                 survey.isClosed
         );
@@ -61,9 +63,11 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         return queryFactory
                 .select(surveySummaryProjections())
                 .from(survey)
+                .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
                 .where(survey.eddate.goe(LocalDate.now()),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate))
+                .groupBy(survey.id, survey.title, survey.region, survey.eddate)
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
                 .fetch();
@@ -74,17 +78,10 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 survey.id,
                 survey.title,
                 survey.region,
-                ExpressionUtils.as(
-                        getParticipantCount(survey.id), "participantCount"
-                ),
+                surveyJoin.passengerNum.sum().coalesce(0),
+                survey.maxPassenger,
                 survey.eddate
         );
-    }
-
-    private JPQLQuery<Long> getParticipantCount(final NumberPath<Long> surveyId) {
-        return JPAExpressions.select(surveyJoin.count())
-                .from(surveyJoin)
-                .where(surveyJoin.surveyId.eq(surveyId));
     }
 
     private static BooleanExpression getRegionCondition(final Region region) {
