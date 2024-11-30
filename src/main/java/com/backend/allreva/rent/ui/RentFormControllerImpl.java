@@ -43,7 +43,7 @@ public class RentFormControllerImpl implements RentFormController {
         return Response.onSuccess();
     }
 
-    @PostMapping("/close")
+    @PatchMapping("/close")
     public Response<Void> closeRentForm(
             @RequestBody final RentFormIdRequest request,
             @AuthMember final Member member
@@ -51,5 +51,4 @@ public class RentFormControllerImpl implements RentFormController {
         rentCommandService.closeRentForm(request, member);
         return Response.onSuccess();
     }
-
 }
