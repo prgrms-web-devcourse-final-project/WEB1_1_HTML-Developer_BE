@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 
 @Tag(name = "차량 대절 폼 조회 API", description = "차량 대절 폼 조회 API")
 public interface RentFormViewController {
@@ -22,7 +21,7 @@ public interface RentFormViewController {
                     boardingDate 는 2024.11.30(토) 와 같은 형태로 반환됩니다.
                     endDate는 2024-11-30 과 같은 형태로 반환됩니다.
                     """)
-    ResponseEntity<Response<RentFormDetailResponse>> getRentFormDetailById(
+    Response<RentFormDetailResponse> getRentFormDetailById(
             Long id
     );
 
@@ -32,7 +31,7 @@ public interface RentFormViewController {
                     입금 계좌를 조회합니다.
                     현재 사용자가 USER 권한보다 아래면 입금 계좌를 조회할 수 없습니다.
                     """)
-    ResponseEntity<Response<DepositAccountResponse>> getDepositAccountById(
+    Response<DepositAccountResponse> getDepositAccountById(
             Long id
     );
 
@@ -41,12 +40,11 @@ public interface RentFormViewController {
             description = """
                     차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
                     """)
-    ResponseEntity<Response<List<RentFormSummaryResponse>>> getRentFormSummaries(
+    Response<List<RentFormSummaryResponse>> getRentFormSummaries(
             Region region,
             SortType sortType,
             Long lastId,
             LocalDate lastEndDate,
             final int pageSize
     );
-
 }
