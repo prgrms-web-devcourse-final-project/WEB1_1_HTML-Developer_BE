@@ -10,11 +10,13 @@ import lombok.*;
 @Embeddable
 public class ConcertInfo {
 
+    @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String price;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ConcertStatus prfstate;
 

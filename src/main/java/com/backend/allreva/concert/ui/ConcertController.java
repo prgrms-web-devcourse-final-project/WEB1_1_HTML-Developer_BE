@@ -6,6 +6,9 @@ import com.backend.allreva.concert.query.application.ConcertQueryService;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,10 @@ public class ConcertController {
 
     private final ConcertQueryService concertQueryService;
 
+    @Operation(summary = "공연 상세 조회", description = "공연 상세 조회 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/{concertId}")
     public Response<ConcertDetailResponse> findConcertDetail(
             @PathVariable("concertId") final Long concertId
