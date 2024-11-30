@@ -14,23 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RentFormQueryService {
 
     private final RentFormQueryRepository rentFormQueryRepository;
 
-    @Transactional(readOnly = true)
     public RentFormDetailResponse getRentFormDetailById(final Long id) {
         return rentFormQueryRepository.findRentFormDetailById(id)
                 .orElseThrow(RentFormNotFoundException::new);
     }
 
-    @Transactional(readOnly = true)
     public DepositAccountResponse getDepositAccountById(final Long id) {
         return rentFormQueryRepository.findDepositAccountById(id)
                 .orElseThrow(RentFormNotFoundException::new);
     }
 
-    @Transactional(readOnly = true)
     public List<RentFormSummaryResponse> getRentFormSummaries(
             Region region, SortType sortType, LocalDate lastEndDate, Long lastId,  int pageSize) {
         return rentFormQueryRepository.findRentFormSummaries(region, sortType, lastEndDate, lastId, pageSize);
