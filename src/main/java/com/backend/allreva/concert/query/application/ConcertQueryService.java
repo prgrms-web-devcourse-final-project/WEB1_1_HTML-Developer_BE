@@ -2,7 +2,7 @@ package com.backend.allreva.concert.query.application;
 
 
 import com.backend.allreva.concert.command.domain.ConcertRepository;
-import com.backend.allreva.concert.command.domain.value.SortDirection;
+import com.backend.allreva.search.query.domain.value.SortDirection;
 import com.backend.allreva.concert.exception.ConcertSearchNotFoundException;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
