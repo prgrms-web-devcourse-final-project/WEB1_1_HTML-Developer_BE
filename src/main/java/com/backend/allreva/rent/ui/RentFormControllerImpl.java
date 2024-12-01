@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/rent-forms")
+@RequestMapping("/api/v1/rents/form")
 public class RentFormControllerImpl implements RentFormController {
 
     private final RentCommandService rentCommandService;

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/rent-forms")
+@RequestMapping("/api/v1/rents/form")
 public class RentFormViewControllerImpl implements RentFormViewController {
 
     private final RentFormQueryService rentFormQueryService;
@@ -42,7 +42,7 @@ public class RentFormViewControllerImpl implements RentFormViewController {
         return Response.onSuccess(rentFormQueryService.getDepositAccountById(id));
     }
 
-    @GetMapping("/summary/list")
+    @GetMapping("/list")
     public Response<List<RentFormSummaryResponse>> getRentFormSummaries(
             @RequestParam(name = "region", required = false) final Region region,
             @RequestParam(name = "sort", defaultValue = "LATEST") final SortType sortType,
