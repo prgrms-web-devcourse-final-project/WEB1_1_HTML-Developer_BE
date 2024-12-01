@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RentCommandService {
 
     private final RentFormReadService rentFormReadService;
     private final RentFormWriteService rentFormWriteService;
 
-    @Transactional
     public RentFormIdResponse registerRentForm(
             final RentFormRegisterRequest rentFormRegisterRequest,
             final Member member
@@ -27,7 +27,6 @@ public class RentCommandService {
         return new RentFormIdResponse(savedRentForm.getId());
     }
 
-    @Transactional
     public void updateRentForm(
             final RentFormUpdateRequest rentFormUpdateRequest,
             final Member member
@@ -35,12 +34,15 @@ public class RentCommandService {
         RentForm rentForm = rentFormReadService.getRentFormById(rentFormUpdateRequest.rentFormId());
 
         rentForm.validateMine(member.getId());
-        rentForm.updateRentForm(rentFormUpdateRequest);
 
+        rentForm.updateRentForm(rentFormUpdateRequest);
+        rentFormWriteService.updateRentFormBoardingDates(
+                rentFormUpdateRequest.rentFormId(),
+                rentFormUpdateRequest.toRentFormBoardingDates()
+        );
         rentFormWriteService.saveRentForm(rentForm);
     }
 
-    @Transactional
     public void closeRentForm(
             final RentFormIdRequest rentFormId,
             final Member member

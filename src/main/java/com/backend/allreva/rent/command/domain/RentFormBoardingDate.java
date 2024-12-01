@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.command.domain;
 
+import com.backend.allreva.common.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,9 +14,9 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("deleted_at IS NULL")
+@SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE rent_form_boarding_date SET deleted_at = NOW() WHERE id = ?")
-public class RentFormBoardingDate {
+public class RentFormBoardingDate extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +28,7 @@ public class RentFormBoardingDate {
     private LocalDate date;
 
     @Builder
-    public RentFormBoardingDate(RentForm rentForm, LocalDate date) {
+    private RentFormBoardingDate(RentForm rentForm, LocalDate date) {
         this.rentForm = rentForm;
         this.date = date;
     }

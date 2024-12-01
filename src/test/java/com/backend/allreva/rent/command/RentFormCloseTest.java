@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.command;
 
+import static com.backend.allreva.rent.fixture.RentFormFixture.createRentFormFixture;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -7,24 +8,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.backend.allreva.common.model.Image;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
 import com.backend.allreva.rent.command.application.RentFormReadService;
 import com.backend.allreva.rent.command.application.RentFormWriteService;
 import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
 import com.backend.allreva.rent.command.domain.RentForm;
-import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
-import com.backend.allreva.rent.command.domain.value.Bus;
-import com.backend.allreva.rent.command.domain.value.BusSize;
-import com.backend.allreva.rent.command.domain.value.BusType;
-import com.backend.allreva.rent.command.domain.value.DetailInfo;
-import com.backend.allreva.rent.command.domain.value.OperationInfo;
-import com.backend.allreva.rent.command.domain.value.Price;
-import com.backend.allreva.rent.command.domain.value.RefundType;
-import com.backend.allreva.rent.command.domain.value.Region;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +40,7 @@ class RentFormCloseTest {
         // given
         var user = createMockUser(1L);
         var rentFormIdRequest = new RentFormIdRequest(1L);
-        given(rentFormReadService.getRentFormById(anyLong())).willReturn(createRentFormFixture());
+        given(rentFormReadService.getRentFormById(anyLong())).willReturn(createRentFormFixture(1L, 1L));
         given(rentFormWriteService.saveRentForm(any(RentForm.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
@@ -75,42 +64,5 @@ class RentFormCloseTest {
         var rentFormCaptor = ArgumentCaptor.forClass(RentForm.class);
         verify(rentFormWriteService).saveRentForm(rentFormCaptor.capture());
         return rentFormCaptor.getValue();
-    }
-
-    private RentForm createRentFormFixture() {
-        return RentForm.builder()
-                .memberId(1L)
-                .concertId(1L)
-                .detailInfo(DetailInfo.builder()
-                        .image(new Image("imageUrl"))
-                        .title("title")
-                        .artistName("artistName")
-                        .depositAccount("depositAccount")
-                        .region(Region.서울)
-                        .build())
-                .operationInfo(OperationInfo.builder()
-                        .boardingArea("boardingArea")
-                        .boardingDates(List.of(LocalDate.of(2024, 9, 20)))
-                        .upTime("09:00")
-                        .downTime("23:00")
-                        .bus(Bus.builder()
-                                .busSize(BusSize.LARGE)
-                                .busType(BusType.STANDARD)
-                                .maxPassenger(28)
-                                .build())
-                        .price(Price.builder()
-                                .roundPrice(30000)
-                                .upTimePrice(30000)
-                                .downTimePrice(30000)
-                                .build())
-                        .build())
-                .additionalInfo(AdditionalInfo.builder()
-                        .recruitmentCount(30)
-                        .chatUrl("chatUrl")
-                        .refundType(RefundType.BOTH)
-                        .information("information")
-                        .endDate(LocalDate.of(2024, 9, 13))
-                        .build())
-                .build();
     }
 }

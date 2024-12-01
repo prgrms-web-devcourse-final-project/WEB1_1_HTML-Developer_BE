@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.command.application.dto;
 
+import com.backend.allreva.rent.command.domain.RentFormBoardingDate;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
 import com.backend.allreva.rent.command.domain.value.RefundType;
@@ -14,7 +15,7 @@ public record RentFormUpdateRequest (
         String boardingArea,
         String upTime,
         String downTime,
-        List<RentBoardingDateUpdateRequest> rentBoardingDateRequests,
+        List<LocalDate> rentBoardingDateRequests,
         BusSize busSize, // enum
         BusType busType, // enum
         int maxPassenger,
@@ -28,9 +29,11 @@ public record RentFormUpdateRequest (
         String information
 ) {
 
-    public record RentBoardingDateUpdateRequest(
-            LocalDate date
-    ) {
-
+    public List<RentFormBoardingDate> toRentFormBoardingDates() {
+        return rentBoardingDateRequests.stream()
+                .map(request -> RentFormBoardingDate.builder()
+                        .date(request)
+                        .build())
+                .toList();
     }
 }

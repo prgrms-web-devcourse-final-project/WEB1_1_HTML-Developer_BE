@@ -3,6 +3,7 @@ package com.backend.allreva.rent.infra;
 import static com.backend.allreva.concert.command.domain.QConcert.concert;
 import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
 import static com.backend.allreva.rent.command.domain.QRentForm.rentForm;
+import static com.backend.allreva.rent.command.domain.QRentFormBoardingDate.rentFormBoardingDate;
 import static com.querydsl.core.types.Projections.list;
 
 import com.backend.allreva.rent.command.domain.value.Region;
@@ -34,6 +35,7 @@ public class RentFormQueryRepositoryImpl implements RentFormQueryRepository {
                 .where(rentForm.id.eq(rentFormId))
                 .leftJoin(concert).on(rentForm.concertId.eq(concert.id))
                 .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
+                .join(rentFormBoardingDate).on(rentForm.id.eq(rentFormBoardingDate.rentForm.id))
                 .fetchOne();
         return Optional.ofNullable(rentFormDetailResponse);
     }
@@ -49,7 +51,7 @@ public class RentFormQueryRepositoryImpl implements RentFormQueryRepository {
                 concertHall.name, // 하행 지역
                 rentForm.operationInfo.upTime,
                 rentForm.operationInfo.downTime,
-                list(rentForm.operationInfo.boardingDates),
+                list(rentFormBoardingDate.date),
                 rentForm.operationInfo.bus.busSize,
                 rentForm.operationInfo.bus.busType,
                 rentForm.operationInfo.bus.maxPassenger,

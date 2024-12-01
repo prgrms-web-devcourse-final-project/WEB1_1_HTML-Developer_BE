@@ -8,6 +8,7 @@ import com.backend.allreva.rent.query.application.dto.RentFormSummaryResponse;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -45,6 +46,6 @@ public interface RentFormViewController {
             SortType sortType,
             Long lastId,
             LocalDate lastEndDate,
-            final int pageSize
+            @Min(10) int pageSize
     );
 }

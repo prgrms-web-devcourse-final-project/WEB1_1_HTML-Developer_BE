@@ -2,6 +2,7 @@ package com.backend.allreva.rent.command.application.dto;
 
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.rent.command.domain.RentForm;
+import com.backend.allreva.rent.command.domain.RentFormBoardingDate;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
 import com.backend.allreva.rent.command.domain.value.Bus;
 import com.backend.allreva.rent.command.domain.value.BusSize;
@@ -24,7 +25,7 @@ public record RentFormRegisterRequest(
         String boardingArea,
         String upTime,
         String downTime,
-        List<RentBoardingDateRegisterRequest> rentBoardingDateRequests,
+        List<LocalDate> rentBoardingDateRequests,
         BusSize busSize, // enum
         BusType busType, // enum
         int maxPassenger,
@@ -39,9 +40,14 @@ public record RentFormRegisterRequest(
 ) {
 
     public RentForm toEntity(final Long memberId) {
-        return RentForm.builder()
+        RentForm rentForm = RentForm.builder()
                 .memberId(memberId)
                 .concertId(concertId)
+                .boardingDates(rentBoardingDateRequests.stream()
+                        .map(request -> RentFormBoardingDate.builder()
+                                .date(request)
+                                .build())
+                        .toList())
                 .detailInfo(DetailInfo.builder()
                         .image(new Image(imageUrl))
                         .title(title)
@@ -51,9 +57,6 @@ public record RentFormRegisterRequest(
                         .build())
                 .operationInfo(OperationInfo.builder()
                         .boardingArea(boardingArea)
-                        .boardingDates(rentBoardingDateRequests.stream()
-                                .map(RentBoardingDateRegisterRequest::date)
-                                .toList())
                         .upTime(upTime)
                         .downTime(downTime)
                         .bus(Bus.builder()
@@ -75,11 +78,13 @@ public record RentFormRegisterRequest(
                         .endDate(endDate)
                         .build())
                 .build();
-    }
 
-    public record RentBoardingDateRegisterRequest(
-            LocalDate date
-    ) {
-
+        rentForm.assignBoardingDates(rentBoardingDateRequests.stream()
+                .map(date -> RentFormBoardingDate.builder()
+                        .rentForm(rentForm) // RentForm 객체 설정
+                        .date(date)
+                        .build())
+                .toList());
+        return rentForm;
     }
 }
