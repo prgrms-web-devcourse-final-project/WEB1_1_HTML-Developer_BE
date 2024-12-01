@@ -79,12 +79,7 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
         // Then
         assertNotNull(responseList);
         assertFalse(responseList.isEmpty());
-        assertEquals(3, responseList.size());
-        System.out.println(responseList.get(0).toString());
-        System.out.println(responseList.get(1).toString());
-        System.out.println(responseList.get(2).toString());
-
-
+        assertEquals(6, responseList.size());
     }
 
     @Test
