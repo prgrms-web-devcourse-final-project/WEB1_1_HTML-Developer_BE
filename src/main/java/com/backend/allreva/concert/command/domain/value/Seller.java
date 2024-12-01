@@ -8,18 +8,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Seller {
 
-    @Column(nullable = false)
-    private String relateName;
-    @Column(nullable = false)
-    private String relateUrl;
+    @Column(nullable = false, name = "relate_name")
+    private String name;
 
-    public Seller(String relateName, String relateUrl) {
-        this.relateName = relateName;
-        this.relateUrl = relateUrl;
+    @Column(nullable = false, name = "relate_url")
+    private String salesUrl;
+
+    @Builder
+    private Seller(final String name, final String salesUrl) {
+        this.name = name;
+        this.salesUrl = salesUrl;
     }
 }

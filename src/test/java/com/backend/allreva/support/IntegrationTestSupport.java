@@ -30,7 +30,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
         "aws.region=us-east-1",
-        "view.count.schedule.rate=20"
+        "view.count.schedule.rate=20" // 이거 숫자를 낮추면 스케줄러 몇백번씩 실행????
 })
 @MockBean(JpaAuditingConfig.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -64,11 +64,23 @@ public abstract class IntegrationTestSupport {
                         .hallCode("123")
                         .concertCode("456")
                         .build())
-                .concertInfo(new ConcertInfo("Sample Concert", "2024-12-01", ConcertStatus.IN_PROGRESS, "host",
-                        new DateInfo(LocalDate.of(2024, 11, 30), LocalDate.of(2024, 12, 1), "timetable")))
+                .concertInfo(ConcertInfo.builder()
+                        .title("Sample Concert")
+                        .price("price")
+                        .performStatus(ConcertStatus.IN_PROGRESS)
+                        .host("host")
+                        .dateInfo(DateInfo.builder()
+                                .startDate(LocalDate.of(2024, 11, 30))
+                                .endDate(LocalDate.of(2024, 12, 1))
+                                .timeTable("timetable")
+                                .build())
+                        .build())
                 .poster(new Image("http://example.com/poster.jpg"))
                 .detailImages(Set.of(new Image("http://example.com/detail1.jpg"), new Image("http://example.com/detail2.jpg")))
-                .sellers(Set.of(new Seller("Sample Seller", "http://seller.com")))
+                .sellers(Set.of(Seller.builder()
+                        .name("Sample Seller")
+                        .salesUrl("http://seller.com")
+                        .build()))
                 .build();
     }
 

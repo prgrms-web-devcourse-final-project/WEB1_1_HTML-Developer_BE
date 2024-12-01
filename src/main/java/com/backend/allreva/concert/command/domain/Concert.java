@@ -61,7 +61,10 @@ public class Concert extends BaseEntity {
     private Set<Seller> sellers;
 
 
-    public void updateFrom(String hallCode, KopisConcertResponse.Db db) {
+    public void updateFrom(
+            final String hallCode,
+            final KopisConcertResponse.Db db
+    ) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(db);
         this.detailImages = KopisConcertResponse.toDetailImages(db.getStyurls().getStyurl());
         this.sellers = KopisConcertResponse.toSellers(db.getRelates().getRelate());
@@ -75,7 +78,7 @@ public class Concert extends BaseEntity {
 
 
     @Builder
-    public Concert(
+    private Concert(
             final Code code,
             final ConcertInfo concertInfo,
             final Set<String> episodes,
