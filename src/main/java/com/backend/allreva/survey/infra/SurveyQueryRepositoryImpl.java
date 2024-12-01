@@ -60,10 +60,10 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 .select(surveySummaryProjections())
                 .from(survey)
                 .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
-                .where(survey.eddate.goe(LocalDate.now()),
+                .where(survey.endDate.goe(LocalDate.now()),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate))
-                .groupBy(survey.id, survey.title, survey.region, survey.eddate)
+                .groupBy(survey.id, survey.title, survey.region, survey.endDate)
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
                 .fetch();
@@ -76,7 +76,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 survey.region,
                 surveyJoin.passengerNum.sum().coalesce(0),
                 survey.maxPassenger,
-                survey.eddate
+                survey.endDate
         );
     }
 
@@ -94,8 +94,8 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
 
         switch (sortType) {
             case CLOSING -> {
-                return (survey.eddate.gt(lastEndDate))
-                        .or(survey.eddate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
+                return (survey.endDate.gt(lastEndDate))
+                        .or(survey.endDate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
             }
             case OLDEST -> {
                 return survey.id.gt(lastId);
@@ -110,7 +110,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         switch (sortType) {
             case CLOSING -> {
                 return new OrderSpecifier[]{
-                        survey.eddate.asc(),
+                        survey.endDate.asc(),
                         survey.id.asc()
                 };
             }

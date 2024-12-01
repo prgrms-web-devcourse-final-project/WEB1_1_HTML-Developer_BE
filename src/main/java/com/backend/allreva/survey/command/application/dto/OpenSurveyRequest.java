@@ -11,10 +11,10 @@ public record OpenSurveyRequest(
         String title,
         Long concertId,
         @NotEmpty(message = "날짜는 하루 이상 선택되어야 합니다.")
-        List<String> boardingDates, //형식은 2024.01.02(금)
+        List<LocalDate> boardingDates,
         String artistName,
         Region region,
-        LocalDate eddate,
+        LocalDate endDate,
         @Min(value = 1, message = "탑승 인원 수는 1명 이상이어야 합니다.")
         int maxPassenger,
         String information

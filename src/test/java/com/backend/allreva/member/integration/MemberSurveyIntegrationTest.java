@@ -8,11 +8,8 @@ import com.backend.allreva.member.query.application.MemberSurveyQueryService;
 import com.backend.allreva.member.query.application.dto.CreatedSurveyResponse;
 import com.backend.allreva.member.query.application.dto.JoinSurveyResponse;
 import com.backend.allreva.support.IntegrationTestSupport;
-import com.backend.allreva.survey.command.application.SurveyCommandRepository;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
-import com.backend.allreva.survey.command.application.dto.SurveyJoinIdResponse;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import org.junit.jupiter.api.AfterEach;
@@ -35,8 +32,6 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
     private SurveyCommandService surveyCommandService;
     @Autowired
     private MemberSurveyQueryService memberSurveyQueryService;
-    @Autowired
-    private SurveyCommandRepository surveyCommandRepository;
     @Autowired
     private ConcertRepository concertRepository;
     private Member testMember;
@@ -62,16 +57,16 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
         // Given
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
-        SurveyIdResponse firstId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.부산));
+        Long firstId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.부산));
         JoinSurveyRequest joinRequest1 = new JoinSurveyRequest(
-                "2024.11.30(토)", BoardingType.DOWN, 2, true
+                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
         );
         JoinSurveyRequest joinRequest2 = new JoinSurveyRequest(
-                "2024.11.30(토)", BoardingType.UP, 2, true
+                LocalDate.of(2030, 12, 1), BoardingType.UP, 2, true
         );
 
-        surveyCommandService.createSurveyResponse(testMember.getId(), firstId.surveyId(), joinRequest1);
-        surveyCommandService.createSurveyResponse(testMember.getId(), firstId.surveyId(), joinRequest2);
+        surveyCommandService.createSurveyResponse(testMember.getId(), firstId, joinRequest1);
+        surveyCommandService.createSurveyResponse(testMember.getId(), firstId, joinRequest2);
 
         // When
         List<CreatedSurveyResponse> responseList = memberSurveyQueryService.getCreatedSurveyList(testMember.getId(), null, 10);
@@ -87,18 +82,18 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
     public void getJoinSurveyList() {
         // Given
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
-        SurveyIdResponse secondSurveyId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
-        SurveyIdResponse firstSurveyId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
+        Long secondSurveyId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
+        Long firstSurveyId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
         JoinSurveyRequest joinRequest1 = new JoinSurveyRequest(
-                "2024.11.30(토)", BoardingType.DOWN, 2, true
+                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
         );
         JoinSurveyRequest joinRequest2 = new JoinSurveyRequest(
-                "2024.11.30(토)", BoardingType.UP, 2, true
+                LocalDate.of(2030, 12, 1), BoardingType.UP, 2, true
         );
 
-        surveyCommandService.createSurveyResponse(testMember.getId(), firstSurveyId.surveyId(), joinRequest1);
-        surveyCommandService.createSurveyResponse(testMember.getId(), firstSurveyId.surveyId(), joinRequest2);
-        SurveyJoinIdResponse firstId = surveyCommandService.createSurveyResponse(testMember.getId(), secondSurveyId.surveyId(), joinRequest2);
+        surveyCommandService.createSurveyResponse(testMember.getId(), firstSurveyId, joinRequest1);
+        surveyCommandService.createSurveyResponse(testMember.getId(), firstSurveyId, joinRequest2);
+        Long firstId = surveyCommandService.createSurveyResponse(testMember.getId(), secondSurveyId, joinRequest2);
 
 
         // When
@@ -108,7 +103,7 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
         assertNotNull(responseList);
         assertFalse(responseList.isEmpty());
         assertEquals(3, responseList.size());
-        assertEquals(firstId.surveyJoinId(), responseList.get(0).getSurveyJoinId());
-        assertEquals(LocalDate.of(2024, 11, 30), responseList.get(0).getSurveyResponse().getBoardingDate());
+        assertEquals(firstId, responseList.get(0).getSurveyJoinId());
+        assertEquals(LocalDate.of(2030, 12, 1), responseList.get(0).getSurveyResponse().getBoardingDate());
     }
 }

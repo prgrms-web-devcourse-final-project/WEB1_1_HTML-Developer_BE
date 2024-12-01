@@ -76,7 +76,7 @@ public abstract class IntegrationTestSupport {
         return new OpenSurveyRequest(
                 "하현상 콘서트: Elegy [서울] 수요조사 모집합니다.",
                 concertId,
-                of("2024.11.30(토)", "2024.12.01(일)"),
+                of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
                 "하현상",
                 region,
                 endDate,

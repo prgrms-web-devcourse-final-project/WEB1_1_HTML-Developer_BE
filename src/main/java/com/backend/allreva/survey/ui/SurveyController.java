@@ -4,7 +4,9 @@ import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.*;
+import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.exception.SurveyIllegalParameterException;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
@@ -31,18 +33,14 @@ public class SurveyController {
     private final SurveyCommandService surveyCommandService;
     private final SurveyQueryService surveyQueryService;
 
-    @Operation(summary = "수요조사 개설 API", description = "수요조사를 개설합니다. \n\n" +
-            "boardingDate 는 2024.11.30(토) 와 같은 형태로 주세요. \n" +
-            "endDate는 2024-11-30 과 같은 형태로 주세요.")
+    @Operation(summary = "수요조사 개설 API", description = "수요조사를 개설합니다.")
     @PostMapping
-    public Response<SurveyIdResponse> openSurvey(@AuthMember Member member,
-                                                 @Valid @RequestBody OpenSurveyRequest openSurveyRequest) {
+    public Response<Long> openSurvey(@AuthMember Member member,
+                                     @Valid @RequestBody OpenSurveyRequest openSurveyRequest) {
         return Response.onSuccess(surveyCommandService.openSurvey(member.getId(), openSurveyRequest));
     }
 
-    @Operation(summary = "수요조사 수정 API", description = "수요조사를 수정합니다. \n\n" +
-            "boardingDate 는 2024.11.30(토) 와 같은 형태로 주세요. \n" +
-            "endDate는 2024-11-30 과 같은 형태로 주세요.")
+    @Operation(summary = "수요조사 수정 API", description = "수요조사를 수정합니다.")
     @PatchMapping
     public Response<Void> updateSurvey(@AuthMember Member member,
                                        @RequestParam(name = "surveyId") Long surveyId,
@@ -60,19 +58,17 @@ public class SurveyController {
         return Response.onSuccess();
     }
 
-    @Operation(summary = "수요조사 상세 조회 API", description = "수요조사를 상세조회합니다. \n\n" +
-            "boardingDate 는 2024.11.30(토) 와 같은 형태로 반환 됩니다.")
+    @Operation(summary = "수요조사 상세 조회 API", description = "수요조사를 상세조회합니다.")
     @GetMapping("/{surveyId}")
     public Response<SurveyDetailResponse> findSurveyDetail(@PathVariable(name = "surveyId") Long surveyId) {
         return Response.onSuccess(surveyQueryService.findSurveyDetail(surveyId));
     }
 
-    @Operation(summary = "수요조사 응답 제출 API", description = "수요조사에 대한 응답을 제출합니다. \n\n" +
-            "boardingDate 는 2024.11.30(토) 와 같은 형태로 주세요.")
+    @Operation(summary = "수요조사 응답 제출 API", description = "수요조사에 대한 응답을 제출합니다.")
     @PostMapping("/{surveyId}/response")
-    public Response<SurveyJoinIdResponse> createSurveyResponse(@AuthMember Member member,
-                                                               @PathVariable(name = "surveyId") Long surveyId,
-                                                               @Valid @RequestBody JoinSurveyRequest surveyJoinRequest) {
+    public Response<Long> createSurveyResponse(@AuthMember Member member,
+                                               @PathVariable(name = "surveyId") Long surveyId,
+                                               @Valid @RequestBody JoinSurveyRequest surveyJoinRequest) {
         return Response.onSuccess(surveyCommandService.createSurveyResponse(member.getId(), surveyId, surveyJoinRequest));
     }
 

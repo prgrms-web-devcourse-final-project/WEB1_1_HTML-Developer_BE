@@ -1,9 +1,10 @@
 package com.backend.allreva.survey.command.application;
 
-import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
-import com.backend.allreva.survey.command.application.dto.*;
+import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
 import com.backend.allreva.survey.command.domain.SurveyJoin;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,14 +27,14 @@ public class SurveyCommandService {
     private final ConcertRepository concertRepository;
     private final SurveyConverter surveyConverter;
 
-    public SurveyIdResponse openSurvey(final Long memberId,
-                                       final OpenSurveyRequest openSurveyRequest) {
+    public Long openSurvey(final Long memberId,
+                           final OpenSurveyRequest openSurveyRequest) {
         checkConcert(openSurveyRequest);
 
         Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, openSurveyRequest));
         saveBoardingDates(survey, openSurveyRequest.boardingDates());
 
-        return new SurveyIdResponse(survey.getId());
+        return survey.getId();
     }
 
     public void updateSurvey(final Long memberId,
@@ -45,7 +47,7 @@ public class SurveyCommandService {
 
         survey.update(request.title(),
                 request.region(),
-                request.eddate(),
+                request.endDate(),
                 request.maxPassenger(),
                 request.information()
         );
@@ -64,27 +66,27 @@ public class SurveyCommandService {
         surveyBoardingDateCommandRepository.deleteAllBySurvey(survey);
     }
 
-    public SurveyJoinIdResponse createSurveyResponse(final Long memberId,
-                                                     final Long surveyId,
-                                                     final JoinSurveyRequest request) {
+    public Long createSurveyResponse(final Long memberId,
+                                     final Long surveyId,
+                                     final JoinSurveyRequest request) {
         checkSurvey(surveyId);
 
         SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
                 surveyConverter.toSurveyJoin(memberId, surveyId, request));
-        return new SurveyJoinIdResponse(surveyJoin.getId());
+        return surveyJoin.getId();
     }
 
     private void saveBoardingDates(final Survey survey,
-                                   final List<String> boardingDates) {
+                                   final List<LocalDate> boardingDates) {
         boardingDates.forEach(date ->
                 surveyBoardingDateCommandRepository.save(
-                        new SurveyBoardingDate(survey, DataConverter.convertToLocalDateFromDateWithDay(date))
+                        new SurveyBoardingDate(survey, date)
                 )
         );
     }
 
     private void updateBoardingDates(final Survey survey,
-                                     final List<String> boardingDates) {
+                                     final List<LocalDate> boardingDates) {
         surveyBoardingDateCommandRepository.deleteAllBySurveyForUpdate(survey);
         saveBoardingDates(survey, boardingDates);
     }

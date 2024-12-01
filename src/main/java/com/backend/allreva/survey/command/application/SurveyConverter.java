@@ -1,10 +1,8 @@
 package com.backend.allreva.survey.command.application;
 
-import com.backend.allreva.common.converter.DataConverter;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
-import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
 import com.backend.allreva.survey.command.domain.SurveyJoin;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +14,7 @@ public class SurveyConverter {
                 .memberId(memberId)
                 .concertId(request.concertId())
                 .title(request.title())
-                .eddate(request.eddate())
+                .endDate(request.endDate())
                 .information(request.information())
                 .artistName(request.artistName())
                 .region(request.region())
@@ -30,7 +28,7 @@ public class SurveyConverter {
         return SurveyJoin.builder()
                 .memberId(memberId)
                 .surveyId(surveyId)
-                .boardingDate(DataConverter.convertToLocalDateFromDateWithDay(request.boardingDate()))
+                .boardingDate(request.boardingDate())
                 .boardingType(request.boardingType())
                 .passengerNum(request.passengerNum())
                 .notified(request.notified())

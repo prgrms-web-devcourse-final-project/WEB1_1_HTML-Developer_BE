@@ -1,11 +1,13 @@
 package com.backend.allreva.survey.ui;
 
-import com.backend.allreva.support.WithCustomMockUser;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
 import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.support.ApiTestSupport;
+import com.backend.allreva.support.WithCustomMockUser;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.*;
+import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
@@ -57,13 +59,12 @@ class SurveyControllerTest extends ApiTestSupport {
     void openSurvey() throws Exception {
         // Given
         OpenSurveyRequest request = new OpenSurveyRequest("하현상 콘서트: Elegy [서울]",
-                1L, List.of("2024.11.30(토)", "2024.12.01(일)"),
+                1L, List.of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
                 "하현상", Region.서울, LocalDate.now(),
                 25, "이틀 모두 운영합니다.");
-        SurveyIdResponse response = new SurveyIdResponse(1L);
 
         // Mocking
-        doReturn(response).when(surveyCommandService).openSurvey(any(), any());
+        doReturn(1L).when(surveyCommandService).openSurvey(any(), any());
 
         // When & Then
         mockMvc.perform(post(BASE_URI)
@@ -71,7 +72,7 @@ class SurveyControllerTest extends ApiTestSupport {
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.surveyId").value(1L))
+                .andExpect(jsonPath("$.result").value(1L))
         ;
     }
 
@@ -82,7 +83,7 @@ class SurveyControllerTest extends ApiTestSupport {
         // Given
         Long surveyId = 1L;
         UpdateSurveyRequest request = new UpdateSurveyRequest("하현상 콘서트: Elegy [서울]",
-                List.of("2024.11.30(토)", "2024.12.01(일)"),
+                List.of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
                 Region.서울, LocalDate.now(),
                 25, "이틀 모두 운영합니다.");
 
@@ -145,12 +146,10 @@ class SurveyControllerTest extends ApiTestSupport {
         // Given
         Long surveyId = 1L;
         JoinSurveyRequest request = new JoinSurveyRequest(
-                "2024.11.30(토)", BoardingType.DOWN, 2, true
+                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
         );
-        SurveyJoinIdResponse response = new SurveyJoinIdResponse(1L);
-
         // Mocking
-        doReturn(response).when(surveyCommandService).createSurveyResponse(any(), any(), any());
+        doReturn(1L).when(surveyCommandService).createSurveyResponse(any(), any(), any());
 
         // When & Then
         mockMvc.perform(post(BASE_URI + "/{id}/response", surveyId)
@@ -158,7 +157,7 @@ class SurveyControllerTest extends ApiTestSupport {
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.surveyJoinId").value(1L))
+                .andExpect(jsonPath("$.result").value(1L))
         ;
     }
 

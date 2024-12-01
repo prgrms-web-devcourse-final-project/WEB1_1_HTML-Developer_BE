@@ -8,7 +8,6 @@ import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
 import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -72,11 +70,11 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         // When
-        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
-        Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
 
         // Then
-        assertNotNull(response);
+        assertNotNull(surveyId);
         assertNotNull(savedSurvey);
         assertEquals("하현상 콘서트: Elegy [서울] 수요조사 모집합니다.", savedSurvey.getTitle());
     }
@@ -88,7 +86,8 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         OpenSurveyRequest openSurveyRequest = new OpenSurveyRequest(
                 "하현상 콘서트: Elegy [서울]",
                 200000L,
-                of("2024.11.30(토)", "2024.12.01(일)"),
+                of(LocalDate.of(2030, 12, 1),
+                        LocalDate.of(2030, 12, 2)),
                 "하현상",
                 Region.서울,
                 LocalDate.now(),
@@ -108,12 +107,12 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
-        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
         surveyCommandRepository.flush();
 
         // When
-        surveyCommandService.removeSurvey(testMember.getId(), response.surveyId());
-        Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
+        surveyCommandService.removeSurvey(testMember.getId(), surveyId);
+        Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
         List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
 
         // Then
@@ -129,25 +128,25 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
 
         UpdateSurveyRequest updateSurveyRequest = new UpdateSurveyRequest(
                 "하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.",
-                List.of("2024.12.01(일)"),
+                List.of(LocalDate.of(2030, 12, 2)),
                 Region.서울,
                 LocalDate.now().plusDays(3),
                 25,
                 "일요일만 운영합니다."
         );
 
-        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
         surveyCommandRepository.flush();
 
         // When
-        surveyCommandService.updateSurvey(testMember.getId(), response.surveyId(), updateSurveyRequest);
-        Survey savedSurvey = surveyCommandRepository.findById(response.surveyId()).orElse(null);
+        surveyCommandService.updateSurvey(testMember.getId(), surveyId, updateSurveyRequest);
+        Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
         List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
         // Then
         assertNotNull(savedSurvey);
         assertEquals("하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.", savedSurvey.getTitle());
         assertEquals(1, boardingDates.size());
-        assertEquals(LocalDate.of(2024, 12, 1), boardingDates.get(0).getDate());
+        assertEquals(LocalDate.of(2030, 12, 2), boardingDates.get(0).getDate());
 
 
     }
@@ -167,12 +166,12 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
-        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
         surveyCommandRepository.flush();
 
         // When & Then
         assertThrows(SurveyNotWriterException.class, () -> {
-            surveyCommandService.removeSurvey(999999999L, response.surveyId());
+            surveyCommandService.removeSurvey(999999999L, surveyId);
         });
     }
 
@@ -183,19 +182,19 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(
-                "2024.11.30(토)", BoardingType.DOWN, 2, true
+                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
         );
 
-        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
 
         // When
-        Long surveyJoinId = surveyCommandService.createSurveyResponse(testMember.getId(), response.surveyId(), joinSurveyRequest).surveyJoinId();
+        Long surveyJoinId = surveyCommandService.createSurveyResponse(testMember.getId(), surveyId, joinSurveyRequest);
         SurveyJoin savedSurveyJoin = surveyJoinCommandRepository.findById(surveyJoinId).orElse(null);
         // Then
         assertNotNull(surveyJoinId);
         assertNotNull(savedSurveyJoin);
-        assertEquals(response.surveyId(), savedSurveyJoin.getSurveyId());
-        assertEquals(LocalDate.of(2024, 11, 30), savedSurveyJoin.getBoardingDate());
+        assertEquals(surveyId, savedSurveyJoin.getSurveyId());
+        assertEquals(LocalDate.of(2030, 12, 1), savedSurveyJoin.getBoardingDate());
     }
 
 }
