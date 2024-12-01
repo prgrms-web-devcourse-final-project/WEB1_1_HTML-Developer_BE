@@ -60,4 +60,11 @@ public final class RentFormFixture {
                 .build()));
         return rentForm;
     }
+
+    public static List<RentFormBoardingDate> createRentFormBoardingDateFixture(final RentForm rentForm) {
+        return List.of(RentFormBoardingDate.builder()
+                .rentForm(rentForm)
+                .date(LocalDate.of(2024, 9, 20))
+                .build());
+    }
 }

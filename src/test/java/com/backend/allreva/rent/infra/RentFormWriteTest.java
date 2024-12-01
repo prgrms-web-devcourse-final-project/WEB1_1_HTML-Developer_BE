@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.infra;
 
+import static com.backend.allreva.rent.fixture.RentFormFixture.createRentFormBoardingDateFixture;
 import static com.backend.allreva.rent.fixture.RentFormFixture.createRentFormFixture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
+@Transactional
 class RentFormWriteTest extends IntegrationTestSupport {
 
     @Autowired
@@ -21,7 +23,6 @@ class RentFormWriteTest extends IntegrationTestSupport {
     private RentFormRepository rentFormRepository;
 
     @Test
-    @Transactional
     void 차량_대절_폼을_성공적으로_저장한다() {
         // given
         var rentForm = createRentFormFixture(1L, 1L);
@@ -55,5 +56,21 @@ class RentFormWriteTest extends IntegrationTestSupport {
         // then
         var deletedRentForm = rentFormRepository.findById(savedRentForm.getId()).orElse(null);
         assertThat(deletedRentForm).isNull();
+    }
+
+    @Test
+    void 가용_날짜를_성공적으로_수정한다() {
+        // given
+        var rentForm = createRentFormFixture(1L, 1L);
+        RentForm savedRentForm = rentFormRepository.save(rentForm);
+        var boardingDates = createRentFormBoardingDateFixture(savedRentForm);
+
+        // when
+        rentFormWriteService.updateRentFormBoardingDates(savedRentForm.getId(), boardingDates);
+
+        // then
+        var updatedRentForm = rentFormRepository.findById(savedRentForm.getId()).orElse(null);
+        assertThat(updatedRentForm).isNotNull();
+        assertThat(updatedRentForm.getBoardingDates().get(0).getDate()).isEqualTo(boardingDates.get(0).getDate());
     }
 }
