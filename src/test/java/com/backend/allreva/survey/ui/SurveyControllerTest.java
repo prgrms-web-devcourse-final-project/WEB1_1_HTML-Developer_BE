@@ -168,7 +168,7 @@ class SurveyControllerTest extends ApiTestSupport {
     void findSurveyList() throws Exception {
         // Given
         List<SurveySummaryResponse> responseList = new ArrayList<>();
-        SurveySummaryResponse response = new SurveySummaryResponse(1L, "title", Region.경기, 20L, LocalDate.now());
+        SurveySummaryResponse response = new SurveySummaryResponse(1L, "title", Region.경기, 20, 25, LocalDate.now());
         responseList.add(response);
 
         Region region = Region.서울;

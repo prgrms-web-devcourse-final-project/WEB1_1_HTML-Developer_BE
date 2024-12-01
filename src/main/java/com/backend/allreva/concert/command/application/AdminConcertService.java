@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -66,7 +67,8 @@ public class AdminConcertService {
     }
 
     // 기존 공연 정보 업데이트
-    private void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
+    @Transactional
+    protected void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
         Concert existingConcert = concertRepository.findByConcertCode(concertCode);
         existingConcert.updateFrom(hallCode, response.getDb());
         concertRepository.save(existingConcert);
