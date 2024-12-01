@@ -3,6 +3,7 @@ package com.backend.allreva.hall.command.domain;
 
 import com.backend.allreva.hall.command.domain.value.ConvenienceInfo;
 import com.backend.allreva.hall.command.domain.value.Location;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,8 +16,9 @@ public class ConcertHall {
 
     @Id
     private String id;
-    // fcltyName + prfplcName
-    private String name;
+
+    @Column(nullable = false)
+    private String name; // fcltyName + prfplcName
     private int seatScale;
     private double star;
 

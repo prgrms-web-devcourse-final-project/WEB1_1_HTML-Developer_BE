@@ -6,6 +6,7 @@ import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = @Index(name = "idx_hall_code", columnList = "concert_hall_code"))
+@Table(indexes = @Index(name = "idx_hall_code", columnList = "hall_code"))
 @Entity
 public class Concert extends BaseEntity {
     @Id
@@ -31,6 +32,15 @@ public class Concert extends BaseEntity {
     @Embedded
     private ConcertInfo concertInfo;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "concert_episode",
+            joinColumns = @JoinColumn(name = "id")
+    )
+    @Column(name = "episode")
+    private Set<String> episodes;
+
+
     @Embedded
     @AttributeOverride(name = "url", column = @Column(name = "poster"))
     private Image poster;
@@ -42,12 +52,14 @@ public class Concert extends BaseEntity {
     )
     private Set<Image> detailImages;
 
+
     @ElementCollection
     @CollectionTable(
             name = "concert_seller",
             joinColumns = @JoinColumn(name = "id")
     )
     private Set<Seller> sellers;
+
 
     public void updateFrom(String hallCode, KopisConcertResponse.Db db) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(db);
@@ -58,6 +70,7 @@ public class Concert extends BaseEntity {
                 .concertCode(db.getConcertCode())
                 .hallCode(hallCode)
                 .build();
+        this.episodes = KopisConcertResponse.toEpisodes(db.getDtguidance());
     }
 
 
@@ -65,16 +78,17 @@ public class Concert extends BaseEntity {
     public Concert(
             final Code code,
             final ConcertInfo concertInfo,
+            final Set<String> episodes,
             final Image poster,
             final Set<Image> detailImages,
             final Set<Seller> sellers
     ) {
         this.code = code;
         this.concertInfo = concertInfo;
+        this.episodes = episodes;
         this.poster = poster;
         this.detailImages = detailImages;
         this.sellers = sellers;
-
         this.viewCount = 0L;
     }
 
