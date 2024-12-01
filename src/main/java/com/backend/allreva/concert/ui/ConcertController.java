@@ -1,7 +1,7 @@
 package com.backend.allreva.concert.ui;
 
 import com.backend.allreva.common.dto.Response;
-import com.backend.allreva.concert.command.domain.value.SortDirection;
+import com.backend.allreva.search.query.domain.value.SortDirection;
 import com.backend.allreva.concert.query.application.ConcertQueryService;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;

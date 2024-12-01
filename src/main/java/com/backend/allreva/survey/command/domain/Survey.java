@@ -27,12 +27,8 @@ public class Survey extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "survey_boarding_date",
-            joinColumns = @JoinColumn(name = "id", nullable = false)
-    )
-    private List<LocalDate> boardingDate = new ArrayList<>();
+    @OneToMany(mappedBy = "survey")
+    private List<SurveyBoardingDate> boardingDates = new ArrayList<>();
 
     @Column(nullable = false)
     private String artistName;
@@ -62,7 +58,6 @@ public class Survey extends BaseEntity {
     public Survey(final Long memberId,
                   final Long concertId,
                   final String title,
-                  final List<LocalDate> boardingDate,
                   final String artistName,
                   final Region region,
                   final LocalDate eddate,
@@ -71,7 +66,6 @@ public class Survey extends BaseEntity {
         this.memberId = memberId;
         this.concertId = concertId;
         this.title = title;
-        this.boardingDate = boardingDate;
         this.artistName = artistName;
         this.region = region;
         this.eddate = eddate;
@@ -81,13 +75,11 @@ public class Survey extends BaseEntity {
     }
 
     public void update(final String title,
-                       final List<LocalDate> boardingDate,
                        final Region region,
                        final LocalDate eddate,
                        final int maxPassenger,
                        final String information) {
         this.title = title;
-        this.boardingDate = boardingDate;
         this.region = region;
         this.eddate = eddate;
         this.maxPassenger = maxPassenger;

@@ -5,6 +5,7 @@ import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
+import com.backend.allreva.survey.command.application.SurveyBoardingDateCommandRepository;
 import com.backend.allreva.survey.command.application.SurveyCommandRepository;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
@@ -39,6 +40,8 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
     private SurveyCommandRepository surveyCommandRepository;
     @Autowired
     private ConcertRepository concertRepository;
+    @Autowired
+    private SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
     private Member testMember;
     private Concert testConcert;
 
@@ -53,6 +56,7 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         memberRepository.deleteAllInBatch();
+        surveyBoardingDateCommandRepository.deleteAllInBatch();
         surveyCommandRepository.deleteAllInBatch();
     }
 
@@ -69,10 +73,10 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         // Then
         assertNotNull(detail);
         assertEquals("하현상 콘서트: Elegy [서울] 수요조사 모집합니다.", detail.getTitle());
-        assertEquals("2024.11.30(토)", detail.getBoardingDate().get(0));
-        assertEquals("2024.12.01(일)", detail.getBoardingDate().get(1));
-        assertEquals(2, detail.getBoardingDate().size());
-        assertThat(detail.getBoardingDate()).contains("2024.11.30(토)", "2024.12.01(일)");
+        assertEquals("2024.11.30(토)", detail.getBoardingDates().get(0));
+        assertEquals("2024.12.01(일)", detail.getBoardingDates().get(1));
+        assertEquals(2, detail.getBoardingDates().size());
+        assertThat(detail.getBoardingDates()).contains("2024.11.30(토)", "2024.12.01(일)");
     }
 
     @Test
@@ -90,6 +94,8 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         assertNotNull(responseList);
         assertFalse(responseList.isEmpty());
         assertThat(responseList).allMatch(response -> response.region().equals(Region.서울));
+        assertEquals(0, responseList.get(0).participationCount());
+        assertEquals(25, responseList.get(0).maxPassenger());
         assertEquals(firstId.surveyId(), responseList.get(0).surveyId());
     }
 
@@ -129,5 +135,4 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         assertEquals(secondId.surveyId(), responseList.get(1).surveyId());
         assertEquals(lastId.surveyId(), responseList.get(2).surveyId());
     }
-
 }
