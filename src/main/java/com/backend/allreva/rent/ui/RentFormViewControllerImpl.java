@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/rents/form")
+@RequestMapping("/api/v1/rents")
 public class RentFormViewControllerImpl implements RentFormViewController {
 
     private final RentFormQueryService rentFormQueryService;
