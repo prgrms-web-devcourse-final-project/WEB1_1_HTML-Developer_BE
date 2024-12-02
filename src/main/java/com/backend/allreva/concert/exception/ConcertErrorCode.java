@@ -2,9 +2,11 @@ package com.backend.allreva.concert.exception;
 
 import com.backend.allreva.common.exception.code.ErrorCode;
 import com.backend.allreva.common.exception.code.ErrorCodeInterface;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@Getter
 @RequiredArgsConstructor
 public enum ConcertErrorCode implements ErrorCodeInterface {
     CONCERT_SEARCH_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "CONCERT_CONCERT_SEARCH_NOT_FOUND_NOT_FOUND", "검색어에 존재하는 콘서트가 없습니다."),
@@ -14,8 +16,9 @@ public enum ConcertErrorCode implements ErrorCodeInterface {
     private final Integer status;
     private final String errorCode;
     private final String message;
+
     @Override
     public ErrorCode getErrorCode() {
-        return null;
+        return ErrorCode.of(status, errorCode, message);
     }
 }

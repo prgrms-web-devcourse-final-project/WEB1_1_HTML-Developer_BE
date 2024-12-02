@@ -9,13 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class ConcertHallQueryService {
 
     private final ConcertHallRepository concertHallRepository;
 
-    public ConcertHallDetail findDetailByHallCode(String hallCode) {
+    public ConcertHallDetail findDetailByHallCode(final String hallCode) {
         return concertHallRepository.findDetailByHallCode(hallCode);
     }
 

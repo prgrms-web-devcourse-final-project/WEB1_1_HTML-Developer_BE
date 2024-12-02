@@ -5,8 +5,6 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Location {
@@ -16,4 +14,15 @@ public class Location {
 
     @Column(nullable = false)
     private String address;
+
+    @Builder
+    private Location(
+            final Double longitude,
+            final Double latitude,
+            final String address
+    ) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.address = address;
+    }
 }

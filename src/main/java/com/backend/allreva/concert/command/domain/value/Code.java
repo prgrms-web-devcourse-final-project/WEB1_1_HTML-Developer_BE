@@ -18,7 +18,10 @@ public class Code {
     private String hallCode;
 
     @Builder
-    public Code(String concertCode, String hallCode) {
+    private Code(
+            final String concertCode,
+            final String hallCode
+    ) {
         this.concertCode = concertCode;
         this.hallCode = hallCode;
     }

@@ -23,12 +23,9 @@ public class ConcertHallController {
     private final ConcertHallQueryService concertHallQueryService;
 
     @Operation(summary = "공연장 상세 조회", description = "공연장 상세 조회 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
-    })
     @GetMapping("/{hallCode}")
     public Response<ConcertHallDetail> findHallDetailByHallCode(
-            @PathVariable("hallCode") String hallCode
+            @PathVariable("hallCode") final String hallCode
     ) {
         ConcertHallDetail details = concertHallQueryService.findDetailByHallCode(hallCode);
         return Response.onSuccess(details);
