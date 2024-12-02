@@ -1,7 +1,8 @@
 package com.backend.allreva.survey.command.application;
 
-import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
+import com.backend.allreva.concert.infra.ConcertJpaRepository;
+import com.backend.allreva.concert.infra.dto.ConcertDateInfoResponse;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
@@ -24,18 +25,22 @@ public class SurveyCommandService {
     private final SurveyCommandRepository surveyCommandRepository;
     private final SurveyJoinCommandRepository surveyJoinCommandRepository;
     private final SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
-    private final ConcertRepository concertRepository;
+    private final ConcertJpaRepository concertRepository;
     private final SurveyConverter surveyConverter;
 
     /**
      * 수요조사 개설
      */
     public Long openSurvey(final Long memberId,
-                           final OpenSurveyRequest openSurveyRequest) {
-        checkConcert(openSurveyRequest);
+                           final OpenSurveyRequest request) {
 
-        Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, openSurveyRequest));
-        saveBoardingDates(survey, openSurveyRequest.boardingDates());
+        //가용 날짜가 콘서트 진행 날짜인지 확인
+        if (!validateBoardingDates(request.concertId(), request.boardingDates())) {
+            throw new SurveyInvalidBoardingDateException();
+        }
+
+        Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, request));
+        saveBoardingDates(survey, request.boardingDates());
 
         return survey.getId();
     }
@@ -46,6 +51,12 @@ public class SurveyCommandService {
     public void updateSurvey(final Long memberId,
                              final UpdateSurveyRequest request) {
         Survey survey = findSurvey(request.surveyId());
+
+        //가용 날짜가 콘서트 진행 날짜인지 확인
+        if (!validateBoardingDates(survey.getConcertId(), request.boardingDates())) {
+            throw new SurveyInvalidBoardingDateException();
+        }
+
         if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
         }
@@ -61,7 +72,7 @@ public class SurveyCommandService {
     }
 
     /**
-     * 수요조사
+     * 수요조사 삭제
      */
     public void removeSurvey(final Long memberId, final SurveyIdRequest surveyIdRequest) {
         Survey survey = findSurvey(surveyIdRequest.surveyId());
@@ -107,10 +118,25 @@ public class SurveyCommandService {
         saveBoardingDates(survey, boardingDates);
     }
 
-    private void checkConcert(final OpenSurveyRequest request) {
-        if (!concertRepository.existsById(request.concertId()))
-            throw new ConcertNotFoundException();
+    private boolean validateBoardingDates(Long concertId, List<LocalDate> boardingDates) {
+        ConcertDateInfoResponse dateInfo = findStartDateAndEndDateById(concertId);
+
+        LocalDate concertStartDate = dateInfo.getStartDate();
+        LocalDate concertEndDate = dateInfo.getEndDate();
+
+        for (LocalDate boardingDate : boardingDates) {
+            if (boardingDate.isBefore(concertStartDate) || boardingDate.isAfter(concertEndDate)) {
+                return false;
+            }
+        }
+        return true;
     }
+
+    private ConcertDateInfoResponse findStartDateAndEndDateById(final Long concertId) {
+        return concertRepository.findStartDateAndEndDateById(concertId)
+                .orElseThrow(ConcertNotFoundException::new);
+    }
+
 
     private Survey findSurvey(final Long surveyId) {
         return surveyCommandRepository.findById(surveyId)
