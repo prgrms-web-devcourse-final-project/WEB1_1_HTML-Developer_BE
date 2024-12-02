@@ -104,8 +104,9 @@ public class SurveyController {
     @GetMapping("/member/list")
     public Response<List<CreatedSurveyResponse>> getCreatedSurveyList(@AuthMember Member member,
                                                                       @RequestParam(value = "lastSurveyId", required = false) Long lastId,
+                                                                      @RequestParam(name = "lastBoardingDate", required = false) LocalDate lastBoardingDate,
                                                                       @Min(10) @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Response.onSuccess(memberSurveyQueryService.getCreatedSurveyList(member.getId(), lastId, pageSize));
+        return Response.onSuccess(memberSurveyQueryService.getCreatedSurveyList(member.getId(), lastId, lastBoardingDate, pageSize));
     }
 
     @Operation(summary = "내가 참여한 수요조사 목록 조회 API", description =

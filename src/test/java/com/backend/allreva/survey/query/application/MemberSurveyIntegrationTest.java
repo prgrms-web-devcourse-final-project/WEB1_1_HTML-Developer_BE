@@ -68,7 +68,7 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
         surveyCommandService.createSurveyResponse(testMember.getId(), joinRequest2);
 
         // When
-        List<CreatedSurveyResponse> responseList = memberSurveyQueryService.getCreatedSurveyList(testMember.getId(), null, 10);
+        List<CreatedSurveyResponse> responseList = memberSurveyQueryService.getCreatedSurveyList(testMember.getId(), null,null,10);
 
         // Then
         assertNotNull(responseList);

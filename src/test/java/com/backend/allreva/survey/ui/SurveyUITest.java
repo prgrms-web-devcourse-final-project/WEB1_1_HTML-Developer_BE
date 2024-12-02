@@ -236,7 +236,7 @@ class SurveyUITest extends ApiTestSupport {
         int pageSize = 10;
 
         // Mocking
-        doReturn(responseList).when(memberSurveyQueryService).getCreatedSurveyList(any(), any(), anyInt());
+        doReturn(responseList).when(memberSurveyQueryService).getCreatedSurveyList(any(), any(), any(), anyInt());
 
         // When & Then
         mockMvc.perform(get(BASE_URI + "/member/list")

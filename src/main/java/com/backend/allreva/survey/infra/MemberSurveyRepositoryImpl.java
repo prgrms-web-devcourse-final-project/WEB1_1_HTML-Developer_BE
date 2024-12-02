@@ -17,6 +17,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.backend.allreva.survey.command.domain.QSurvey.survey;
@@ -32,18 +33,19 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
     @Override
     public List<CreatedSurveyResponse> getCreatedSurveyList(final Long memberId,
                                                             final Long lastId,
+                                                            final LocalDate lastBoardingDate,
                                                             final int pageSize) {
 
         return jpaQueryFactory
                 .select(CreatedSurveyProjections())
                 .from(survey)
                 .join(surveyBoardingDate)
-                    .on(survey.id.eq(surveyBoardingDate.survey.id))
+                .on(survey.id.eq(surveyBoardingDate.survey.id))
                 .leftJoin(surveyJoin)
-                    .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
+                .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
                         .and(survey.id.eq(surveyJoin.surveyId)))
                 .where(survey.memberId.eq(memberId),
-                        getPagingCondition(lastId))
+                        getPagingCondition(lastId, lastBoardingDate))
                 .groupBy(survey.id, surveyBoardingDate.date)
                 .orderBy(survey.id.desc())
                 .limit(pageSize)
@@ -68,12 +70,13 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
     }
 
 
-    private BooleanExpression getPagingCondition(final Long lastId) {
-        if (lastId == null) {
+    private BooleanExpression getPagingCondition(final Long lastId, final LocalDate lastBoardingDate) {
+        //첫페이지인 경우 조건 없음
+        if (lastId == null && lastBoardingDate == null) {
             return null;
         }
-
-        return survey.id.lt(lastId);
+        return survey.id.lt(lastId)
+                .or(survey.id.eq(lastId).and(surveyBoardingDate.date.gt(lastBoardingDate)));
     }
 
     //해당하는 boardingType이면 passengerNum을 더함
@@ -94,9 +97,9 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
                 .select(JoinSurveyProjections())
                 .from(survey)
                 .join(surveyBoardingDate)
-                    .on(survey.id.eq(surveyBoardingDate.survey.id))
+                .on(survey.id.eq(surveyBoardingDate.survey.id))
                 .join(surveyJoin)
-                    .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
+                .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
                         .and(survey.id.eq(surveyJoin.surveyId)))
                 .where(surveyJoin.memberId.eq(memberId),
                         getPagingCondition(lastId))
@@ -131,5 +134,13 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
                 .where(surveyJoin.surveyId.eq(survey.id)
                         .and(surveyJoin.boardingDate.eq(surveyBoardingDate.date)))
                 .groupBy(surveyJoin.surveyId, surveyJoin.boardingDate), "participationCount");
+    }
+
+    private BooleanExpression getPagingCondition(final Long lastId) {
+        if (lastId == null) {
+            return null;
+        }
+
+        return survey.id.lt(lastId);
     }
 }

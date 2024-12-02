@@ -51,8 +51,8 @@ public class Survey extends BaseEntity {
     @Column(nullable = false)
     private Long memberId;
 
+    @Column(nullable = false)
     private boolean isClosed;
-
 
     @Builder
     private Survey(final Long memberId,
