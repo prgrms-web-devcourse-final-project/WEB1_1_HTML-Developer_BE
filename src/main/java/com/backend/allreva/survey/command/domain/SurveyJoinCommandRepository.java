@@ -1,4 +1,4 @@
-package com.backend.allreva.survey.command.application;
+package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.survey.command.domain.SurveyJoin;
 import org.springframework.data.jpa.repository.JpaRepository;

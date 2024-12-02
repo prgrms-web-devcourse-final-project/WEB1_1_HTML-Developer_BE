@@ -43,7 +43,7 @@ public class SurveyJoin extends BaseEntity {
     private Long memberId;
 
     @Builder
-    public SurveyJoin(final Long memberId,
+    private SurveyJoin(final Long memberId,
                       final Long surveyId,
                       final LocalDate boardingDate,
                       final BoardingType boardingType,

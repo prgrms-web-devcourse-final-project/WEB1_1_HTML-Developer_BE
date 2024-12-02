@@ -2,7 +2,10 @@ package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -25,7 +28,7 @@ public class SurveyBoardingDate extends BaseEntity {
     private LocalDate date;
 
     @Builder
-    public SurveyBoardingDate(Survey survey, LocalDate date) {
+    private SurveyBoardingDate(Survey survey, LocalDate date) {
         this.survey = survey;
         this.date = date;
     }

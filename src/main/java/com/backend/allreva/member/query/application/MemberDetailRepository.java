@@ -1,5 +1,6 @@
-package com.backend.allreva.member.query;
+package com.backend.allreva.member.query.application;
 
+import com.backend.allreva.member.query.application.dto.MemberDetail;
 import org.springframework.stereotype.Repository;
 
 @Repository

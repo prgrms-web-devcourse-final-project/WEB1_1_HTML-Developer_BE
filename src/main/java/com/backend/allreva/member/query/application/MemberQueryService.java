@@ -1,7 +1,6 @@
 package com.backend.allreva.member.query.application;
 
-import com.backend.allreva.member.query.MemberDetail;
-import com.backend.allreva.member.query.MemberDetailRepository;
+import com.backend.allreva.member.query.application.dto.MemberDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
