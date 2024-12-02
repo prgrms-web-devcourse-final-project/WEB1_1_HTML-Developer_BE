@@ -1,5 +1,6 @@
 package com.backend.allreva.search.infra;
 
+import com.backend.allreva.search.exception.EventConsumingException;
 import com.backend.allreva.search.exception.SearchResultNotFoundException;
 import com.backend.allreva.search.query.domain.ConcertLikeEvent;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,7 @@ public class ConcertLikeConsumer {
 
             log.info("Elasticsearch 업데이트 완료 - eventId: {}", event.getEventId());
         } catch (Exception e) {
-            log.error("이벤트 처리 실패 - eventId: {}, error: {}",
-                    event.getEventId(), e.getMessage());
+            throw new EventConsumingException();
         }
     }
 }

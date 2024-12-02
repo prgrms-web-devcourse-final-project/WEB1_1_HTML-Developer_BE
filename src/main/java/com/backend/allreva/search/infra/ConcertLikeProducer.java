@@ -1,5 +1,6 @@
 package com.backend.allreva.search.infra;
 
+import com.backend.allreva.search.exception.EventPublishingException;
 import com.backend.allreva.search.query.domain.ConcertLikeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,7 @@ public class ConcertLikeProducer {
                         }
                     });
         } catch (Exception e) {
-            log.error("이벤트 발행 중 예외 발생 - eventId: {}, error: {}",
-                    event.getEventId(), e.getMessage());
+            throw new EventPublishingException();
         }
     }
 }
