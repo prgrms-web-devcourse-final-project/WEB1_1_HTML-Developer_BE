@@ -1,5 +1,6 @@
 package com.backend.allreva.auth.exception;
 
+import com.backend.allreva.auth.exception.code.CustomAccessDeniedException;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,9 +20,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private final HandlerExceptionResolver resolver;
 
-    public CustomAccessDeniedHandler(
-        @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
-    ) {
+    public CustomAccessDeniedHandler(@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
         this.resolver = resolver;
     }
 
@@ -29,14 +28,18 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
      * 유효하지 않는 권한일 때 호출되는 메서드
      */
     @Override
-    public void handle(final HttpServletRequest request, final HttpServletResponse response,
-            AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final AccessDeniedException accessDeniedException
+    ) throws IOException, ServletException {
         Exception exception = (Exception) request.getAttribute("jakarta.servlet.error.exception");
         if (exception != null) {
-            log.info("Access denied: {}", exception.getMessage());
             resolver.resolveException(request, response, null, exception);
-        } else {
-            resolver.resolveException(request, response, null, accessDeniedException);
+            return;
         }
+        CustomAccessDeniedException customAccessDeniedException = new CustomAccessDeniedException(
+                accessDeniedException.getLocalizedMessage());
+        resolver.resolveException(request, response, null, customAccessDeniedException);
     }
 }

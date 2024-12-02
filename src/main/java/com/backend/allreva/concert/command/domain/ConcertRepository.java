@@ -3,7 +3,7 @@ package com.backend.allreva.concert.command.domain;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 
 public interface ConcertRepository {
-    void save(Concert concert);
+    Concert save(Concert concert);
 
     ConcertDetailResponse findDetailById(Long concertId);
 

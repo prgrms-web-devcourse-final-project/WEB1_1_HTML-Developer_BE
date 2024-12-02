@@ -21,10 +21,11 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     private final ConcertJpaRepository concertJpaRepository;
 
     @Override
-    public void save(final Concert concert) {
-        concertJpaRepository.save(concert);
+    public Concert save(final Concert concert) {
+        Concert savedConcert = concertJpaRepository.save(concert);
         ConcertDetailResponse response = concertJpaRepository.findDetailById(concert.getId());
         cache.put(concert.getId(), response);
+        return savedConcert;
     }
 
     @Override
