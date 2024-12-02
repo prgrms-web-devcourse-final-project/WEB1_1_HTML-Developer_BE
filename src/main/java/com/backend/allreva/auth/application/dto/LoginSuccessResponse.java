@@ -3,21 +3,27 @@ package com.backend.allreva.auth.application.dto;
 import lombok.Builder;
 
 @Builder
-public record TokenResponse(
+public record LoginSuccessResponse(
         String accessToken,
         String refreshToken,
-        Long refreshTokenExpirationTime
+        Long refreshTokenExpirationTime,
+        String email,
+        String profileImageUrl
 ) {
 
-    public static TokenResponse of(
+    public static LoginSuccessResponse of(
             final String accessToken,
             final String refreshToken,
-            final Long refreshTokenExpirationTime
+            final Long refreshTokenExpirationTime,
+            final String email,
+            final String profileImageUrl
     ) {
-        return TokenResponse.builder()
+        return LoginSuccessResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                .email(email)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 }
