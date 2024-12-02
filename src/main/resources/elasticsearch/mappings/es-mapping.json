@@ -1,0 +1,73 @@
+{
+  "properties": {
+    "id": { "type": "keyword" },
+    "title": {
+      "type": "text",
+      "fields": {
+        "mixed": {
+          "type": "text",
+          "analyzer": "korean_mixed"
+        },
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "concert_code": { "type": "keyword" },
+    "hall_code": { "type": "keyword" },
+    "time_table": { "type": "keyword" },
+    "host": { "type": "keyword" },
+    "prfstate": { "type": "keyword" },
+    "price": { "type": "text" },
+    "poster": { "type": "keyword" },
+    "view_count": { "type": "long" },
+    "episodes": { "type": "keyword" },
+    "concert_hall_cafe": { "type": "boolean" },
+    "concert_hall_elev_barrier": { "type": "boolean" },
+    "concert_hall_park_barrier": { "type": "boolean" },
+    "concert_hall_parking": { "type": "boolean" },
+    "concert_hall_rest_barrier": { "type": "boolean" },
+    "concert_hall_restaurant": { "type": "boolean" },
+    "concert_hall_runw_barrier": { "type": "boolean" },
+    "concert_hall_store": { "type": "boolean" },
+    "concert_hall_name": { "type": "keyword" },
+    "concert_hall_seat_scale": { "type": "integer" },
+    "concert_hall_address": {
+      "type": "text",
+      "fields": {
+        "mixed": {
+          "type": "text",
+          "analyzer": "korean_mixed"
+        },
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "concert_hall_latitude": { "type": "double" },
+    "concert_hall_longitude": { "type": "double" },
+    "star": { "type": "double" },
+    "image_urls": { "type": "keyword" },
+    "seller_info": { "type": "keyword" },
+    "stdate": {
+      "type": "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis"
+    },
+    "eddate": {
+      "type": "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis"
+    },
+    "created_at": {
+      "type": "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis"
+    },
+    "updated_at": {
+      "type": "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis"
+    },
+    "deleted_at": {
+      "type": "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis"
+    }
+  }
+}

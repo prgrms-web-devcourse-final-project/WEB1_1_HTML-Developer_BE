@@ -3,16 +3,15 @@ package com.backend.allreva.search.query.domain;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(indexName = "concerts")
+@Setting(settingPath = "elasticsearch/mappings/es-settings.json")
+@Mapping(mappingPath = "elasticsearch/mappings/es-mapping.json")
 @Getter
 @ToString
 public class ConcertDocument {
@@ -35,7 +34,7 @@ public class ConcertDocument {
     private String host;
 
     @Field(type = FieldType.Keyword, name = "prfstate")
-    private String prfstate;
+    private String prfState;
 
     @Field(type = FieldType.Text, name = "price")
     private String price;
@@ -95,24 +94,34 @@ public class ConcertDocument {
     private List<String> sellerInfo;
 
     @Field(type = FieldType.Date, name = "stdate")
-    private LocalDate stdate;
+    private LocalDate stDate;
 
     @Field(type = FieldType.Date, name = "eddate")
-    private LocalDate eddate;
+    private LocalDate edDate;
 
-    @Field(type = FieldType.Date, name = "created_at"
-            ,format = DateFormat.date_time, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSSSSXXX"
-    )
+    @Field(type = FieldType.Keyword, name = "episodes")
+    private List<String> episodes;
+
+    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
+    private LocalDateTime stdate;
+
+    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
+    private LocalDateTime eddate;
+
+    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private LocalDateTime createdAt;
 
-    @Field(type = FieldType.Date, name = "updated_at"
-            ,format = DateFormat.date_time, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSSSSXXX"
-    )
+    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private LocalDateTime updatedAt;
 
-    @Field(type = FieldType.Date, name = "deleted_at"
-            ,format = DateFormat.date_time, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSSSSXXX"
-    )
+    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private LocalDateTime deletedAt;
 
+    public void updateViewCount(final Long increaseCount) {
+        viewCount = viewCount + increaseCount;
+    }
+
+    public void intiViewCount() {
+        viewCount = 0L;
+    }
 }
