@@ -5,7 +5,6 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
 import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
-import com.backend.allreva.rent.command.application.dto.RentFormIdResponse;
 import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +24,11 @@ public class RentFormControllerImpl implements RentFormController {
     private final RentCommandService rentCommandService;
 
     @PostMapping
-    public Response<RentFormIdResponse> createRentForm(
+    public Response<Long> createRentForm(
             @RequestBody final RentFormRegisterRequest rentFormRegisterRequest,
             @AuthMember final Member member
     ) {
-        RentFormIdResponse rentFormIdResponse = rentCommandService.registerRentForm(rentFormRegisterRequest, member);
+        Long rentFormIdResponse = rentCommandService.registerRentForm(rentFormRegisterRequest, member);
 
         return Response.onSuccess(rentFormIdResponse);
     }
