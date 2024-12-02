@@ -28,7 +28,11 @@ public class RentQueryService {
     }
 
     public List<RentSummaryResponse> getRentSummaries(
-            Region region, SortType sortType, LocalDate lastEndDate, Long lastId,  int pageSize) {
+            final Region region,
+            final SortType sortType,
+            final LocalDate lastEndDate,
+            final Long lastId,
+            final int pageSize) {
         return rentQueryRepository.findRentSummaries(region, sortType, lastEndDate, lastId, pageSize);
     }
 }

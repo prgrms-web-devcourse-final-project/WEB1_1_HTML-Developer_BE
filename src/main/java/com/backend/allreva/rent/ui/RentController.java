@@ -28,7 +28,7 @@ public class RentController implements RentControllerSwagger {
             @RequestBody final RentRegisterRequest rentRegisterRequest,
             @AuthMember final Member member
     ) {
-        Long rentIdResponse = rentCommandService.registerRent(rentRegisterRequest, member);
+        Long rentIdResponse = rentCommandService.registerRent(rentRegisterRequest, member.getId());
 
         return Response.onSuccess(rentIdResponse);
     }
@@ -38,7 +38,7 @@ public class RentController implements RentControllerSwagger {
         @RequestBody final RentUpdateRequest rentUpdateRequest,
         @AuthMember final Member member
     ) {
-        rentCommandService.updateRent(rentUpdateRequest, member);
+        rentCommandService.updateRent(rentUpdateRequest, member.getId());
         return Response.onSuccess();
     }
 
@@ -47,7 +47,7 @@ public class RentController implements RentControllerSwagger {
             @RequestBody final RentIdRequest rentIdRequest,
             @AuthMember final Member member
     ) {
-        rentCommandService.closeRent(rentIdRequest, member);
+        rentCommandService.closeRent(rentIdRequest, member.getId());
         return Response.onSuccess();
     }
 }

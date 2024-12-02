@@ -1,6 +1,5 @@
 package com.backend.allreva.rent.command.application;
 
-import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.dto.RentIdRequest;
 import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
@@ -20,21 +19,21 @@ public class RentCommandService {
 
     public Long registerRent(
             final RentRegisterRequest rentRegisterRequest,
-            final Member member
+            final Long memberId
     ) {
-        Rent rent = rentRegisterRequest.toEntity(member.getId());
+        Rent rent = rentRegisterRequest.toEntity(memberId);
         Rent savedRent = rentRepository.save(rent);
         return savedRent.getId();
     }
 
     public void updateRent(
             final RentUpdateRequest rentUpdateRequest,
-            final Member member
+            final Long memberId
     ) {
         Rent rent = rentRepository.findById(rentUpdateRequest.rentId())
                 .orElseThrow(RentNotFoundException::new);
 
-        rent.validateMine(member.getId());
+        rent.validateMine(memberId);
 
         rentRepository.deleteBoardingDateAllByRentId(rentUpdateRequest.rentId());
         rent.updateRent(rentUpdateRequest);
@@ -42,12 +41,12 @@ public class RentCommandService {
 
     public void closeRent(
             final RentIdRequest rentIdRequest,
-            final Member member
+            final Long memberId
     ) {
         Rent rent = rentRepository.findById(rentIdRequest.rentId())
                 .orElseThrow(RentNotFoundException::new);
 
-        rent.validateMine(member.getId());
+        rent.validateMine(memberId);
         rent.close();
     }
 }
