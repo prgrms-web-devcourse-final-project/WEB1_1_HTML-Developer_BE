@@ -1,19 +1,15 @@
 package com.backend.allreva.survey.infra;
 
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.SurveyQueryRepository;
+import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -64,10 +60,10 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 .select(surveySummaryProjections())
                 .from(survey)
                 .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
-                .where(survey.eddate.goe(LocalDate.now()),
+                .where(survey.endDate.goe(LocalDate.now()),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate))
-                .groupBy(survey.id, survey.title, survey.region, survey.eddate)
+                .groupBy(survey.id)
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
                 .fetch();
@@ -80,7 +76,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 survey.region,
                 surveyJoin.passengerNum.sum().coalesce(0),
                 survey.maxPassenger,
-                survey.eddate
+                survey.endDate
         );
     }
 
@@ -98,8 +94,8 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
 
         switch (sortType) {
             case CLOSING -> {
-                return (survey.eddate.gt(lastEndDate))
-                        .or(survey.eddate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
+                return (survey.endDate.gt(lastEndDate))
+                        .or(survey.endDate.eq(lastEndDate).and(survey.id.gt(lastId))); //endDate가 같을 경우 lastId 오래된 순
             }
             case OLDEST -> {
                 return survey.id.gt(lastId);
@@ -114,7 +110,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         switch (sortType) {
             case CLOSING -> {
                 return new OrderSpecifier[]{
-                        survey.eddate.asc(),
+                        survey.endDate.asc(),
                         survey.id.asc()
                 };
             }

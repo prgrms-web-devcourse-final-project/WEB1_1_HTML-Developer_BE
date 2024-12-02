@@ -6,7 +6,7 @@ import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.query.MemberDetail;
+import com.backend.allreva.member.query.application.dto.MemberDetail;
 import com.backend.allreva.member.query.application.MemberQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

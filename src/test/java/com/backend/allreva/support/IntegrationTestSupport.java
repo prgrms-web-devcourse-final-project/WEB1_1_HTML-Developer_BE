@@ -69,8 +69,8 @@ public abstract class IntegrationTestSupport {
                         .performStatus(ConcertStatus.IN_PROGRESS)
                         .host("host")
                         .dateInfo(DateInfo.builder()
-                                .startDate(LocalDate.of(2024, 11, 30))
-                                .endDate(LocalDate.of(2024, 12, 1))
+                                .startDate(LocalDate.of(2030, 12, 1))
+                                .endDate(LocalDate.of(2030, 12, 2))
                                 .timeTable("timetable")
                                 .build())
                         .build())
@@ -87,7 +87,7 @@ public abstract class IntegrationTestSupport {
         return new OpenSurveyRequest(
                 "하현상 콘서트: Elegy [서울] 수요조사 모집합니다.",
                 concertId,
-                of("2024.11.30(토)", "2024.12.01(일)"),
+                of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
                 "하현상",
                 region,
                 endDate,

@@ -5,11 +5,10 @@ import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
-import com.backend.allreva.survey.command.application.SurveyBoardingDateCommandRepository;
-import com.backend.allreva.survey.command.application.SurveyCommandRepository;
+import com.backend.allreva.survey.command.domain.SurveyBoardingDateCommandRepository;
+import com.backend.allreva.survey.command.domain.SurveyCommandRepository;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdResponse;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
@@ -28,7 +27,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class SurveyQueryServiceTest extends IntegrationTestSupport {
+public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
@@ -65,18 +64,18 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
     public void findSurveyDetail() {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
-        SurveyIdResponse response = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
 
         // When
-        SurveyDetailResponse detail = surveyQueryService.findSurveyDetail(response.surveyId());
+        SurveyDetailResponse detail = surveyQueryService.findSurveyDetail(surveyId);
 
         // Then
         assertNotNull(detail);
-        assertEquals("하현상 콘서트: Elegy [서울] 수요조사 모집합니다.", detail.getTitle());
-        assertEquals("2024.11.30(토)", detail.getBoardingDates().get(0));
-        assertEquals("2024.12.01(일)", detail.getBoardingDates().get(1));
-        assertEquals(2, detail.getBoardingDates().size());
-        assertThat(detail.getBoardingDates()).contains("2024.11.30(토)", "2024.12.01(일)");
+        assertEquals("하현상 콘서트: Elegy [서울] 수요조사 모집합니다.", detail.title());
+        assertEquals(LocalDate.of(2030, 12, 1), detail.boardingDates().get(0));
+        assertEquals(LocalDate.of(2030, 12, 2), detail.boardingDates().get(1));
+        assertEquals(2, detail.boardingDates().size());
+        assertThat(detail.boardingDates()).contains(LocalDate.of(2030, 12, 1));
     }
 
     @Test
@@ -84,7 +83,7 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
     public void findSurveyList() {
         // Given
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
-        SurveyIdResponse firstId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
+        Long firstId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.부산));
 
         // When
@@ -96,14 +95,14 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         assertThat(responseList).allMatch(response -> response.region().equals(Region.서울));
         assertEquals(0, responseList.get(0).participationCount());
         assertEquals(25, responseList.get(0).maxPassenger());
-        assertEquals(firstId.surveyId(), responseList.get(0).surveyId());
+        assertEquals(firstId, responseList.get(0).surveyId());
     }
 
     @Test
     @DisplayName("수요조사 목록을 오래된순으로 조회에 성공한다.")
     public void findSurveyListOldest() {
         // Given
-        SurveyIdResponse lastId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
+        Long lastId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울));
         surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.부산));
 
@@ -114,16 +113,16 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         assertNotNull(responseList);
         assertFalse(responseList.isEmpty());
         assertThat(responseList).allMatch(response -> response.region().equals(Region.서울));
-        assertEquals(lastId.surveyId(), responseList.get(0).surveyId());
+        assertEquals(lastId, responseList.get(0).surveyId());
     }
 
     @Test
     @DisplayName("수요조사 목록을 마감임박 순으로 조회에 성공한다.")
     public void findSurveyListClosing() {
         // Given
-        SurveyIdResponse secondId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(2), Region.서울)); // 두번째
-        SurveyIdResponse lastId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(2), Region.서울)); // 세번째
-        SurveyIdResponse firstId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(1), Region.서울)); //가장 첫번째
+        Long secondId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(2), Region.서울)); // 두번째
+        Long lastId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(2), Region.서울)); // 세번째
+        Long firstId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(), LocalDate.now().plusDays(1), Region.서울)); //가장 첫번째
 
         // When
         List<SurveySummaryResponse> responseList = surveyQueryService.findSurveyList(Region.서울, SortType.CLOSING, null, null, 10);
@@ -131,8 +130,9 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
         // Then
         assertNotNull(responseList);
         assertFalse(responseList.isEmpty());
-        assertEquals(firstId.surveyId(), responseList.get(0).surveyId());
-        assertEquals(secondId.surveyId(), responseList.get(1).surveyId());
-        assertEquals(lastId.surveyId(), responseList.get(2).surveyId());
+        assertEquals(firstId, responseList.get(0).surveyId());
+        assertEquals(secondId, responseList.get(1).surveyId());
+        assertEquals(lastId, responseList.get(2).surveyId());
     }
+
 }
