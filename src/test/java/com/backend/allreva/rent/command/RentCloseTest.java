@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rent.command.application.RentReadService;
-import com.backend.allreva.rent.command.application.RentWriteService;
 import com.backend.allreva.rent.command.application.dto.RentIdRequest;
 import com.backend.allreva.rent.command.domain.Rent;
+import com.backend.allreva.rent.command.domain.RentRepository;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,17 +31,15 @@ class RentCloseTest {
     @InjectMocks
     private RentCommandService rentCommandService;
     @Mock
-    private RentReadService rentReadService;
-    @Mock
-    private RentWriteService rentWriteService;
+    private RentRepository rentRepository;
 
     @Test
     void 차량_대절_폼_마감을_성공한다() {
         // given
         var user = createMockUser(1L);
         var rentFormIdRequest = new RentIdRequest(1L);
-        given(rentReadService.getRentById(anyLong())).willReturn(createRentFixture(1L, 1L));
-        given(rentWriteService.saveRent(any(Rent.class))).willAnswer(invocation -> invocation.getArgument(0));
+        given(rentRepository.findById(anyLong())).willReturn(Optional.of(createRentFixture(1L, 1L)));
+        given(rentRepository.save(any(Rent.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
         rentCommandService.closeRent(rentFormIdRequest, user);
@@ -62,7 +60,7 @@ class RentCloseTest {
 
     private Rent getArgumentCaptorValue() {
         var rentFormCaptor = ArgumentCaptor.forClass(Rent.class);
-        verify(rentWriteService).saveRent(rentFormCaptor.capture());
+        verify(rentRepository).save(rentFormCaptor.capture());
         return rentFormCaptor.getValue();
     }
 }

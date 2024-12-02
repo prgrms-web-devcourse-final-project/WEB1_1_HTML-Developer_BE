@@ -5,6 +5,8 @@ import com.backend.allreva.rent.command.application.dto.RentIdRequest;
 import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
 import com.backend.allreva.rent.command.domain.Rent;
+import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.exception.RentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RentCommandService {
 
-    private final RentReadService rentReadService;
-    private final RentWriteService rentWriteService;
+    private final RentRepository rentRepository;
 
     public Long registerRent(
             final RentRegisterRequest rentRegisterRequest,
             final Member member
     ) {
         Rent rent = rentRegisterRequest.toEntity(member.getId());
-        Rent savedRent = rentWriteService.saveRent(rent);
+        Rent savedRent = rentRepository.save(rent);
         return savedRent.getId();
     }
 
@@ -30,27 +31,29 @@ public class RentCommandService {
             final RentUpdateRequest rentUpdateRequest,
             final Member member
     ) {
-        Rent rent = rentReadService.getRentById(rentUpdateRequest.rentId());
+        Rent rent = rentRepository.findById(rentUpdateRequest.rentId())
+                .orElseThrow(RentNotFoundException::new);
 
         rent.validateMine(member.getId());
 
         rent.updateRent(rentUpdateRequest);
-        rentWriteService.updateRentBoardingDates(
+        rentRepository.updateRentBoardingDates(
                 rentUpdateRequest.rentId(),
                 rentUpdateRequest.toRentBoardingDates()
         );
-        rentWriteService.saveRent(rent);
+        rentRepository.save(rent);
     }
 
     public void closeRent(
-            final RentIdRequest rentId,
+            final RentIdRequest rentIdRequest,
             final Member member
     ) {
-        Rent rent = rentReadService.getRentById(rentId.rentFormId());
+        Rent rent = rentRepository.findById(rentIdRequest.rentId())
+                .orElseThrow(RentNotFoundException::new);
 
         rent.validateMine(member.getId());
         rent.close();
 
-        rentWriteService.saveRent(rent);
+        rentRepository.save(rent);
     }
 }

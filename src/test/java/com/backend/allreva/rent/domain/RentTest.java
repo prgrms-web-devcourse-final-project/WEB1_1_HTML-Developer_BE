@@ -14,21 +14,21 @@ class RentTest {
     void 차량_대절_폼_작성자가_아니면_예외를_발생시킨다() {
         // given
         var writerId = 1L;
-        var rentForm = createRentFixture(2L, 1L);
+        var rent = createRentFixture(2L, 1L);
 
         // when & then
-        assertThrows(RentAccessDeniedException.class, () -> rentForm.validateMine(writerId));
+        assertThrows(RentAccessDeniedException.class, () -> rent.validateMine(writerId));
     }
 
     @Test
     void 차량_대절_폼을_마감한다() {
         // given
-        var rentForm = createRentFixture(1L, 1L);
+        var rent = createRentFixture(1L, 1L);
 
         // when
-        rentForm.close();
+        rent.close();
 
         // then
-        assertThat(rentForm.isClosed()).isTrue();
+        assertThat(rent.isClosed()).isTrue();
     }
 }

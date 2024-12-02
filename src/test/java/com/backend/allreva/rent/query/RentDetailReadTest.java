@@ -8,7 +8,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
-import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.infra.RentJpaRepository;
 import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.support.IntegrationTestSupport;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ class RentDetailReadTest extends IntegrationTestSupport {
     @Autowired
     private RentQueryService rentQueryService;
     @Autowired
-    private RentRepository rentRepository;
+    private RentJpaRepository rentJpaRepository;
     @Autowired
     private ConcertRepository concertRepository;
     @Autowired
@@ -33,7 +33,7 @@ class RentDetailReadTest extends IntegrationTestSupport {
         // given
         var concertHall = concertHallRepository.save(createConcertHallFixture());
         var concert = concertRepository.save(createConcertFixture(concertHall.getId()));
-        var rent = rentRepository.save(createRentFixture(1L, concert.getId()));
+        var rent = rentJpaRepository.save(createRentFixture(1L, concert.getId()));
 
         // when
         var rentDetail = rentQueryService.getRentDetailById(rent.getId());
@@ -53,7 +53,7 @@ class RentDetailReadTest extends IntegrationTestSupport {
         // given
         var concertHall = concertHallRepository.save(createConcertHallFixture());
         var concert = concertRepository.save(createConcertFixture(concertHall.getId()));
-        var rent = rentRepository.save(createRentFixture(1L, concert.getId()));
+        var rent = rentJpaRepository.save(createRentFixture(1L, concert.getId()));
 
         // when
         var depositAccount = rentQueryService.getDepositAccountById(rent.getId());

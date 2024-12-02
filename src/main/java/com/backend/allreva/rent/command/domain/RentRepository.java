@@ -1,7 +1,17 @@
 package com.backend.allreva.rent.command.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
 
-public interface RentRepository extends JpaRepository<Rent, Long> {
+public interface RentRepository {
 
+    Optional<Rent> findById(Long id);
+
+    boolean existsById(Long id);
+
+    Rent save(Rent rent);
+
+    List<RentBoardingDate> updateRentBoardingDates(Long rentId, List<RentBoardingDate> rentBoardingDates);
+
+    void delete(final Rent rent);
 }

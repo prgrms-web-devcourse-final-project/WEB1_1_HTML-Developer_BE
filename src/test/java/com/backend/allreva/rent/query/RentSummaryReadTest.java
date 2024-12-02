@@ -2,7 +2,7 @@ package com.backend.allreva.rent.query;
 
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
-import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.infra.RentJpaRepository;
 import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.support.IntegrationTestSupport;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class RentSummaryReadTest extends IntegrationTestSupport {
     @Autowired
     private RentQueryService rentQueryService;
     @Autowired
-    private RentRepository rentRepository;
+    private RentJpaRepository rentJpaRepository;
     @Autowired
     private ConcertRepository concertRepository;
     @Autowired

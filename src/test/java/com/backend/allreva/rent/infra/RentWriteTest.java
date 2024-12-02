@@ -5,7 +5,6 @@ import static com.backend.allreva.rent.fixture.RentFixture.createRentFixture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.backend.allreva.rent.command.application.RentWriteService;
 import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
@@ -18,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 class RentWriteTest extends IntegrationTestSupport {
 
     @Autowired
-    private RentWriteService rentWriteService;
-    @Autowired
     private RentRepository rentRepository;
 
     @Test
@@ -28,8 +25,7 @@ class RentWriteTest extends IntegrationTestSupport {
         var rent = createRentFixture(1L, 1L);
 
         // when
-        var savedRent = rentWriteService.saveRent(rent);
-        rentRepository.flush();
+        var savedRent = rentRepository.save(rent);
 
         // then
         var expectRent = rentRepository.findById(savedRent.getId()).orElse(null);
@@ -47,11 +43,9 @@ class RentWriteTest extends IntegrationTestSupport {
         // given
         var rent = createRentFixture(1L, 1L);
         Rent savedRent = rentRepository.save(rent);
-        rentRepository.flush();
 
         // when
-        rentWriteService.deleteRent(rent);
-        rentRepository.flush();
+        rentRepository.delete(rent);
 
         // then
         var deletedRent = rentRepository.findById(savedRent.getId()).orElse(null);
@@ -66,7 +60,7 @@ class RentWriteTest extends IntegrationTestSupport {
         var boardingDates = createRentBoardingDateFixture(savedRent);
 
         // when
-        rentWriteService.updateRentBoardingDates(savedRent.getId(), boardingDates);
+        rentRepository.updateRentBoardingDates(savedRent.getId(), boardingDates);
 
         // then
         var updatedRent = rentRepository.findById(savedRent.getId()).orElse(null);
