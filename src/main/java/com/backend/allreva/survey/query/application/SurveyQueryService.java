@@ -17,10 +17,16 @@ import java.util.List;
 public class SurveyQueryService {
     private final SurveyQueryRepository surveyQueryRepository;
 
+    /**
+     * 수요조사 상세 조회
+     */
     public SurveyDetailResponse findSurveyDetail(final Long surveyId) {
         return surveyQueryRepository.findSurveyDetail(surveyId);
     }
 
+    /**
+     * 수요조사 목록 조회
+     */
     public List<SurveySummaryResponse> findSurveyList(final Region region,
                                                       final SortType sortType,
                                                       final Long lastId,

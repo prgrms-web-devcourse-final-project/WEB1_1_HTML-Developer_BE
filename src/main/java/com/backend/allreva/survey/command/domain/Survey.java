@@ -55,7 +55,7 @@ public class Survey extends BaseEntity {
 
 
     @Builder
-    public Survey(final Long memberId,
+    private Survey(final Long memberId,
                   final Long concertId,
                   final String title,
                   final String artistName,
@@ -88,5 +88,10 @@ public class Survey extends BaseEntity {
 
     public boolean isWriter(final Long loginMemberId) {
         return this.memberId.equals(loginMemberId);
+    }
+
+    public boolean containsBoardingDate(final LocalDate boardingDate) {
+        return this.boardingDates.stream()
+                .anyMatch(bd -> bd.getDate().equals(boardingDate));
     }
 }

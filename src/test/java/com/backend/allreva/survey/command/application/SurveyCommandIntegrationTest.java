@@ -15,6 +15,7 @@ import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
 import com.backend.allreva.survey.command.domain.SurveyJoin;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
 import com.backend.allreva.survey.exception.SurveyNotWriterException;
 import org.junit.jupiter.api.AfterEach;
@@ -195,6 +196,22 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
         assertNotNull(savedSurveyJoin);
         assertEquals(surveyId, savedSurveyJoin.getSurveyId());
         assertEquals(LocalDate.of(2030, 12, 1), savedSurveyJoin.getBoardingDate());
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 날짜를 선택해 수요조사 응답에 실패한다.")
+    public void failCreateSurveyResponse() {
+        // Given
+        OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+
+        JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(surveyId,
+                LocalDate.of(2030, 12, 3), BoardingType.DOWN, 2, true
+        );
+        // When
+        assertThrows(SurveyInvalidBoardingDateException.class, () -> {
+            surveyCommandService.createSurveyResponse(testMember.getId(), joinSurveyRequest);
+        });
     }
 
 }

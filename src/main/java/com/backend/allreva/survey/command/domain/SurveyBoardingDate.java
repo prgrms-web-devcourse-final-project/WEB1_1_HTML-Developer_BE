@@ -28,7 +28,7 @@ public class SurveyBoardingDate extends BaseEntity {
     private LocalDate date;
 
     @Builder
-    public SurveyBoardingDate(Survey survey, LocalDate date) {
+    private SurveyBoardingDate(Survey survey, LocalDate date) {
         this.survey = survey;
         this.date = date;
     }
