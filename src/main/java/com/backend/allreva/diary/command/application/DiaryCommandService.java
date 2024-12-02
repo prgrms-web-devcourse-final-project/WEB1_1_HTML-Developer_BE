@@ -63,10 +63,4 @@ public class DiaryCommandService {
 
         diaryRepository.deleteById(diaryId);
     }
-
-    public void addImagesById(Long diaryId, List<Image> images) {
-        ConcertDiary diary = diaryRepository.findById(diaryId)
-                .orElseThrow();
-        diary.addImages(images);
-    }
 }
