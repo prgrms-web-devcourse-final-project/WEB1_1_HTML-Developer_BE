@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record UpdateSurveyRequest(
+        Long surveyId,
         String title,
         @NotEmpty(message = "날짜는 하루 이상 선택되어야 합니다.")
         List<LocalDate> boardingDates,

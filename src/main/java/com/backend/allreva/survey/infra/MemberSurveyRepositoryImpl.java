@@ -1,10 +1,10 @@
-package com.backend.allreva.member.infra;
+package com.backend.allreva.survey.infra;
 
-import com.backend.allreva.member.query.application.MemberSurveyRepository;
-import com.backend.allreva.member.query.application.dto.CreatedSurveyResponse;
-import com.backend.allreva.member.query.application.dto.JoinSurveyResponse;
-import com.backend.allreva.member.query.application.dto.SurveyResponse;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
+import com.backend.allreva.survey.query.application.MemberSurveyRepository;
+import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
+import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;
+import com.backend.allreva.survey.query.application.dto.SurveyResponse;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
@@ -37,9 +37,10 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
         return jpaQueryFactory
                 .select(CreatedSurveyProjections())
                 .from(survey)
-                .join(surveyBoardingDate).on(survey.id.eq(surveyBoardingDate.survey.id))
+                .join(surveyBoardingDate)
+                    .on(survey.id.eq(surveyBoardingDate.survey.id))
                 .leftJoin(surveyJoin)
-                .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
+                    .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
                         .and(survey.id.eq(surveyJoin.surveyId)))
                 .where(survey.memberId.eq(memberId),
                         getPagingCondition(lastId))
@@ -92,9 +93,10 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
         return jpaQueryFactory
                 .select(JoinSurveyProjections())
                 .from(survey)
-                .join(surveyBoardingDate).on(survey.id.eq(surveyBoardingDate.survey.id))
+                .join(surveyBoardingDate)
+                    .on(survey.id.eq(surveyBoardingDate.survey.id))
                 .join(surveyJoin)
-                .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
+                    .on(surveyBoardingDate.date.eq(surveyJoin.boardingDate)
                         .and(survey.id.eq(surveyJoin.surveyId)))
                 .where(surveyJoin.memberId.eq(memberId),
                         getPagingCondition(lastId))

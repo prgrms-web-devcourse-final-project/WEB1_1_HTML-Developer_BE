@@ -7,13 +7,13 @@ import com.backend.allreva.support.WithCustomMockUser;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
 import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.query.application.MemberSurveyQueryService;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
-import com.backend.allreva.survey.query.application.dto.SortType;
-import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
-import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
+import com.backend.allreva.survey.query.application.dto.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +24,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +45,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         )
 )
 @AutoConfigureMockMvc(addFilters = false)
-class SurveyControllerTest extends ApiTestSupport {
+class SurveyUITest extends ApiTestSupport {
 
     @MockBean
     private SurveyCommandService surveyCommandService;
     @MockBean
     private SurveyQueryService surveyQueryService;
+    @MockBean
+    private MemberSurveyQueryService memberSurveyQueryService;
 
     private static final String BASE_URI = "/api/v1/surveys";
 
@@ -59,9 +62,13 @@ class SurveyControllerTest extends ApiTestSupport {
     void openSurvey() throws Exception {
         // Given
         OpenSurveyRequest request = new OpenSurveyRequest("하현상 콘서트: Elegy [서울]",
-                1L, List.of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
-                "하현상", Region.서울, LocalDate.now(),
-                25, "이틀 모두 운영합니다.");
+                1L,
+                List.of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
+                "하현상",
+                Region.서울,
+                LocalDate.now(),
+                25,
+                "이틀 모두 운영합니다.");
 
         // Mocking
         doReturn(1L).when(surveyCommandService).openSurvey(any(), any());
@@ -82,18 +89,20 @@ class SurveyControllerTest extends ApiTestSupport {
     void updateSurvey() throws Exception {
         // Given
         Long surveyId = 1L;
-        UpdateSurveyRequest request = new UpdateSurveyRequest("하현상 콘서트: Elegy [서울]",
+        UpdateSurveyRequest request = new UpdateSurveyRequest(surveyId,
+                "하현상 콘서트: Elegy [서울]",
                 List.of(LocalDate.of(2030, 12, 1), LocalDate.of(2030, 12, 2)),
-                Region.서울, LocalDate.now(),
-                25, "이틀 모두 운영합니다.");
+                Region.서울,
+                LocalDate.now(),
+                25,
+                "이틀 모두 운영합니다.");
 
         // Mocking
-        doNothing().when(surveyCommandService).updateSurvey(any(), any(), any());
+        doNothing().when(surveyCommandService).updateSurvey(any(), any());
 
         // When & Then
         mockMvc.perform(patch(BASE_URI)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .param("surveyId", String.valueOf(surveyId))
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -105,7 +114,7 @@ class SurveyControllerTest extends ApiTestSupport {
     @DisplayName("수요조사 삭제에 성공한다.")
     void deleteSurvey() throws Exception {
         // Given
-        Long surveyId = 1L;
+        SurveyIdRequest request = new SurveyIdRequest(1L);
 
         // Mocking
         doNothing().when(surveyCommandService).removeSurvey(any(), any());
@@ -113,7 +122,7 @@ class SurveyControllerTest extends ApiTestSupport {
         // When & Then
         mockMvc.perform(delete(BASE_URI)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .param("surveyId", String.valueOf(surveyId)))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())
         ;
@@ -145,14 +154,17 @@ class SurveyControllerTest extends ApiTestSupport {
     void createSurveyJoin() throws Exception {
         // Given
         Long surveyId = 1L;
-        JoinSurveyRequest request = new JoinSurveyRequest(
-                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
+        JoinSurveyRequest request = new JoinSurveyRequest(surveyId,
+                LocalDate.of(2030, 12, 1),
+                BoardingType.DOWN,
+                2,
+                true
         );
         // Mocking
-        doReturn(1L).when(surveyCommandService).createSurveyResponse(any(), any(), any());
+        doReturn(1L).when(surveyCommandService).createSurveyResponse(any(), any());
 
         // When & Then
-        mockMvc.perform(post(BASE_URI + "/{id}/response", surveyId)
+        mockMvc.perform(post(BASE_URI + "/apply")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -167,9 +179,15 @@ class SurveyControllerTest extends ApiTestSupport {
     void findSurveyList() throws Exception {
         // Given
         List<SurveySummaryResponse> responseList = new ArrayList<>();
-        SurveySummaryResponse response = new SurveySummaryResponse(1L, "title", Region.경기, 20, 25, LocalDate.now());
+        SurveySummaryResponse response = new SurveySummaryResponse(1L,
+                "title",
+                Region.경기,
+                20,
+                25,
+                LocalDate.now());
         responseList.add(response);
 
+        //param
         Region region = Region.서울;
         SortType sortType = SortType.LATEST;
         Long lastId = 1L;
@@ -190,6 +208,81 @@ class SurveyControllerTest extends ApiTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result[0].surveyId").value(1L))
+        ;
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("내가 개설한 수요조사 목록 조회에 성공한다.")
+    public void getCreatedSurveyList() throws Exception {
+        // Given
+        List<CreatedSurveyResponse> responseList = new ArrayList<>();
+        SurveyResponse surveyResponse = new SurveyResponse(1L,
+                "하현상 콘서트 토요일 차대절 모집합니다.",
+                LocalDate.of(2024, 11, 30),
+                Region.서울,
+                LocalDateTime.now(),
+                LocalDate.of(2024, 11, 25),
+                12,
+                30
+        );
+
+        CreatedSurveyResponse response = new CreatedSurveyResponse(surveyResponse,
+                2,
+                2,
+                2);
+        responseList.add(response);
+
+        int pageSize = 10;
+
+        // Mocking
+        doReturn(responseList).when(memberSurveyQueryService).getCreatedSurveyList(any(), any(), anyInt());
+
+        // When & Then
+        mockMvc.perform(get(BASE_URI + "/member/list")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result[0].surveyResponse.surveyId").value(1L))
+        ;
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("내가 참여한 수요조사 목록 조회에 성공한다.")
+    public void getJoinSurveyList() throws Exception {
+        // Given
+        List<JoinSurveyResponse> responseList = new ArrayList<>();
+        SurveyResponse surveyResponse = new SurveyResponse(1L,
+                "하현상 콘서트 토요일 차대절 모집합니다.",
+                LocalDate.of(2024, 11, 30),
+                Region.서울,
+                LocalDateTime.now(),
+                LocalDate.of(2024, 11, 25),
+                12,
+                30
+        );
+
+        JoinSurveyResponse response = new JoinSurveyResponse(surveyResponse,
+                1L,
+                LocalDateTime.now(),
+                BoardingType.ROUND,
+                3);
+        responseList.add(response);
+
+        int pageSize = 10;
+
+        // Mocking
+        doReturn(responseList).when(memberSurveyQueryService).getJoinSurveyList(any(), any(), anyInt());
+
+        // When & Then
+        mockMvc.perform(get(BASE_URI + "/member/apply/list")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result[0].surveyJoinId").value(1L))
         ;
     }
 }

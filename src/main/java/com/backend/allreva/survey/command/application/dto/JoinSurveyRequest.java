@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 
 public record JoinSurveyRequest(
+        Long surveyId,
         LocalDate boardingDate,
         BoardingType boardingType,
         @Min(value = 1, message = "탑승 인원 수는 1명 이상이어야 합니다.")

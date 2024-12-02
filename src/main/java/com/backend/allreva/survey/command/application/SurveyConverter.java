@@ -23,11 +23,10 @@ public class SurveyConverter {
     }
 
     public SurveyJoin toSurveyJoin(final Long memberId,
-                                   final Long surveyId,
                                    final JoinSurveyRequest request) {
         return SurveyJoin.builder()
                 .memberId(memberId)
-                .surveyId(surveyId)
+                .surveyId(request.surveyId())
                 .boardingDate(request.boardingDate())
                 .boardingType(request.boardingType())
                 .passengerNum(request.passengerNum())

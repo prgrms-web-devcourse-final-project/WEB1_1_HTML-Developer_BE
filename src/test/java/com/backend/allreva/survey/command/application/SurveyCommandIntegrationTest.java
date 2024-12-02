@@ -8,6 +8,7 @@ import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
 import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
@@ -29,7 +30,7 @@ import static java.util.List.of;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SurveyCommandServiceTest extends IntegrationTestSupport {
+class SurveyCommandIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
@@ -111,7 +112,7 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         surveyCommandRepository.flush();
 
         // When
-        surveyCommandService.removeSurvey(testMember.getId(), surveyId);
+        surveyCommandService.removeSurvey(testMember.getId(), new SurveyIdRequest(surveyId));
         Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
         List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
 
@@ -126,7 +127,11 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
+        surveyCommandRepository.flush();
+
         UpdateSurveyRequest updateSurveyRequest = new UpdateSurveyRequest(
+                surveyId,
                 "하현상 콘서트: Elegy [서울] 일요일 차대절 모집합니다.",
                 List.of(LocalDate.of(2030, 12, 2)),
                 Region.서울,
@@ -135,11 +140,8 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
                 "일요일만 운영합니다."
         );
 
-        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
-        surveyCommandRepository.flush();
-
         // When
-        surveyCommandService.updateSurvey(testMember.getId(), surveyId, updateSurveyRequest);
+        surveyCommandService.updateSurvey(testMember.getId(), updateSurveyRequest);
         Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
         List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
         // Then
@@ -156,7 +158,7 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
     public void failRemoveSurveyWithNotFoundException() {
 
         assertThrows(SurveyNotFoundException.class, () -> {
-            surveyCommandService.removeSurvey(testMember.getId(), 99999999L);
+            surveyCommandService.removeSurvey(testMember.getId(), new SurveyIdRequest(99999999L));
         });
     }
 
@@ -171,7 +173,7 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
 
         // When & Then
         assertThrows(SurveyNotWriterException.class, () -> {
-            surveyCommandService.removeSurvey(999999999L, surveyId);
+            surveyCommandService.removeSurvey(999999999L, new SurveyIdRequest(surveyId));
         });
     }
 
@@ -180,15 +182,13 @@ class SurveyCommandServiceTest extends IntegrationTestSupport {
     public void createSurveyResponse() {
         // Given
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
-
-        JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(
-                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
-        );
-
         Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
 
+        JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(surveyId,
+                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
+        );
         // When
-        Long surveyJoinId = surveyCommandService.createSurveyResponse(testMember.getId(), surveyId, joinSurveyRequest);
+        Long surveyJoinId = surveyCommandService.createSurveyResponse(testMember.getId(), joinSurveyRequest);
         SurveyJoin savedSurveyJoin = surveyJoinCommandRepository.findById(surveyJoinId).orElse(null);
         // Then
         assertNotNull(surveyJoinId);

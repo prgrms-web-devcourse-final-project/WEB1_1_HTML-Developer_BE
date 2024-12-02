@@ -4,6 +4,7 @@ import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
 import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDate;
@@ -38,9 +39,8 @@ public class SurveyCommandService {
     }
 
     public void updateSurvey(final Long memberId,
-                             final Long surveyId,
                              final UpdateSurveyRequest request) {
-        Survey survey = findSurvey(surveyId);
+        Survey survey = findSurvey(request.surveyId());
         if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
         }
@@ -55,8 +55,8 @@ public class SurveyCommandService {
         updateBoardingDates(survey, request.boardingDates());
     }
 
-    public void removeSurvey(final Long memberId, final Long surveyId) {
-        Survey survey = findSurvey(surveyId);
+    public void removeSurvey(final Long memberId, final SurveyIdRequest surveyIdRequest) {
+        Survey survey = findSurvey(surveyIdRequest.surveyId());
 
         if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
@@ -67,12 +67,11 @@ public class SurveyCommandService {
     }
 
     public Long createSurveyResponse(final Long memberId,
-                                     final Long surveyId,
                                      final JoinSurveyRequest request) {
-        checkSurvey(surveyId);
+        checkSurvey(request.surveyId());
 
         SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
-                surveyConverter.toSurveyJoin(memberId, surveyId, request));
+                surveyConverter.toSurveyJoin(memberId, request));
         return surveyJoin.getId();
     }
 

@@ -1,4 +1,4 @@
-package com.backend.allreva.member.query.application.dto;
+package com.backend.allreva.survey.query.application.dto;
 
 import com.backend.allreva.survey.command.domain.value.Region;
 import lombok.Getter;

@@ -27,7 +27,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class SurveyQueryServiceTest extends IntegrationTestSupport {
+public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;

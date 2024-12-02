@@ -1,7 +1,7 @@
-package com.backend.allreva.member.query.application;
+package com.backend.allreva.survey.query.application;
 
-import com.backend.allreva.member.query.application.dto.CreatedSurveyResponse;
-import com.backend.allreva.member.query.application.dto.JoinSurveyResponse;
+import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
+import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
