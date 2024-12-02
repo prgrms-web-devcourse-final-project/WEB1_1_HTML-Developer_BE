@@ -3,7 +3,6 @@ package com.backend.allreva.common.application;
 import com.backend.allreva.common.exception.CustomException;
 import com.backend.allreva.common.exception.code.GlobalErrorCode;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.member.command.application.ImageService;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
@@ -15,42 +14,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class S3ImageService implements ImageService {
+public class S3ImageRepository implements ImageRepository{
 
     @Value("${spring.cloud.aws.s3.bucket:null}")
     private String bucketName;
     private final S3Operations s3Operations;
 
-    public List<Image> upload(List<MultipartFile> imageFiles) {
-        if (imageFiles == null || imageFiles.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<Image> images = new ArrayList<>();
-
-        for (MultipartFile file : imageFiles) {
-            Image uploadedImage = upload(file);
-            images.add(uploadedImage);
-        }
-        return images;
-    }
-
-    public Image upload(MultipartFile imageFile) {
-        ObjectMetadata objectMetadata = new ObjectMetadata.Builder()
-                .contentType(imageFile.getContentType())
-                .build();
-        String storeKey = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-        return uploadOnS3(imageFile, storeKey, objectMetadata);
-    }
-
-    private Image uploadOnS3(
+    @Override
+    public Image uploadOnS3(
             MultipartFile imageFile,
             String storeKey,
             ObjectMetadata metadata
