@@ -44,19 +44,29 @@ class ConcertQueryTest extends IntegrationTestSupport {
                 .name("hallName")
                 .seatScale(2000)
                 .convenienceInfo(
-                        new ConvenienceInfo(
-                                true, true, true,
-                                true, true, true,
-                                true, true
-                        ))
-                .location(new Location(0.0, 1.2, "address"))
+                        ConvenienceInfo.builder()
+                                .hasCafe(true)
+                                .hasParkingLot(true)
+                                .hasRestaurant(true)
+                                .hasStore(true)
+                                .hasDisabledParking(true)
+                                .hasDisabledToilet(true)
+                                .hasElevator(true)
+                                .hasRunway(true)
+                                .build()
+                )
+                .location(Location.builder()
+                        .latitude(0.0)
+                        .longitude(1.2)
+                        .address("address")
+                        .build())
                 .build();
         concertHallRepository.save(savedConcertHall);
 
         // Concert 저장
         var dateInfo = DateInfo.builder()
-                .stdate(LocalDate.now())
-                .eddate(LocalDate.now().plusDays(1))
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(1))
                 .timeTable("timeTable")
                 .build();
 
@@ -64,27 +74,30 @@ class ConcertQueryTest extends IntegrationTestSupport {
                 .title("title")
                 .price("price")
                 .host("host")
-                .prfstate(ConcertStatus.IN_PROGRESS)
+                .performStatus(ConcertStatus.IN_PROGRESS)
                 .dateInfo(dateInfo)
                 .build();
 
         var sellers = Set.of(
                 Seller.builder()
-                        .relateName("relateName")
-                        .relateUrl("relateUrl")
+                        .name("relateName")
+                        .salesUrl("relateUrl")
                         .build(),
                 Seller.builder()
-                        .relateName("relateName22")
-                        .relateUrl("relateUrl22")
+                        .name("relateName22")
+                        .salesUrl("relateUrl22")
                         .build(),
                 Seller.builder()
-                        .relateName("relateName33")
-                        .relateUrl("relateUrl33")
+                        .name("relateName33")
+                        .salesUrl("relateUrl33")
                         .build()
         );
 
         savedConcert = Concert.builder()
-                .code(new Code("concertCode", "hallCode"))
+                .code(Code.builder()
+                        .concertCode("concertCode")
+                        .hallCode("hallCode")
+                        .build())
                 .concertInfo(concertInfo)
                 .sellers(sellers)
                 .poster(new Image("posterUrl"))
@@ -113,11 +126,11 @@ class ConcertQueryTest extends IntegrationTestSupport {
 
         // Then
         Assertions.assertThat(response)
-                .extracting(ConcertDetailResponse::getHallCode)
+                .extracting(ConcertDetailResponse::hallCode)
                 .isEqualTo(savedConcertHall.getId()); // 공연장 id = hallCode
 
-        Assertions.assertThat(response.getSellers())
-                .extracting("relateName")
+        Assertions.assertThat(response.sellers())
+                .extracting("name")
                 .contains("relateName22")
                 .contains("relateName"); // 공연장 id = hallCode
     }

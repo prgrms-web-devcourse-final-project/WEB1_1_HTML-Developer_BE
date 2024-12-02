@@ -6,7 +6,6 @@ import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
-import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -61,7 +60,10 @@ public class Concert extends BaseEntity {
     private Set<Seller> sellers;
 
 
-    public void updateFrom(String hallCode, KopisConcertResponse.Db db) {
+    public void updateFrom(
+            final String hallCode,
+            final KopisConcertResponse.Db db
+    ) {
         this.concertInfo = KopisConcertResponse.toConcertInfo(db);
         this.detailImages = KopisConcertResponse.toDetailImages(db.getStyurls().getStyurl());
         this.sellers = KopisConcertResponse.toSellers(db.getRelates().getRelate());
@@ -75,7 +77,7 @@ public class Concert extends BaseEntity {
 
 
     @Builder
-    public Concert(
+    private Concert(
             final Code code,
             final ConcertInfo concertInfo,
             final Set<String> episodes,

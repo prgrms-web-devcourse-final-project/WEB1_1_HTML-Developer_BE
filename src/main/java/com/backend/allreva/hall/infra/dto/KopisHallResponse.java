@@ -102,14 +102,14 @@ public class KopisHallResponse {
     private static ConvenienceInfo toConvenienceInfo(final KopisHallResponse response) {
         Db db = response.getDb();
         return ConvenienceInfo.builder()
-                .store(toBoolean(db.store))
-                .cafe(toBoolean(db.cafe))
-                .parking(toBoolean(db.parkinglot))
-                .restaurant(toBoolean(db.restaurant))
-                .parkBarrier(toBoolean(db.parkbarrier))
-                .elevBarrier(toBoolean(db.elevbarrier))
-                .restBarrier(toBoolean(db.restbarrier))
-                .runwBarrier(toBoolean(db.runwbarrier))
+                .hasStore(toBoolean(db.store))
+                .hasCafe(toBoolean(db.cafe))
+                .hasParkingLot(toBoolean(db.parkinglot))
+                .hasRestaurant(toBoolean(db.restaurant))
+                .hasDisabledParking(toBoolean(db.parkbarrier))
+                .hasElevator(toBoolean(db.elevbarrier))
+                .hasDisabledToilet(toBoolean(db.restbarrier))
+                .hasRunway(toBoolean(db.runwbarrier))
                 .build();
     }
 

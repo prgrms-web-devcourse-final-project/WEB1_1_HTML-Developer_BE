@@ -54,7 +54,7 @@ public class ConcertDiary extends BaseEntity {
 
 
     @Builder
-    public ConcertDiary(
+    private ConcertDiary(
             final Long memberId,
             final Long concertId,
             final LocalDate diaryDate,
@@ -91,7 +91,7 @@ public class ConcertDiary extends BaseEntity {
             final String episode,
             final String content,
             final String seatName,
-            final List<Image> images
+            final List<Image> diaryImages
     ) {
         this.memberId = memberId;
         this.concertId = concertId;
@@ -99,6 +99,6 @@ public class ConcertDiary extends BaseEntity {
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
-        addImages(images);
+        addImages(diaryImages);
     }
 }
