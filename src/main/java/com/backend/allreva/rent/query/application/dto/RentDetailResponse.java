@@ -7,7 +7,7 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import java.time.LocalDate;
 import java.util.List;
 
-public record RentFormDetailResponse(
+public record RentDetailResponse(
         String concertName, // x -> 대신 concert랑 조인해서 concert name
         String imageUrl,
         String title,

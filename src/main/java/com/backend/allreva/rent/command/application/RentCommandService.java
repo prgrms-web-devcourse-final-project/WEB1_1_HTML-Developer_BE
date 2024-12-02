@@ -1,10 +1,10 @@
 package com.backend.allreva.rent.command.application;
 
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
-import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
-import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
-import com.backend.allreva.rent.command.domain.RentForm;
+import com.backend.allreva.rent.command.application.dto.RentIdRequest;
+import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
+import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
+import com.backend.allreva.rent.command.domain.Rent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,43 +14,43 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RentCommandService {
 
-    private final RentFormReadService rentFormReadService;
-    private final RentFormWriteService rentFormWriteService;
+    private final RentReadService rentReadService;
+    private final RentWriteService rentWriteService;
 
-    public Long registerRentForm(
-            final RentFormRegisterRequest rentFormRegisterRequest,
+    public Long registerRent(
+            final RentRegisterRequest rentRegisterRequest,
             final Member member
     ) {
-        RentForm rentForm = rentFormRegisterRequest.toEntity(member.getId());
-        RentForm savedRentForm = rentFormWriteService.saveRentForm(rentForm);
-        return savedRentForm.getId();
+        Rent rent = rentRegisterRequest.toEntity(member.getId());
+        Rent savedRent = rentWriteService.saveRent(rent);
+        return savedRent.getId();
     }
 
-    public void updateRentForm(
-            final RentFormUpdateRequest rentFormUpdateRequest,
+    public void updateRent(
+            final RentUpdateRequest rentUpdateRequest,
             final Member member
     ) {
-        RentForm rentForm = rentFormReadService.getRentFormById(rentFormUpdateRequest.rentFormId());
+        Rent rent = rentReadService.getRentById(rentUpdateRequest.rentId());
 
-        rentForm.validateMine(member.getId());
+        rent.validateMine(member.getId());
 
-        rentForm.updateRentForm(rentFormUpdateRequest);
-        rentFormWriteService.updateRentFormBoardingDates(
-                rentFormUpdateRequest.rentFormId(),
-                rentFormUpdateRequest.toRentFormBoardingDates()
+        rent.updateRent(rentUpdateRequest);
+        rentWriteService.updateRentBoardingDates(
+                rentUpdateRequest.rentId(),
+                rentUpdateRequest.toRentBoardingDates()
         );
-        rentFormWriteService.saveRentForm(rentForm);
+        rentWriteService.saveRent(rent);
     }
 
-    public void closeRentForm(
-            final RentFormIdRequest rentFormId,
+    public void closeRent(
+            final RentIdRequest rentId,
             final Member member
     ) {
-        RentForm rentForm = rentFormReadService.getRentFormById(rentFormId.rentFormId());
+        Rent rent = rentReadService.getRentById(rentId.rentFormId());
 
-        rentForm.validateMine(member.getId());
-        rentForm.close();
+        rent.validateMine(member.getId());
+        rent.close();
 
-        rentFormWriteService.saveRentForm(rentForm);
+        rentWriteService.saveRent(rent);
     }
 }

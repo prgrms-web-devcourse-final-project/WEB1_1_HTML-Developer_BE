@@ -1,6 +1,6 @@
 package com.backend.allreva.rent.command;
 
-import static com.backend.allreva.rent.fixture.RentFormFixture.createRentFormFixture;
+import static com.backend.allreva.rent.fixture.RentFixture.createRentFixture;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rent.command.application.RentFormReadService;
-import com.backend.allreva.rent.command.application.RentFormWriteService;
-import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
-import com.backend.allreva.rent.command.domain.RentForm;
+import com.backend.allreva.rent.command.application.RentReadService;
+import com.backend.allreva.rent.command.application.RentWriteService;
+import com.backend.allreva.rent.command.application.dto.RentIdRequest;
+import com.backend.allreva.rent.command.domain.Rent;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,25 +26,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
-class RentFormCloseTest {
+class RentCloseTest {
 
     @InjectMocks
     private RentCommandService rentCommandService;
     @Mock
-    private RentFormReadService rentFormReadService;
+    private RentReadService rentReadService;
     @Mock
-    private RentFormWriteService rentFormWriteService;
+    private RentWriteService rentWriteService;
 
     @Test
     void 차량_대절_폼_마감을_성공한다() {
         // given
         var user = createMockUser(1L);
-        var rentFormIdRequest = new RentFormIdRequest(1L);
-        given(rentFormReadService.getRentFormById(anyLong())).willReturn(createRentFormFixture(1L, 1L));
-        given(rentFormWriteService.saveRentForm(any(RentForm.class))).willAnswer(invocation -> invocation.getArgument(0));
+        var rentFormIdRequest = new RentIdRequest(1L);
+        given(rentReadService.getRentById(anyLong())).willReturn(createRentFixture(1L, 1L));
+        given(rentWriteService.saveRent(any(Rent.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        rentCommandService.closeRentForm(rentFormIdRequest, user);
+        rentCommandService.closeRent(rentFormIdRequest, user);
 
         // then
         var capturedRentForm = getArgumentCaptorValue();
@@ -60,9 +60,9 @@ class RentFormCloseTest {
         return user;
     }
 
-    private RentForm getArgumentCaptorValue() {
-        var rentFormCaptor = ArgumentCaptor.forClass(RentForm.class);
-        verify(rentFormWriteService).saveRentForm(rentFormCaptor.capture());
+    private Rent getArgumentCaptorValue() {
+        var rentFormCaptor = ArgumentCaptor.forClass(Rent.class);
+        verify(rentWriteService).saveRent(rentFormCaptor.capture());
         return rentFormCaptor.getValue();
     }
 }

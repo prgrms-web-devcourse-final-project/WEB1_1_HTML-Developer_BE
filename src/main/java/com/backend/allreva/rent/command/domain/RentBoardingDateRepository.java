@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface RentFormBoardingDateRepository extends JpaRepository<RentFormBoardingDate, Long> {
+public interface RentBoardingDateRepository extends JpaRepository<RentBoardingDate, Long> {
     @Modifying
-    @Query("DELETE FROM RentFormBoardingDate rfbd WHERE rfbd.rentForm.id = :rentFormId")
-    void deleteAllByRentFormId(Long rentFormId);
+    @Query("DELETE FROM RentBoardingDate rfbd WHERE rfbd.rent.id = :rentId")
+    void deleteAllByRentId(Long rentId);
 }

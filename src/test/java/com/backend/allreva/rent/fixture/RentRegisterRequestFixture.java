@@ -1,6 +1,6 @@
 package com.backend.allreva.rent.fixture;
 
-import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
+import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
 import com.backend.allreva.rent.command.domain.value.RefundType;
@@ -11,10 +11,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class RentFormRegisterRequestFixture {
+public final class RentRegisterRequestFixture {
 
-    public static RentFormRegisterRequest createRentFormRegisterRequestFixture() {
-        return new RentFormRegisterRequest(
+    public static RentRegisterRequest createRentRegisterRequestFixture() {
+        return new RentRegisterRequest(
                 1L,
                 "imageUrl",
                 "title",

@@ -4,9 +4,9 @@ import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rent.command.application.dto.RentFormIdRequest;
-import com.backend.allreva.rent.command.application.dto.RentFormRegisterRequest;
-import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
+import com.backend.allreva.rent.command.application.dto.RentIdRequest;
+import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
+import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,35 +19,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/rents")
-public class RentFormControllerImpl implements RentFormController {
+public class RentControllerImpl implements RentController {
 
     private final RentCommandService rentCommandService;
 
     @PostMapping
-    public Response<Long> createRentForm(
-            @RequestBody final RentFormRegisterRequest rentFormRegisterRequest,
+    public Response<Long> createRent(
+            @RequestBody final RentRegisterRequest rentRegisterRequest,
             @AuthMember final Member member
     ) {
-        Long rentFormIdResponse = rentCommandService.registerRentForm(rentFormRegisterRequest, member);
+        Long rentIdResponse = rentCommandService.registerRent(rentRegisterRequest, member);
 
-        return Response.onSuccess(rentFormIdResponse);
+        return Response.onSuccess(rentIdResponse);
     }
 
     @PatchMapping
-    public Response<Void> updateRentForm(
-        @RequestBody final RentFormUpdateRequest rentFormUpdateRequest,
+    public Response<Void> updateRent(
+        @RequestBody final RentUpdateRequest rentUpdateRequest,
         @AuthMember final Member member
     ) {
-        rentCommandService.updateRentForm(rentFormUpdateRequest, member);
+        rentCommandService.updateRent(rentUpdateRequest, member);
         return Response.onSuccess();
     }
 
     @PatchMapping("/close")
-    public Response<Void> closeRentForm(
-            @RequestBody final RentFormIdRequest request,
+    public Response<Void> closeRent(
+            @RequestBody final RentIdRequest rentIdRequest,
             @AuthMember final Member member
     ) {
-        rentCommandService.closeRentForm(request, member);
+        rentCommandService.closeRent(rentIdRequest, member);
         return Response.onSuccess();
     }
 }

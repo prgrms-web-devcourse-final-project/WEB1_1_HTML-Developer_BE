@@ -1,8 +1,8 @@
 package com.backend.allreva.rent.fixture;
 
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.rent.command.domain.RentForm;
-import com.backend.allreva.rent.command.domain.RentFormBoardingDate;
+import com.backend.allreva.rent.command.domain.Rent;
+import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
 import com.backend.allreva.rent.command.domain.value.Bus;
 import com.backend.allreva.rent.command.domain.value.BusSize;
@@ -18,10 +18,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class RentFormFixture {
+public final class RentFixture {
 
-    public static RentForm createRentFormFixture(final Long memberId, final Long concertId) {
-        RentForm rentForm = RentForm.builder()
+    public static Rent createRentFixture(final Long memberId, final Long concertId) {
+        Rent rent = Rent.builder()
                 .memberId(memberId)
                 .concertId(concertId)
                 .detailInfo(DetailInfo.builder()
@@ -54,16 +54,16 @@ public final class RentFormFixture {
                         .endDate(LocalDate.of(2024, 9, 13))
                         .build())
                 .build();
-        rentForm.assignBoardingDates(List.of(RentFormBoardingDate.builder()
-                .rentForm(rentForm)
+        rent.assignBoardingDates(List.of(RentBoardingDate.builder()
+                .rent(rent)
                 .date(LocalDate.of(2024, 9, 20))
                 .build()));
-        return rentForm;
+        return rent;
     }
 
-    public static List<RentFormBoardingDate> createRentFormBoardingDateFixture(final RentForm rentForm) {
-        return List.of(RentFormBoardingDate.builder()
-                .rentForm(rentForm)
+    public static List<RentBoardingDate> createRentBoardingDateFixture(final Rent rent) {
+        return List.of(RentBoardingDate.builder()
+                .rent(rent)
                 .date(LocalDate.of(2024, 9, 20))
                 .build());
     }

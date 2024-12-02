@@ -2,19 +2,19 @@ package com.backend.allreva.rent.query;
 
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
-import com.backend.allreva.rent.command.domain.RentFormRepository;
-import com.backend.allreva.rent.query.application.RentFormQueryService;
+import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.support.IntegrationTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("NonAsciiCharacters")
-class RentFormSummaryReadTest extends IntegrationTestSupport {
+class RentSummaryReadTest extends IntegrationTestSupport {
 
     @Autowired
-    private RentFormQueryService rentFormQueryService;
+    private RentQueryService rentQueryService;
     @Autowired
-    private RentFormRepository rentFormRepository;
+    private RentRepository rentRepository;
     @Autowired
     private ConcertRepository concertRepository;
     @Autowired

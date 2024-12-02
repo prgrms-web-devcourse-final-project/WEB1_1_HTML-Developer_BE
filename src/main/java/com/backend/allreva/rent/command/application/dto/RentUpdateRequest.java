@@ -1,6 +1,6 @@
 package com.backend.allreva.rent.command.application.dto;
 
-import com.backend.allreva.rent.command.domain.RentFormBoardingDate;
+import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
 import com.backend.allreva.rent.command.domain.value.RefundType;
@@ -8,8 +8,8 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import java.time.LocalDate;
 import java.util.List;
 
-public record RentFormUpdateRequest (
-        Long rentFormId,
+public record RentUpdateRequest(
+        Long rentId,
         String imageUrl,
         Region region, // enum 파싱
         String boardingArea,
@@ -29,9 +29,9 @@ public record RentFormUpdateRequest (
         String information
 ) {
 
-    public List<RentFormBoardingDate> toRentFormBoardingDates() {
+    public List<RentBoardingDate> toRentBoardingDates() {
         return rentBoardingDateRequests.stream()
-                .map(request -> RentFormBoardingDate.builder()
+                .map(request -> RentBoardingDate.builder()
                         .date(request)
                         .build())
                 .toList();

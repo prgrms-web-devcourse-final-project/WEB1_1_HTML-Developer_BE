@@ -1,6 +1,6 @@
 package com.backend.allreva.rent.command;
 
-import static com.backend.allreva.rent.fixture.RentFormRegisterRequestFixture.createRentFormRegisterRequestFixture;
+import static com.backend.allreva.rent.fixture.RentRegisterRequestFixture.createRentRegisterRequestFixture;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rent.command.application.RentFormWriteService;
-import com.backend.allreva.rent.command.domain.RentForm;
+import com.backend.allreva.rent.command.application.RentWriteService;
+import com.backend.allreva.rent.command.domain.Rent;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,22 +23,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
-class RentFormRegisterTest {
+class RentRegisterTest {
 
     @InjectMocks
     private RentCommandService rentCommandService;
     @Mock
-    private RentFormWriteService rentFormWriteService;
+    private RentWriteService rentWriteService;
 
     @Test
     void 차량_대절_폼_개설을_성공한다() {
         // given
         var user = createMockUser(1L);
-        var rentFormRequest = createRentFormRegisterRequestFixture();
-        given(rentFormWriteService.saveRentForm(any(RentForm.class))).willAnswer(invocation -> invocation.getArgument(0));
+        var rentFormRequest = createRentRegisterRequestFixture();
+        given(rentWriteService.saveRent(any(Rent.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        rentCommandService.registerRentForm(rentFormRequest, user);
+        rentCommandService.registerRent(rentFormRequest, user);
 
         // then
         var capturedRentForm = getArgumentCaptorValue();
@@ -54,9 +54,9 @@ class RentFormRegisterTest {
         return user;
     }
 
-    private RentForm getArgumentCaptorValue() {
-        var rentFormCaptor = ArgumentCaptor.forClass(RentForm.class);
-        verify(rentFormWriteService).saveRentForm(rentFormCaptor.capture());
+    private Rent getArgumentCaptorValue() {
+        var rentFormCaptor = ArgumentCaptor.forClass(Rent.class);
+        verify(rentWriteService).saveRent(rentFormCaptor.capture());
         return rentFormCaptor.getValue();
     }
 }

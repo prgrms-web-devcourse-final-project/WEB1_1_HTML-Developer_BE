@@ -2,13 +2,13 @@ package com.backend.allreva.rent.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.rent.command.application.dto.RentFormUpdateRequest;
+import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
 import com.backend.allreva.rent.command.domain.value.Bus;
 import com.backend.allreva.rent.command.domain.value.DetailInfo;
 import com.backend.allreva.rent.command.domain.value.OperationInfo;
 import com.backend.allreva.rent.command.domain.value.Price;
-import com.backend.allreva.rent.exception.RentFormAccessDeniedException;
+import com.backend.allreva.rent.exception.RentAccessDeniedException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -17,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -34,7 +35,8 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE rent_form SET deleted_at = NOW() WHERE id = ?")
 @Entity
-public class RentForm extends BaseEntity {
+@Table(name = "rent_form")
+public class Rent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -55,20 +57,21 @@ public class RentForm extends BaseEntity {
     private AdditionalInfo additionalInfo;
 
     @Builder.Default
-    @OneToMany(mappedBy = "rentForm", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<RentFormBoardingDate> boardingDates = new ArrayList<>();
+    @OneToMany(mappedBy = "rent", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<RentBoardingDate> boardingDates = new ArrayList<>();
 
+    @Builder.Default
     @Column(nullable = false)
-    private boolean isClosed; //마감 여부
+    private boolean isClosed = false; //마감 여부
 
-    public void assignBoardingDates(List<RentFormBoardingDate> boardingDates) {
+    public void assignBoardingDates(List<RentBoardingDate> boardingDates) {
         this.boardingDates = boardingDates;
     }
 
-    public void updateRentForm(RentFormUpdateRequest request) {
+    public void updateRent(RentUpdateRequest request) {
         this.boardingDates = request.rentBoardingDateRequests().stream()
-                .map(date -> RentFormBoardingDate.builder()
-                        .rentForm(this)
+                .map(date -> RentBoardingDate.builder()
+                        .rent(this)
                         .date(date)
                         .build())
                 .toList();
@@ -103,7 +106,7 @@ public class RentForm extends BaseEntity {
 
     public void validateMine(Long memberId) {
         if (!this.memberId.equals(memberId)) {
-            throw new RentFormAccessDeniedException();
+            throw new RentAccessDeniedException();
         }
     }
 

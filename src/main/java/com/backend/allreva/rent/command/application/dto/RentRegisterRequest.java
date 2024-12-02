@@ -1,8 +1,8 @@
 package com.backend.allreva.rent.command.application.dto;
 
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.rent.command.domain.RentForm;
-import com.backend.allreva.rent.command.domain.RentFormBoardingDate;
+import com.backend.allreva.rent.command.domain.Rent;
+import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
 import com.backend.allreva.rent.command.domain.value.Bus;
 import com.backend.allreva.rent.command.domain.value.BusSize;
@@ -15,7 +15,7 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import java.time.LocalDate;
 import java.util.List;
 
-public record RentFormRegisterRequest(
+public record RentRegisterRequest(
         Long concertId,
         String imageUrl,
         String title,
@@ -39,12 +39,12 @@ public record RentFormRegisterRequest(
         String information
 ) {
 
-    public RentForm toEntity(final Long memberId) {
-        RentForm rentForm = RentForm.builder()
+    public Rent toEntity(final Long memberId) {
+        Rent rent = Rent.builder()
                 .memberId(memberId)
                 .concertId(concertId)
                 .boardingDates(rentBoardingDateRequests.stream()
-                        .map(request -> RentFormBoardingDate.builder()
+                        .map(request -> RentBoardingDate.builder()
                                 .date(request)
                                 .build())
                         .toList())
@@ -79,12 +79,12 @@ public record RentFormRegisterRequest(
                         .build())
                 .build();
 
-        rentForm.assignBoardingDates(rentBoardingDateRequests.stream()
-                .map(date -> RentFormBoardingDate.builder()
-                        .rentForm(rentForm) // RentForm 객체 설정
+        rent.assignBoardingDates(rentBoardingDateRequests.stream()
+                .map(date -> RentBoardingDate.builder()
+                        .rent(rent) // RentForm 객체 설정
                         .date(date)
                         .build())
                 .toList());
-        return rentForm;
+        return rent;
     }
 }
