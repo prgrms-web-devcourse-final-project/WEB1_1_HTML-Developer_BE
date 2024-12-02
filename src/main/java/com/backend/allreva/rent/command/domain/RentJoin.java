@@ -44,5 +44,8 @@ public class RentJoin extends BaseEntity {
     private RefundType refundType;
 
     @Column(nullable = false)
+    private String refundAccount;
+
+    @Column(nullable = false)
     private LocalDate boardingDate; //이용날짜
 }

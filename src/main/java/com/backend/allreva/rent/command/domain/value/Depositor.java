@@ -2,6 +2,7 @@ package com.backend.allreva.rent.command.domain.value;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.time.LocalTime;
 import lombok.*;
 
 @Getter
@@ -14,7 +15,7 @@ public class Depositor {
     private String depositorName;
 
     @Column(nullable = false)
-    private String bankName;
+    private LocalTime depositorTime;
 
     @Column(nullable = false)
     private String phone;
