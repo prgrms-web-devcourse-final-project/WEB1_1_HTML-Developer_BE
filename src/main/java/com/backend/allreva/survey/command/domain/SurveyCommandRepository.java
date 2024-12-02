@@ -1,4 +1,4 @@
-package com.backend.allreva.survey.command.application;
+package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.survey.command.domain.Survey;
 import io.lettuce.core.dynamic.annotation.Param;

@@ -1,7 +1,7 @@
 package com.backend.allreva.survey.infra;
 
 import com.backend.allreva.survey.command.domain.value.BoardingType;
-import com.backend.allreva.survey.query.application.MemberSurveyRepository;
+import com.backend.allreva.survey.query.application.domain.MemberSurveyRepository;
 import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
 import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;
 import com.backend.allreva.survey.query.application.dto.SurveyResponse;

@@ -1,7 +1,7 @@
 package com.backend.allreva.survey.infra;
 
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.SurveyQueryRepository;
+import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
@@ -63,7 +63,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 .where(survey.endDate.goe(LocalDate.now()),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate))
-                .groupBy(survey.id, survey.title, survey.region, survey.endDate)
+                .groupBy(survey.id)
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
                 .fetch();

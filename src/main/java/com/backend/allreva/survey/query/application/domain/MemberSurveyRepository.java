@@ -1,4 +1,4 @@
-package com.backend.allreva.survey.query.application;
+package com.backend.allreva.survey.query.application.domain;
 
 import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
 import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;

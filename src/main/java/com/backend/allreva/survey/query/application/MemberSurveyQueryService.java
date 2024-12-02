@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.query.application;
 
+import com.backend.allreva.survey.query.application.domain.MemberSurveyRepository;
 import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
 import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;
 import lombok.RequiredArgsConstructor;

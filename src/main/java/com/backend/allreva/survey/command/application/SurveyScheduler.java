@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.command.application;
 
+import com.backend.allreva.survey.command.domain.SurveyCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

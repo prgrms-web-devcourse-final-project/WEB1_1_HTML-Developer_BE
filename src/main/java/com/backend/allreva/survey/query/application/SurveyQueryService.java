@@ -1,12 +1,12 @@
 package com.backend.allreva.survey.query.application;
 
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
