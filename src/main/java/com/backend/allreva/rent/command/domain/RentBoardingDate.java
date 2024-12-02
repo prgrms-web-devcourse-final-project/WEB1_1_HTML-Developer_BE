@@ -33,5 +33,9 @@ public class RentBoardingDate extends BaseEntity {
         this.rent = rent;
         this.date = date;
     }
+
+    protected void assignRent(Rent rent) {
+        this.rent = rent;
+    }
 }
 

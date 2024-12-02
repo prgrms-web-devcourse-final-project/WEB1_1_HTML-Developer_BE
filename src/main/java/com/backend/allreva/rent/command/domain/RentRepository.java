@@ -13,5 +13,7 @@ public interface RentRepository {
 
     List<RentBoardingDate> updateRentBoardingDates(Long rentId, List<RentBoardingDate> rentBoardingDates);
 
+    void deleteBoardingDateAllByRentId(Long rentId);
+
     void delete(final Rent rent);
 }

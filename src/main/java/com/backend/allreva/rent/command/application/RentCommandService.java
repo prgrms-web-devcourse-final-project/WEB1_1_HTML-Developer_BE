@@ -36,12 +36,8 @@ public class RentCommandService {
 
         rent.validateMine(member.getId());
 
+        rentRepository.deleteBoardingDateAllByRentId(rentUpdateRequest.rentId());
         rent.updateRent(rentUpdateRequest);
-        rentRepository.updateRentBoardingDates(
-                rentUpdateRequest.rentId(),
-                rentUpdateRequest.toRentBoardingDates()
-        );
-        rentRepository.save(rent);
     }
 
     public void closeRent(
@@ -53,7 +49,5 @@ public class RentCommandService {
 
         rent.validateMine(member.getId());
         rent.close();
-
-        rentRepository.save(rent);
     }
 }

@@ -57,7 +57,7 @@ public class Rent extends BaseEntity {
     private AdditionalInfo additionalInfo;
 
     @Builder.Default
-    @OneToMany(mappedBy = "rent", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "rent", cascade = CascadeType.ALL)
     private List<RentBoardingDate> boardingDates = new ArrayList<>();
 
     @Builder.Default
@@ -65,19 +65,17 @@ public class Rent extends BaseEntity {
     private boolean isClosed = false; //마감 여부
 
     public void assignBoardingDates(List<RentBoardingDate> boardingDates) {
+        boardingDates.forEach(boardingDate -> boardingDate.assignRent(this));
         this.boardingDates = boardingDates;
     }
 
     public void updateRent(RentUpdateRequest request) {
-        this.boardingDates = request.rentBoardingDateRequests().stream()
-                .map(date -> RentBoardingDate.builder()
-                        .rent(this)
-                        .date(date)
-                        .build())
-                .toList();
         this.detailInfo = DetailInfo.builder()
+                .title(detailInfo.getTitle())
+                .artistName(detailInfo.getArtistName())
                 .image(new Image(request.imageUrl()))
                 .region(request.region())
+                .depositAccount(detailInfo.getDepositAccount())
                 .build();
         this.operationInfo = OperationInfo.builder()
                 .boardingArea(request.boardingArea())
@@ -101,6 +99,13 @@ public class Rent extends BaseEntity {
                 .information(request.information())
                 .endDate(request.endDate())
                 .build();
+        List<RentBoardingDate> rentBoardingDates = request.rentBoardingDateRequests().stream()
+                .map(date -> RentBoardingDate.builder()
+                        .rent(this)
+                        .date(date)
+                        .build())
+                .toList();
+        assignBoardingDates(rentBoardingDates);
         isClosed = false;
     }
 

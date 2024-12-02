@@ -79,12 +79,12 @@ public record RentRegisterRequest(
                         .build())
                 .build();
 
-        rent.assignBoardingDates(rentBoardingDateRequests.stream()
+        List<RentBoardingDate> rentBoardingDates = rentBoardingDateRequests.stream()
                 .map(date -> RentBoardingDate.builder()
-                        .rent(rent) // RentForm 객체 설정
                         .date(date)
                         .build())
-                .toList());
+                .toList();
+        rent.assignBoardingDates(rentBoardingDates);
         return rent;
     }
 }

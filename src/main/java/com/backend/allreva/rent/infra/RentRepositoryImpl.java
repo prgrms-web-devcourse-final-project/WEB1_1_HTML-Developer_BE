@@ -42,6 +42,11 @@ public class RentRepositoryImpl implements RentRepository {
     }
 
     @Override
+    public void deleteBoardingDateAllByRentId(final Long rentId) {
+        rentBoardingDateJpaRepository.deleteAllByRentId(rentId);
+    }
+
+    @Override
     public void delete(final Rent rent) {
         rentJpaRepository.delete(rent);
     }
