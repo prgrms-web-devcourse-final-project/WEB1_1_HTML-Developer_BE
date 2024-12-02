@@ -99,13 +99,13 @@ public class KopisConcertResponse {
                 .title(db.prfnm)
                 .host(db.entrpsnmH)
                 .price(db.pcseguidance)
-                .prfstate(ConcertStatus.convertToConcertStatus(db.prfstate))
+                .performStatus(ConcertStatus.convertToConcertStatus(db.prfstate))
                 .dateInfo(
-                        new DateInfo(
-                                DataConverter.convertToLocalDate(db.prfpdfrom),
-                                DataConverter.convertToLocalDate(db.prfpdto),
-                                db.getDtguidance()
-                        )
+                        DateInfo.builder()
+                                .startDate(DataConverter.convertToLocalDate(db.prfpdfrom))
+                                .endDate(DataConverter.convertToLocalDate(db.prfpdto))
+                                .timeTable(db.getDtguidance())
+                                .build()
                 )
                 .build();
     }
@@ -128,8 +128,8 @@ public class KopisConcertResponse {
 
     public static Seller toSeller(final Relate relate) {
         return Seller.builder()
-                .relateName(relate.getRelatenm())
-                .relateUrl(relate.getRelateurl())
+                .name(relate.getRelatenm())
+                .salesUrl(relate.getRelateurl())
                 .build();
     }
 

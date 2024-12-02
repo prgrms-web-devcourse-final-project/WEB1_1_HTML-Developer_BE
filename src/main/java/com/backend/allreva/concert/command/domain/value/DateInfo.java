@@ -17,18 +17,18 @@ import java.util.regex.Pattern;
 @Embeddable
 public class DateInfo {
 
-    @Column(nullable = false)
-    private LocalDate stdate;
-    @Column(nullable = false)
-    private LocalDate eddate;
+    @Column(nullable = false, name = "stdate")
+    private LocalDate startDate;
+    @Column(nullable = false, name = "eddate")
+    private LocalDate endDate;
 
     @Column(nullable = false)
     private String timeTable;
 
     @Builder
-    public DateInfo(LocalDate stdate, LocalDate eddate, String timeTable) {
-        this.stdate = stdate;
-        this.eddate = eddate;
+    private DateInfo(LocalDate startDate, LocalDate endDate, String timeTable) {
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.timeTable = timeTable;
     }
 }

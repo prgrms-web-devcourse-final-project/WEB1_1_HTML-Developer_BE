@@ -29,12 +29,12 @@ public class ConcertHall {
 
 
     @Builder
-    public ConcertHall(
-            String id,
-            String name,
-            int seatScale,
-            ConvenienceInfo convenienceInfo,
-            Location location
+    private ConcertHall(
+            final String id,
+            final String name,
+            final int seatScale,
+            final ConvenienceInfo convenienceInfo,
+            final Location location
     ) {
         this.id = id;
         this.name = name;

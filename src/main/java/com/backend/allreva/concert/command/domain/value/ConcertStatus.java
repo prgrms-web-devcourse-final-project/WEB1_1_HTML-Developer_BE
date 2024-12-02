@@ -13,7 +13,7 @@ public enum ConcertStatus {
 
     private final String korean;
 
-    public static ConcertStatus convertToConcertStatus(String korean) {
+    public static ConcertStatus convertToConcertStatus(final String korean) {
         for (ConcertStatus status : ConcertStatus.values()) {
             if (status.getKorean().equals(korean)) {
                 return status;

@@ -18,7 +18,7 @@ public class ConcertHallRepositoryImpl implements ConcertHallRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public ConcertHallDetail findDetailByHallCode(String hallCode) {
+    public ConcertHallDetail findDetailByHallCode(final String hallCode) {
         return queryFactory.select(hallDetailProjections())
                 .from(concertHall)
                 .where(concertHall.id.eq(hallCode))

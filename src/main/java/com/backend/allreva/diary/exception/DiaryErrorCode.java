@@ -19,6 +19,6 @@ public enum DiaryErrorCode implements ErrorCodeInterface {
 
     @Override
     public ErrorCode getErrorCode() {
-        return null;
+        return ErrorCode.of(status, errorCode, message);
     }
 }
