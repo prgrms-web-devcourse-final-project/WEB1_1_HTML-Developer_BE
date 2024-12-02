@@ -1,4 +1,6 @@
 package com.backend.allreva.survey.command.application.dto;
 
-public record SurveyIdRequest(Long surveyId) {
+import jakarta.validation.constraints.NotNull;
+
+public record SurveyIdRequest(@NotNull  Long surveyId) {
 }

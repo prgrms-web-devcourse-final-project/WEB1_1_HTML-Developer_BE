@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class SurveyScheduler {
     private final SurveyCommandRepository surveyCommandRepository;
 
-    @Scheduled(cron = "0 0 0 * * *") //초 분 시 일 월 요일. 매일 새벽 0시에 업데이트
+    @Scheduled(cron = "0 0 0 * * *") //초 분 시 일 월 요일. 매일 0시에 업데이트
     public void closeSurvey() {
         try {
             surveyCommandRepository.closeSurveys(LocalDate.now());
