@@ -4,13 +4,11 @@ import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
 import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberSurveyQueryService {
     private final MemberSurveyRepository memberSurveyRepository;

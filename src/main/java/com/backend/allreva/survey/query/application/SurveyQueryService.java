@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SurveyQueryService {
     private final SurveyQueryRepository surveyQueryRepository;
