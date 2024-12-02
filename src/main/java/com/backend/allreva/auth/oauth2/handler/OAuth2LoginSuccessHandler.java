@@ -2,6 +2,7 @@ package com.backend.allreva.auth.oauth2.handler;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -25,6 +26,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
+    @Value("${jwt.refresh.expiration}")
+    private Long REFRESH_TIME;
 
     /**
      * OAuth2 인증 success시 JWT 반환하는 메서드
@@ -75,10 +78,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     // refreshToken 쿠키 생성
-    public static ResponseCookie createRefreshToken(final String refreshToken) {
+    public ResponseCookie createRefreshToken(final String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
-                .maxAge(14 * 24 * 60 * 60 * 1000)
+                .maxAge(REFRESH_TIME)
                 .httpOnly(true)
                 .build();
     }
