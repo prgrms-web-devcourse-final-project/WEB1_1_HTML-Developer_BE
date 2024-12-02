@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
-import com.backend.allreva.auth.application.dto.TokenResponse;
+import com.backend.allreva.auth.application.dto.LoginSuccessResponse;
 import com.backend.allreva.auth.util.JwtProvider;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
@@ -46,18 +46,22 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String accessToken = jwtProvider.generateAccessToken(memberId);
         String refreshToken = jwtProvider.generateRefreshToken(memberId);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
         // access token 응답객체 생성
-        TokenResponse tokenResponse = TokenResponse.of(accessToken, refreshToken, jwtProvider.getREFRESH_TIME());
+        LoginSuccessResponse loginSuccessResponse = LoginSuccessResponse.of(
+                accessToken,
+                refreshToken,
+                jwtProvider.getREFRESH_TIME(),
+                member.getEmail().getEmail(),
+                member.getMemberInfo().getProfileImageUrl());
 
         // TODO: db or cache에 RefreshToken 저장
 
         // refreshToken 쿠키 등록
         setHeader(response, refreshToken);
 
-        Response<TokenResponse> apiResponse = Response.onSuccess(tokenResponse);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        Response<LoginSuccessResponse> apiResponse = Response.onSuccess(loginSuccessResponse);
         String jsonResponse = objectMapper.writeValueAsString(apiResponse);
         response.getWriter().write(jsonResponse);
     }
