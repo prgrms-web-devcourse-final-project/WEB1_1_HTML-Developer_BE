@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class AdminConcertScheduler {
     private final AdminConcertService adminConcertService;
-   @Scheduled(cron = "0 0 4 * * *") //초 분 시 일 월 요일
+   @Scheduled(cron = "0 0 4 * * *") //초 분 시 일 월 요일. 매일 새벽 4시에 업데이트
     public void fetchDailyConcertInfoList() {
         try {
             LocalDate today = LocalDate.now();
@@ -22,7 +22,7 @@ public class AdminConcertScheduler {
             adminConcertService.fetchDailyConcertInfoList(formattedDate);
             log.info(" {} :daily concert info update complete", formattedDate);
         } catch (Exception e) {
-            log.info("can't update daily concert info. Message: {}", e.getMessage());
+            log.error("can't update daily concert info. Message: {}", e.getMessage());
         }
     }
 }

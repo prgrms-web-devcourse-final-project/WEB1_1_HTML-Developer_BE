@@ -1,6 +1,7 @@
 package com.backend.allreva.survey.command.application.dto;
 
 import com.backend.allreva.survey.command.domain.value.Region;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -14,6 +15,7 @@ public record OpenSurveyRequest(
         List<LocalDate> boardingDates,
         String artistName,
         Region region,
+        @FutureOrPresent(message = "마감 기한은 과거일 수 없습니다.")
         LocalDate endDate,
         @Min(value = 1, message = "탑승 인원 수는 1명 이상이어야 합니다.")
         int maxPassenger,
