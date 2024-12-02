@@ -38,9 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final HttpServletResponse response,
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
-        // token이 없다면 ANONYMOUS 로그인
+        // 바디 및 쿠키로부터 토큰 추출
         String refreshToken = jwtParser.getRefreshToken(request);
         String accessToken = jwtParser.getAccessToken(request);
+
+        // token이 없다면 ANONYMOUS 로그인
         if (accessToken == null && refreshToken == null) {
             log.debug("GUEST login! {}", request.getRequestURI());
             filterChain.doFilter(request, response);
@@ -48,21 +50,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // token 검증 수행
-        if (accessToken != null) {
-            jwtValidator.validateToken(accessToken);
-        }
-
-        if (accessToken == null && refreshToken != null) {
-            // TODO: refreshToken validation 적용
-        }
-
-        // 토큰으로부터 member id 추출
-        String memberId = jwtParser.extractMemberId(accessToken);
+        String memberId = validateAndExtractMemberId(accessToken, refreshToken);
 
         // Authentication Security Holder에 저장
         setAuthenication(memberId, request);
 
         filterChain.doFilter(request, response);
+    }
+
+    private String validateAndExtractMemberId(String accessToken, String refreshToken) {
+        if (accessToken != null) {
+            jwtValidator.validateToken(accessToken);
+            return jwtParser.extractMemberId(accessToken);
+        }
+        if (refreshToken != null) {
+            // TODO: refreshToken validation 적용
+            jwtValidator.validateToken(refreshToken);
+            return jwtParser.extractMemberId(refreshToken);
+        }
+        return null;
     }
 
     private void setAuthenication(final String memberId, final HttpServletRequest request) {
