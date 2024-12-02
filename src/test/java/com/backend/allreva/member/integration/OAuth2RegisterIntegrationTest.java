@@ -7,14 +7,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.backend.allreva.artist.command.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
-import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
-import com.backend.allreva.support.DatabaseCleanUpUtil;
+import com.backend.allreva.member.fixture.MemberFixture;
+import com.backend.allreva.support.ContextHolderTestUtil;
 import com.backend.allreva.support.IntegrationTestSupport;
 import java.util.List;
 import java.util.Optional;
@@ -25,14 +24,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
+class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
     private ArtistRepository artistRepository;
@@ -44,25 +40,13 @@ public class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
 
     @BeforeEach
     void setUp() {
-        member = Member.createTemporary(
-                "my@email",
-                "nickname",
-                LoginProvider.GOOGLE,
-                "https://my_picture");
-        ReflectionTestUtils.setField(member, "id", 1L);
-
-        var principalDetails = new PrincipalDetails(member, null);
-        var authentication = new UsernamePasswordAuthenticationToken(
-                principalDetails,
-                null,
-                principalDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        member = MemberFixture.createMemberFixture(1L, MemberRole.GUEST);
+        ContextHolderTestUtil.setContextHolder(member);
     }
 
     @AfterEach
     void cleanUp() {
-        entityManager.createNativeQuery(DatabaseCleanUpUtil.getDeleteSql("artist")).executeUpdate();
-        SecurityContextHolder.clearContext();
+        ContextHolderTestUtil.cleanContextHolder();
     }
 
     @Test

@@ -9,6 +9,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomException extends RuntimeException {
     private final ErrorCodeInterface errorCode;
+    private final String errorMsg;
+
+    public CustomException(ErrorCodeInterface errorCode) {
+        this.errorCode = errorCode;
+        this.errorMsg = "nothing";
+    }
 
     public ErrorCode getErrorCode() {
         return this.errorCode.getErrorCode();

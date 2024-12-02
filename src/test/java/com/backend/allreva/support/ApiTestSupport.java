@@ -1,6 +1,5 @@
 package com.backend.allreva.support;
 
-import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
 import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.member.command.application.MemberCommandFacade;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -52,13 +50,6 @@ public abstract class ApiTestSupport {
                 LoginProvider.GOOGLE,
                 "https://my_picture");
         ReflectionTestUtils.setField(member, "id", 1L);
-
-        var principalDetails = new PrincipalDetails(member, null);
-        var authentication = new UsernamePasswordAuthenticationToken(
-                principalDetails,
-                null,
-                principalDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @AfterEach
