@@ -17,8 +17,8 @@ public record ConcertThumbnail(
                     concertDocument.getPoster(),
                     concertDocument.getTitle(),
                     concertDocument.getConcertHallName(),
-                    concertDocument.getStdate(),
-                    concertDocument.getEddate(),
+                    concertDocument.getStDate(),
+                    concertDocument.getEdDate(),
                     Long.parseLong(concertDocument.getId())
             );
         }
