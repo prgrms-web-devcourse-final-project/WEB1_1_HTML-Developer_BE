@@ -1,5 +1,6 @@
 package com.backend.allreva.concert.infra;
 
+import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.ConstructorExpression;

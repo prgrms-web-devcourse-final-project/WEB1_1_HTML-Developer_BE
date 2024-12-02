@@ -6,7 +6,6 @@ import com.backend.allreva.concert.command.domain.value.Code;
 import com.backend.allreva.concert.command.domain.value.ConcertInfo;
 import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
-import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

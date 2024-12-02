@@ -30,7 +30,13 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
     @Override
     public ConcertDetailResponse findDetailById(final Long concertId) {
-        return cache.get(concertId);
+        if (cache.containsKey(concertId)) {
+            return cache.get(concertId);
+        }
+
+        ConcertDetailResponse detail = concertJpaRepository.findDetailById(concertId);
+        cache.put(concertId, detail);
+        return detail;
     }
 
     @Override
