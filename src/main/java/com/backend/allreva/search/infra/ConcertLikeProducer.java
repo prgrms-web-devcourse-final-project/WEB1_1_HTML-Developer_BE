@@ -1,12 +1,12 @@
 package com.backend.allreva.search.infra;
 
 import com.backend.allreva.search.query.domain.ConcertLikeEvent;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +15,7 @@ public class ConcertLikeProducer {
     private final KafkaTemplate<String, ConcertLikeEvent> kafkaTemplate;
     private static final String TOPIC = "concertLike-event";
 
-    @Transactional
+    @TransactionalEventListener
     public void publishEvent(ConcertLikeEvent event) {
         try {
             ProducerRecord<String, ConcertLikeEvent> record =

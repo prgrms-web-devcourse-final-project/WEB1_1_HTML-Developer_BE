@@ -96,5 +96,6 @@ public class Concert extends BaseEntity {
 
     public void addViewCount(final int count) {
         this.viewCount += count;
+
     }
 }

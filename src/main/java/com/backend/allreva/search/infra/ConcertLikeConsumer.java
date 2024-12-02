@@ -36,6 +36,7 @@ public class ConcertLikeConsumer {
                     .findByConcertCode(event.getEventId())
                     .ifPresentOrElse(
                             concertDocument -> {
+                                log.info("event.getIncreaseCount : {}", event.getIncreaseCount());
                                 concertDocument.updateViewCount((long) event.getIncreaseCount());
                                 concertSearchRepository.save(concertDocument);
                             },

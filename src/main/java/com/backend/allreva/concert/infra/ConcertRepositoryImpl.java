@@ -83,12 +83,11 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
                                     concertLikeProducer.publishEvent(
                                             ConcertLikeEvent.builder()
+                                                    .increaseCount(entry.getValue())
                                                     .eventId(concert.getCode().getConcertCode())
                                                     .timestamp(LocalDateTime.now())
                                                     .build()
-
                                     );
-
                                 })
                 );
         viewCountCache.clear();
