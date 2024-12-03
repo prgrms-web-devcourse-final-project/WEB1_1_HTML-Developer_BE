@@ -1,7 +1,7 @@
 package com.backend.allreva.member.command;
 
-import com.backend.allreva.artist.command.ArtistCommandService;
 import com.backend.allreva.artist.command.domain.Artist;
+import com.backend.allreva.artist.query.application.ArtistQueryService;
 import com.backend.allreva.member.command.application.MemberArtistCommandService;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
@@ -33,7 +33,7 @@ public class MemberArtistCommandTest {
     @Mock
     private MemberArtistRepository memberArtistRepository;
     @Mock
-    private ArtistCommandService artistCommandService;
+    private ArtistQueryService artistQueryService;
     @Spy
     private MemberArtistService memberArtistService;
 
@@ -56,7 +56,7 @@ public class MemberArtistCommandTest {
                 .id("spotify_1L")
                 .name("하현상")
                 .build();
-        given(artistCommandService.getArtistById(any(String.class))).willReturn(artist);
+        given(artistQueryService.getArtistById(any(String.class))).willReturn(artist);
         var memberArtistRequests = List.of(new MemberArtistRequest("spotify_1L","name1"));
 
         // when

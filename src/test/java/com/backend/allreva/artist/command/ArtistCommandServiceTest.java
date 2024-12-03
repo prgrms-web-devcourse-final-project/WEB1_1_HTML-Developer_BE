@@ -4,6 +4,7 @@ import com.backend.allreva.artist.query.application.ArtistQueryService;
 import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.support.IntegrationTestSupport;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ class ArtistCommandServiceTest extends IntegrationTestSupport {
         //then
         memberArtistRequests.forEach(memberArtistRequest -> {
             assertThat(
-                    artistCommandService.getArtistById(memberArtistRequest.spotifyArtistId())
+                    artistQueryService.getArtistById(memberArtistRequest.spotifyArtistId())
             ).isNotNull();
         });
     }

@@ -1,6 +1,8 @@
 package com.backend.allreva.artist.query.application;
 
 import com.backend.allreva.artist.command.ArtistRepository;
+import com.backend.allreva.artist.command.domain.Artist;
+import com.backend.allreva.artist.exception.ArtistNotFoundException;
 import com.backend.allreva.artist.exception.ArtistSearchNoContentException;
 import com.backend.allreva.artist.query.application.dto.SpotifyArtistWrapper;
 import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
@@ -37,6 +39,10 @@ public class ArtistQueryService {
         if(artists.isEmpty()) throw new ArtistSearchNoContentException();
 
         return artists;
+    }
+
+    public Artist getArtistById(String id) {
+        return artistRepository.findById(id).orElseThrow(ArtistNotFoundException::new);
     }
 
     private String getAccessToken() {
