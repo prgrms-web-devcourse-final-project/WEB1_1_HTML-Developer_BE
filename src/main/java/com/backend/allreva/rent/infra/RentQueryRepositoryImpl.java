@@ -5,7 +5,6 @@ import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
 import static com.backend.allreva.rent.command.domain.QRent.rent;
 import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoardingDate;
 import static com.backend.allreva.rent.command.domain.QRentJoin.rentJoin;
-import static com.backend.allreva.survey.command.domain.QSurvey.survey;
 import static com.querydsl.core.types.Projections.list;
 
 import com.backend.allreva.rent.command.domain.value.BoardingType;
@@ -144,17 +143,16 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
                         rent.isClosed,
                         rent.createdAt,
                         rentJoin.id,
-                        rentJoin.depositor.depositorTime,
+                        rentJoin.depositor.depositorName,
                         rentJoin.depositor.phone,
                         rentJoin.passengerNum,
                         rentJoin.boardingType,
                         rentJoin.depositor.depositorTime,
                         rentJoin.refundType
                 ))
-                .from(rent)
-                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
                 .from(rentJoin)
-                .join(rent).on(rentJoin.rentId.eq(rent.id)
+                .join(rent).on(rentJoin.rentId.eq(rent.id))
+                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id)
                         .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
                 .where(rentJoin.memberId.eq(memberId))
                 .groupBy(rent.id, rentBoardingDate.date)
@@ -168,7 +166,7 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
         return ExpressionUtils.as(JPAExpressions
                 .select(rentJoin.passengerNum.sum())
                 .from(rentJoin)
-                .where(rentJoin.rentId.eq(survey.id)
+                .where(rentJoin.rentId.eq(rent.id)
                         .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
                 .groupBy(rentJoin.rentId, rentJoin.boardingDate), "participationCount");
     }
