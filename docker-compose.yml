@@ -1,5 +1,6 @@
 version: '3'
 
+services:
   green:
     container_name: green
     environment:
