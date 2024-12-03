@@ -6,9 +6,10 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberArtist;
 import com.backend.allreva.member.command.domain.MemberArtistRepository;
 import com.backend.allreva.member.command.domain.MemberArtistService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class MemberArtistCommandService {
             final List<MemberArtistRequest> memberArtistRequests,
             final Member member
     ) {
+        artistCommandService.saveIfNotExist(memberArtistRequests);
         List<MemberArtist> preMemberArtists = memberArtistRepository.findByMemberId(member.getId());
 
         // MemberArtist 추가
