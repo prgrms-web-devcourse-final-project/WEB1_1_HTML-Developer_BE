@@ -26,8 +26,8 @@ public class RentJoin extends BaseEntity {
     @Column(nullable = false)
     private Long memberId;
 
-    @Column(nullable = false)
-    private Long rentFormId;
+    @Column(nullable = false, name = "rent_form_id")
+    private Long rentId;
 
     @Embedded
     private Depositor depositor;
