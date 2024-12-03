@@ -33,7 +33,7 @@ public class SecurityConfig {
 
     // 인가 과정에서 허용할 URL 등록
     private static final String[] ALLOW_URLS = {"/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**",
-            "/swagger-resources/**", "api/v1/concerts/list"};
+            "/swagger-resources/**", "/api/v1/concerts/list"};
     private static final String[] AUTH_URLS = {"/api/v1/oauth2/login/**", "/login/oauth2/**"};
 
     // JWT
