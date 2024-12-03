@@ -72,10 +72,9 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
         // Then
         assertNotNull(detail);
         assertEquals("하현상 콘서트: Elegy [서울] 수요조사 모집합니다.", detail.title());
-        assertEquals(LocalDate.of(2030, 12, 1), detail.boardingDates().get(0));
-        assertEquals(LocalDate.of(2030, 12, 2), detail.boardingDates().get(1));
+        assertEquals(LocalDate.of(2030, 12, 1), detail.boardingDates().get(0).date());
+        assertEquals(LocalDate.of(2030, 12, 2), detail.boardingDates().get(1).date());
         assertEquals(2, detail.boardingDates().size());
-        assertThat(detail.boardingDates()).contains(LocalDate.of(2030, 12, 1));
     }
 
     @Test
@@ -94,7 +93,6 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
         assertFalse(responseList.isEmpty());
         assertThat(responseList).allMatch(response -> response.region().equals(Region.서울));
         assertEquals(0, responseList.get(0).participationCount());
-        assertEquals(25, responseList.get(0).maxPassenger());
         assertEquals(firstId, responseList.get(0).surveyId());
     }
 

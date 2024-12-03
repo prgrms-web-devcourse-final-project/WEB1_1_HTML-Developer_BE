@@ -133,7 +133,11 @@ class SurveyUITest extends ApiTestSupport {
     void findSurveyDetail() throws Exception {
         // Given
         Long surveyId = 1L;
-        SurveyDetailResponse response = new SurveyDetailResponse(surveyId, "하현상 콘서트 차대절 수요조사합니다.", List.of(LocalDate.now()), "정보정보", false);
+        SurveyDetailResponse response = new SurveyDetailResponse(surveyId,
+                "하현상 콘서트 차대절 수요조사합니다.",
+                List.of(new SurveyBoardingDateResponse(LocalDate.now(), 4)),
+                "정보정보",
+                false);
 
         // Mocking
         doReturn(response).when(surveyQueryService).findSurveyDetail(any());
@@ -183,7 +187,6 @@ class SurveyUITest extends ApiTestSupport {
                 "title",
                 Region.경기,
                 20,
-                25,
                 LocalDate.now());
         responseList.add(response);
 
