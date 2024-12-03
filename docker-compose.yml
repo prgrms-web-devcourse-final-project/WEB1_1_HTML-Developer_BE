@@ -5,14 +5,18 @@ services:
     container_name: green
     environment:
       color: "green"
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
+    image: "${DOCKERHUB_USERNAME}/${APP_NAME}:latest"
     ports:
       - "8080:8080"
+    env_file:
+      - .env
 
   blue:
     container_name: blue
     environment:
       color: "blue"
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
+    image: "${DOCKERHUB_USERNAME}/${APP_NAME}:latest"
     ports:
       - "8081:8080"
+    env_file:
+      - .env

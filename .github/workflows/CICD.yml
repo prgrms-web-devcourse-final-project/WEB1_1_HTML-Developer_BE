@@ -109,6 +109,11 @@ jobs:
             --port 22 \
             --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
+      - name: Create .env file
+        run: |
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> .env
+
       - name: Send docker-compose.yml
         uses: appleboy/scp-action@master
         with:
