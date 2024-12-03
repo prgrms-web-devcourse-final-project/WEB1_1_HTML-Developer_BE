@@ -11,7 +11,7 @@ public record RentJoinApplyRequest(
         String depositorName,
         String depositorTime,
         String phone,
-        String passengerNum,
+        int passengerNum,
         BoardingType boardingType,
         RefundType refundType,
         String refundAccount,

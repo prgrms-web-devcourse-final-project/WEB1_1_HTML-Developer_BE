@@ -61,7 +61,7 @@ public class RentCommandService {
             final RentJoinApplyRequest rentJoinApplyRequest,
             final Long memberId
     ) {
-        if (rentRepository.existsById(rentJoinApplyRequest.rentId())) {
+        if (!rentRepository.existsById(rentJoinApplyRequest.rentId())) {
             throw new RentNotFoundException();
         }
 
