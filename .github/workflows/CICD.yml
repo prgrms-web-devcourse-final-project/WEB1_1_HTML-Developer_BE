@@ -47,7 +47,6 @@ jobs:
 
   cd:
     needs: ci
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
