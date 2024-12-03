@@ -3,6 +3,7 @@ package com.backend.allreva.survey.infra;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
+import com.backend.allreva.survey.query.application.dto.SurveyBoardingDateResponse;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
 import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import com.querydsl.core.group.GroupBy;
@@ -31,6 +32,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         return queryFactory
                 .from(survey)
                 .join(surveyBoardingDate).on(survey.id.eq(surveyBoardingDate.survey.id))
+                .leftJoin(surveyJoin).on(surveyBoardingDate.date.eq(surveyJoin.boardingDate))
                 .where(survey.id.eq(surveyId))
                 .transform(
                         GroupBy.groupBy(survey.id).as(
@@ -43,7 +45,12 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
         return Projections.constructor(SurveyDetailResponse.class,
                 survey.id,
                 survey.title,
-                GroupBy.list(surveyBoardingDate.date),
+                GroupBy.list(
+                        Projections.constructor(
+                                SurveyBoardingDateResponse.class,
+                                surveyBoardingDate.date,
+                                GroupBy.sum(surveyJoin.passengerNum.coalesce(0))
+                        )),
                 survey.information,
                 survey.isClosed
         );
@@ -75,7 +82,6 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 survey.title,
                 survey.region,
                 surveyJoin.passengerNum.sum().coalesce(0),
-                survey.maxPassenger,
                 survey.endDate
         );
     }
