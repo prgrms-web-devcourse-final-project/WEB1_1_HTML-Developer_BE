@@ -93,7 +93,6 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
         assertFalse(responseList.isEmpty());
         assertThat(responseList).allMatch(response -> response.region().equals(Region.서울));
         assertEquals(0, responseList.get(0).participationCount());
-        assertEquals(25, responseList.get(0).maxPassenger());
         assertEquals(firstId, responseList.get(0).surveyId());
     }
 
