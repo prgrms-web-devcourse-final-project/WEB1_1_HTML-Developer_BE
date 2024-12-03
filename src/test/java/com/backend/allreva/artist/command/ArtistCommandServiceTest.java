@@ -1,10 +1,10 @@
 package com.backend.allreva.artist.command;
 
+import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.query.application.ArtistQueryService;
 import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
 import com.backend.allreva.support.IntegrationTestSupport;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +23,26 @@ class ArtistCommandServiceTest extends IntegrationTestSupport {
     @DisplayName("아티스트 검색후 값이 존재하지 않을 경우 DB에 삽입")
     @Test
     void saveIfNotExistTest() {
-        //given
+        // given
         String query = "day6";
         List<SpotifySearchResponse> responses = artistQueryService.searchArtist(query);
         List<MemberArtistRequest> memberArtistRequests = responses.stream()
-                .map(response -> {
-                    return new MemberArtistRequest(response.id(), response.name());
-                }).toList();
+                .map(response -> new MemberArtistRequest(response.id(), response.name()))
+                .toList();
 
-        //when
+        // when
         artistCommandService.saveIfNotExist(memberArtistRequests);
 
-        //then
-        memberArtistRequests.forEach(memberArtistRequest -> {
-            assertThat(
-                    artistQueryService.getArtistById(memberArtistRequest.spotifyArtistId())
-            ).isNotNull();
-        });
+        // then
+        for (MemberArtistRequest request : memberArtistRequests) {
+            Artist savedArtist = artistQueryService.getArtistById(request.spotifyArtistId());
+            assertThat(savedArtist)
+                    .isNotNull()
+                    .satisfies(artist -> {
+                        assertThat(artist.getName()).isEqualTo(request.name());
+                        assertThat(artist.getId()).isEqualTo(request.spotifyArtistId());
+                    });
+        }
     }
 
 }
