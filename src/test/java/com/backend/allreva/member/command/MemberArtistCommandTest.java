@@ -1,5 +1,6 @@
 package com.backend.allreva.member.command;
 
+import com.backend.allreva.artist.command.ArtistCommandService;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.query.application.ArtistQueryService;
 import com.backend.allreva.member.command.application.MemberArtistCommandService;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -28,13 +28,19 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberArtistCommandTest {
 
-    @InjectMocks
-    private MemberArtistCommandService memberArtistCommandService;
     @Mock
     private MemberArtistRepository memberArtistRepository;
+
     @Mock
     private ArtistQueryService artistQueryService;
-    @Spy
+
+    @Mock
+    private ArtistCommandService artistCommandService;
+
+    @InjectMocks
+    private MemberArtistCommandService memberArtistCommandService;
+
+    @Mock
     private MemberArtistService memberArtistService;
 
     Member member;
@@ -57,6 +63,7 @@ public class MemberArtistCommandTest {
                 .name("하현상")
                 .build();
         given(artistQueryService.getArtistById(any(String.class))).willReturn(artist);
+        given(memberArtistService.isNewMemberArtists(any(), any())).willReturn(true);
         var memberArtistRequests = List.of(new MemberArtistRequest("spotify_1L","name1"));
 
         // when
@@ -65,5 +72,6 @@ public class MemberArtistCommandTest {
         // then
         verify(memberArtistRepository, times(1)).deleteAll(any());
         verify(memberArtistRepository, times(1)).saveAll(any());
+        verify(artistCommandService, times(1)).saveIfNotExist(any());
     }
 }
