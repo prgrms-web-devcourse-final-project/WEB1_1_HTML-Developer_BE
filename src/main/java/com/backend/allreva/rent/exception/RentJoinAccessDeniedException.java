@@ -5,6 +5,6 @@ import com.backend.allreva.common.exception.CustomException;
 public class RentJoinAccessDeniedException extends CustomException {
 
     public RentJoinAccessDeniedException() {
-        super(message);
+        super(RentErrorCode.RENT_JOIN_ACCESS_DENIED);
     }
 }
