@@ -2,8 +2,11 @@ package com.backend.allreva.rent.command.domain.value;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import java.time.LocalTime;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -15,7 +18,7 @@ public class Depositor {
     private String depositorName;
 
     @Column(nullable = false)
-    private LocalTime depositorTime;
+    private String depositorTime;
 
     @Column(nullable = false)
     private String phone;
