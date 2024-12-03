@@ -1,5 +1,7 @@
 package com.backend.allreva.member.command.application.dto;
 
+import com.backend.allreva.artist.command.domain.Artist;
+
 import java.util.List;
 
 public record MemberInfoRequest(
@@ -10,8 +12,11 @@ public record MemberInfoRequest(
 ) {
 
     public record MemberArtistRequest(
-            String spotifyArtistId
+            String spotifyArtistId,
+            String name
     ) {
-
+        public static Artist to(final MemberArtistRequest memberArtistRequest) {
+            return new Artist(memberArtistRequest.spotifyArtistId(), memberArtistRequest.name());
+        }
     }
 }
