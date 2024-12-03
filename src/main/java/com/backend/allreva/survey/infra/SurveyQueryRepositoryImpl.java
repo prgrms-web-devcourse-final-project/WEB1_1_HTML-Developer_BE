@@ -34,6 +34,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 .join(surveyBoardingDate).on(survey.id.eq(surveyBoardingDate.survey.id))
                 .leftJoin(surveyJoin).on(surveyBoardingDate.date.eq(surveyJoin.boardingDate))
                 .where(survey.id.eq(surveyId))
+                .groupBy(surveyBoardingDate.date)
                 .transform(
                         GroupBy.groupBy(survey.id).as(
                                 surveyDetailProjections()
@@ -49,12 +50,13 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                         Projections.constructor(
                                 SurveyBoardingDateResponse.class,
                                 surveyBoardingDate.date,
-                                GroupBy.sum(surveyJoin.passengerNum.coalesce(0))
+                                surveyJoin.passengerNum.sum().coalesce(0)
                         )),
                 survey.information,
                 survey.isClosed
         );
     }
+
 
     @Override
     public List<SurveySummaryResponse> findSurveyList(final Region region,
