@@ -2,6 +2,7 @@ package com.backend.allreva.artist.command;
 
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.exception.ArtistNotFoundException;
+import com.backend.allreva.artist.exception.InsertArtistException;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,12 @@ public class ArtistCommandService {
                 .filter(artist -> !existingIds.contains(artist.spotifyArtistId()))
                 .map(MemberInfoRequest.MemberArtistRequest::to)
                 .toList();
+        try {
+            artistRepository.saveAll(list);
 
-        artistRepository.saveAll(list);
+        }catch (Exception e) {
+            throw new InsertArtistException();
+        }
     }
 
 }
