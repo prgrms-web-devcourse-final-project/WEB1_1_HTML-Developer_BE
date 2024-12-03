@@ -15,5 +15,5 @@ public interface RentRepository {
 
     void deleteBoardingDateAllByRentId(Long rentId);
 
-    void delete(final Rent rent);
+    void delete(Rent rent);
 }

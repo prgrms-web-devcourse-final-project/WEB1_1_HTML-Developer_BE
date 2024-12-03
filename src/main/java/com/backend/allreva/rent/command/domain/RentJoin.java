@@ -1,9 +1,11 @@
 package com.backend.allreva.rent.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
+import com.backend.allreva.rent.command.application.dto.RentJoinUpdateRequest;
 import com.backend.allreva.rent.command.domain.value.BoardingType;
 import com.backend.allreva.rent.command.domain.value.Depositor;
 import com.backend.allreva.rent.command.domain.value.RefundType;
+import com.backend.allreva.rent.exception.RentJoinAccessDeniedException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -48,4 +50,23 @@ public class RentJoin extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate boardingDate; //이용날짜
+
+    public void updateRentJoin(RentJoinUpdateRequest request) {
+        this.depositor = Depositor.builder()
+                .depositorName(request.depositorName())
+                .depositorTime(request.depositorTime())
+                .phone(request.phone())
+                .build();
+        this.passengerNum = request.passengerNum();
+        this.boardingType = request.boardingType();
+        this.refundType = request.refundType();
+        this.refundAccount = request.refundAccount();
+        this.boardingDate = request.boardingDate();
+    }
+
+    public void validateMine(Long memberId) {
+        if (!this.memberId.equals(memberId)) {
+            throw new RentJoinAccessDeniedException();
+        }
+    }
 }

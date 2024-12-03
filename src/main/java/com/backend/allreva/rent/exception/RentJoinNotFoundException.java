@@ -4,7 +4,7 @@ import com.backend.allreva.common.exception.CustomException;
 
 public class RentJoinNotFoundException extends CustomException {
 
-    public RentJoinNotFoundException(String message) {
-        super(RentErrorCode.RENT_JOIN_NOT_FOUND, message);
+    public RentJoinNotFoundException() {
+        super(RentErrorCode.RENT_JOIN_NOT_FOUND);
     }
 }
