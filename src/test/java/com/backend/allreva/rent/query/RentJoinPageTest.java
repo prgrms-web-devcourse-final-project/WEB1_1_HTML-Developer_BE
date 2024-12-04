@@ -46,8 +46,7 @@ class RentJoinPageTest extends IntegrationTestSupport {
         var user3Id = 3L;
         var savedRent = rentJpaRepository.save(createRentFixture(registerId, 1L));
         var boardingDates = savedRent.getBoardingDates();
-        var gilDongRentJoin = rentJoinRepository.save(
-                createRentJoinFixture(savedRent.getId(), user2Id, "홍길동", boardingDates.get(0).getDate()));
+        var gilDongRentJoin = rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user2Id, "홍길동", boardingDates.get(0).getDate()));
         rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user3Id, "김철수", boardingDates.get(1).getDate()));
 
         // when
@@ -55,7 +54,7 @@ class RentJoinPageTest extends IntegrationTestSupport {
 
         // then
         assertThat(rentJoinSummaries).hasSize(1);
-        assertThat(rentJoinSummaries.get(0).rentJoinId()).isEqualTo(gilDongRentJoin.getRentId());
+        assertThat(rentJoinSummaries.get(0).rentJoinId()).isEqualTo(gilDongRentJoin.getId());
     }
 
     private Rent createRentFixture(Long memberId, Long concertId) {

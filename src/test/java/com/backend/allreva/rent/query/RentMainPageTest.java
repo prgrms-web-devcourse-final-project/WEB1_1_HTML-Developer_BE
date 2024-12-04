@@ -93,7 +93,7 @@ class RentMainPageTest extends IntegrationTestSupport {
         var user3Id = 3L;
         var concertHall = concertHallRepository.save(createConcertHallFixture());
         var concert = concertRepository.save(createConcertFixture(concertHall.getId()));
-        var savedRent = rentRepository.save(createRentFixture(registerId, 1L, Region.서울, LocalDate.of(2024, 9, 21)));
+        var savedRent = rentRepository.save(createRentFixture(registerId, concert.getId(), Region.서울, LocalDate.of(2024, 9, 21)));
         var boardingDates = savedRent.getBoardingDates();
         rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user2Id, "홍길동", boardingDates.get(0).getDate()));
         rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user3Id, "김철수", boardingDates.get(1).getDate()));
