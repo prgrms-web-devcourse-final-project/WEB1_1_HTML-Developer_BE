@@ -1,7 +1,9 @@
 package com.backend.allreva.common.event;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Events {
 
     private static ApplicationEventPublisher publisher;
@@ -18,4 +20,5 @@ public class Events {
             publisher.publishEvent(event);
         }
     }
+
 }

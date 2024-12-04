@@ -43,9 +43,6 @@ public class DiaryController {
     }
 
     @Operation(summary = "공연 기록 수정", description = "multipart/form-data 로 설정하고 넣어주셔야 합니다")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json"))
-    })
     @PatchMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Void> updateDiary(
             @RequestPart(value = "request") final UpdateDiaryRequest request,

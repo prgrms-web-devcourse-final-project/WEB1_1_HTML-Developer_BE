@@ -14,18 +14,42 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class S3ImageRepository implements ImageRepository{
+public class S3ImageService {
 
     @Value("${spring.cloud.aws.s3.bucket:null}")
     private String bucketName;
     private final S3Operations s3Operations;
 
-    @Override
-    public Image uploadOnS3(
+    public List<Image> upload(List<MultipartFile> imageFiles) {
+        if (imageFiles == null || imageFiles.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Image> images = new ArrayList<>();
+
+        for (MultipartFile file : imageFiles) {
+            Image uploadedImage = upload(file);
+            images.add(uploadedImage);
+        }
+        return images;
+    }
+
+    public Image upload(MultipartFile imageFile) {
+        ObjectMetadata objectMetadata = new ObjectMetadata.Builder()
+                .contentType(imageFile.getContentType())
+                .build();
+        String storeKey = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        return uploadOnS3(imageFile, storeKey, objectMetadata);
+    }
+
+    private Image uploadOnS3(
             MultipartFile imageFile,
             String storeKey,
             ObjectMetadata metadata

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
-public class EventsConfiguration {
+public class EventsConfig {
 
     private final ApplicationEventPublisher publisher;
 

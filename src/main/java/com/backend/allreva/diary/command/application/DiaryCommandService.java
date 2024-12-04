@@ -1,6 +1,6 @@
 package com.backend.allreva.diary.command.application;
 
-import com.backend.allreva.common.application.ImageService;
+import com.backend.allreva.common.application.S3ImageService;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.diary.command.application.dto.AddDiaryRequest;
 import com.backend.allreva.diary.command.application.dto.UpdateDiaryRequest;
@@ -19,16 +19,16 @@ import java.util.List;
 @Service
 public class DiaryCommandService {
 
-    private final ImageService imageService;
+    private final S3ImageService s3ImageService;
     private final DiaryRepository diaryRepository;
 
     public Long add(
             final AddDiaryRequest request,
-            final List<MultipartFile> images,
+            final List<MultipartFile> imageFiles,
             final Long memberId
     ) {
         ConcertDiary diary = request.to();
-        List<Image> uploadedImages = imageService.upload(images);
+        List<Image> uploadedImages = s3ImageService.upload(imageFiles);
 
         diary.addImages(uploadedImages);
         diary.addMemberId(memberId);
@@ -37,10 +37,10 @@ public class DiaryCommandService {
 
     public void update(
             final UpdateDiaryRequest request,
-            final List<MultipartFile> images,
+            final List<MultipartFile> imageFiles,
             final Long memberId
     ) {
-        List<Image> uploadedImages = imageService.upload(images);
+        List<Image> uploadedImages = s3ImageService.upload(imageFiles);
         ConcertDiary diary = diaryRepository.findById(request.diaryId())
                 .orElseThrow(DiaryNotFoundException::new);
 
@@ -62,5 +62,11 @@ public class DiaryCommandService {
         diary.validateWriter(memberId);
 
         diaryRepository.deleteById(diaryId);
+    }
+
+    public void addImagesById(Long diaryId, List<Image> images) {
+        ConcertDiary diary = diaryRepository.findById(diaryId)
+                .orElseThrow();
+        diary.addImages(images);
     }
 }

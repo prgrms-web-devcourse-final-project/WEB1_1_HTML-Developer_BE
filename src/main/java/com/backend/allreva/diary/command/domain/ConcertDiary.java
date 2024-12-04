@@ -1,6 +1,5 @@
 package com.backend.allreva.diary.command.domain;
 
-import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.diary.exception.DiaryNotWriterException;
@@ -56,12 +55,12 @@ public class ConcertDiary extends BaseEntity {
 
     @Builder
     public ConcertDiary(
-            Long memberId,
-            Long concertId,
-            LocalDate diaryDate,
-            String episode,
-            String content,
-            String seatName
+            final Long memberId,
+            final Long concertId,
+            final LocalDate diaryDate,
+            final String episode,
+            final String content,
+            final String seatName
     ) {
         this.memberId = memberId;
         this.concertId = concertId;
@@ -69,31 +68,30 @@ public class ConcertDiary extends BaseEntity {
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
-        Events.raise();
     }
 
-    public void addImages(List<Image> images) {
+    public void addImages(final List<Image> images) {
         this.diaryImages.addAll(images);
     }
 
-    public void addMemberId(Long memberId) {
+    public void addMemberId(final Long memberId) {
         this.memberId = memberId;
     }
 
-    public void validateWriter(Long memberId) {
+    public void validateWriter(final Long memberId) {
         if (!this.memberId.equals(memberId)) {
             throw new DiaryNotWriterException();
         }
     }
 
     public void update(
-            Long memberId,
-            Long concertId,
-            LocalDate diaryDate,
-            String episode,
-            String content,
-            String seatName,
-            List<Image> diaryImages
+            final Long memberId,
+            final Long concertId,
+            final LocalDate diaryDate,
+            final String episode,
+            final String content,
+            final String seatName,
+            final List<Image> images
     ) {
         this.memberId = memberId;
         this.concertId = concertId;
@@ -101,6 +99,6 @@ public class ConcertDiary extends BaseEntity {
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
-        addImages(diaryImages);
+        addImages(images);
     }
 }

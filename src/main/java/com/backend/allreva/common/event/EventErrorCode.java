@@ -1,4 +1,4 @@
-package com.backend.allreva.diary.exception;
+package com.backend.allreva.common.event;
 
 import com.backend.allreva.common.exception.code.ErrorCode;
 import com.backend.allreva.common.exception.code.ErrorCodeInterface;
@@ -8,10 +8,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum DiaryErrorCode implements ErrorCodeInterface {
+public enum EventErrorCode implements ErrorCodeInterface {
 
-    DIARY_NOT_WRITER(HttpStatus.FORBIDDEN.value(), "DIARY_NOT_WRITER", "삭제할 권한이 없습니다"),
-    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "DIARY_NOT_FOUND", "존재하지 않는 공연 기록입니다");
+    JSON_PARSING_ERROR(HttpStatus.BAD_GATEWAY.value(), "JSON_PARSING_ERROR", "이벤트 json 파싱 오류입니다.");
 
     private final Integer status;
     private final String errorCode;
