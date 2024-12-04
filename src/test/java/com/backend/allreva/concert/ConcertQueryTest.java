@@ -5,6 +5,7 @@ import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.command.domain.value.*;
+import com.backend.allreva.concert.infra.ConcertJpaRepository;
 import com.backend.allreva.concert.query.application.ConcertQueryService;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import com.backend.allreva.hall.command.domain.ConcertHall;
@@ -29,6 +30,8 @@ class ConcertQueryTest extends IntegrationTestSupport {
 
     @Autowired
     private ConcertRepository concertRepository;
+    @Autowired
+    private ConcertJpaRepository concertJpaRepository;
     @Autowired
     private ConcertHallRepository concertHallRepository;
 
