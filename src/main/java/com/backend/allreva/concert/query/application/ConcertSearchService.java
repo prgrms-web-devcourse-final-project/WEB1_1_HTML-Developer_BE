@@ -21,16 +21,14 @@ import java.util.List;
 public class ConcertSearchService {
     private final ConcertSearchRepository concertSearchRepository;
 
-    public List<ConcertThumbnail> searchConcertThumbnails(final String title) {
+    public List<ConcertDocument> searchConcertThumbnails(final String title) {
         try {
             List<ConcertDocument> content = concertSearchRepository.findByTitleMixed(
                     title, PageRequest.of(0, 2)).getContent();
             if (content.isEmpty()) {
                 throw new SearchResultNotFoundException();
             }
-            return content.stream()
-                    .map(ConcertThumbnail::from)
-                    .toList();
+            return content;
         }catch (ElasticSearchException e){
             throw new ElasticSearchException();
         }

@@ -1,8 +1,8 @@
 package com.backend.allreva.concert.ui;
 
 import com.backend.allreva.common.dto.Response;
-import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import com.backend.allreva.concert.query.application.ConcertSearchService;
+import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 import com.backend.allreva.concert.query.application.dto.ConcertSearchListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,7 +28,7 @@ public class SearchController {
             description = "콘서트 검색어에 따라 관련도 상위 2개의 썸네일에 필요한 정보를 출력"
     )
     @GetMapping("/concert")
-    public Response<List<ConcertThumbnail>> searchConcertThumbnail(@RequestParam final String query) {
+    public Response<List<ConcertDocument>> searchConcertThumbnail(@RequestParam final String query) {
         return Response.onSuccess(
                 concertSearchService.searchConcertThumbnails(query)
         );
