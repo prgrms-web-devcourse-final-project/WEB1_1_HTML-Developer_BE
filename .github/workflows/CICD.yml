@@ -145,12 +145,6 @@ jobs:
             sudo chmod 666 /var/run/docker.sock
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             
-            # 기존 컨테이너와 이미지 정리
-            docker stop $(docker ps -a -q) || true
-            docker rm $(docker ps -a -q) || true
-            docker rmi $(docker images -q) || true
-            docker system prune -af --volumes
-            
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
             chmod 777 ./deploy.sh
             export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
