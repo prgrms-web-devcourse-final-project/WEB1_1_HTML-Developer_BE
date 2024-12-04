@@ -5,6 +5,7 @@ import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
 import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
 import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminJoinDetailResponse;
 import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.dto.SortType;
@@ -19,6 +20,7 @@ public interface RentQueryRepository {
 
     List<RentAdminSummaryResponse> findRentAdminSummariesByMemberId(Long memberId);
     Optional<RentAdminDetailResponse> findRentAdminDetail(Long memberId, LocalDate boardingDate, Long rentId);
+    List<RentAdminJoinDetailResponse> findRentAdminJoinDetails(Long memberId, Long rentId, LocalDate boardingDate);
 
     List<RentJoinSummaryResponse> findRentJoinSummariesByMemberId(Long memberId);
 }

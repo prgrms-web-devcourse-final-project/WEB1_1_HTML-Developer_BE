@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Transactional
-class RentJoinSummariesReadTest extends IntegrationTestSupport {
+class RentJoinPageTest extends IntegrationTestSupport {
 
     @Autowired
     private RentQueryService rentQueryService;
@@ -118,7 +118,7 @@ class RentJoinSummariesReadTest extends IntegrationTestSupport {
                         .depositorTime("21:30")
                         .phone("010-1234-5678")
                         .build())
-                .passengerNum(28)
+                .passengerNum(2) // 탑승자
                 .boardingType(BoardingType.ROUND)
                 .refundType(RefundType.BOTH)
                 .refundAccount("123-4567-4344-23")

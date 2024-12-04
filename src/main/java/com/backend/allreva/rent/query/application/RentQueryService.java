@@ -4,6 +4,7 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.exception.RentNotFoundException;
 import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
 import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminJoinDetailResponse;
 import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
 import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
@@ -49,8 +50,13 @@ public class RentQueryService {
             final LocalDate boardingDate,
             final Long rentId
     ) {
-        return rentQueryRepository.findRentAdminDetail(memberId, boardingDate, rentId)
+        RentAdminDetailResponse rentAdminDetailResponse = rentQueryRepository.findRentAdminDetail(memberId,
+                        boardingDate, rentId)
                 .orElseThrow(RentNotFoundException::new);
+        List<RentAdminJoinDetailResponse> rentAdminJoinDetails = rentQueryRepository.findRentAdminJoinDetails(memberId,
+                rentId, boardingDate);
+        rentAdminDetailResponse.setRentJoinDetailResponses(rentAdminJoinDetails);
+        return rentAdminDetailResponse;
     }
 
     public List<RentJoinSummaryResponse> getRentJoinSummariesByMemberId(final Long memberId) {
