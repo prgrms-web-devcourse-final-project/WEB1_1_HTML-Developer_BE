@@ -23,7 +23,7 @@ public final class RentJoinFixture {
                         .depositorTime("21:30")
                         .phone("010-1234-5678")
                         .build())
-                .passengerNum(28)
+                .passengerNum(1)
                 .boardingType(BoardingType.ROUND)
                 .refundType(RefundType.BOTH)
                 .refundAccount("123-4567-4344-23")

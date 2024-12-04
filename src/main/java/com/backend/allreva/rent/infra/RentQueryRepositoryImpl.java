@@ -7,14 +7,16 @@ import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoar
 import static com.backend.allreva.rent.command.domain.QRentJoin.rentJoin;
 import static com.querydsl.core.types.Projections.list;
 
+import com.backend.allreva.common.util.DateHolder;
 import com.backend.allreva.rent.command.domain.value.BoardingType;
 import com.backend.allreva.rent.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentQueryRepository;
 import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse.RentJoinDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentJoinCountDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentJoinDetailResponse;
 import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.dto.SortType;
@@ -38,6 +40,19 @@ import org.springframework.stereotype.Repository;
 public class RentQueryRepositoryImpl implements RentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final DateHolder dateHolder;
+
+    /**
+     * [SubQuery] 차 대절 현재 참여자 수
+     */
+    private Expression<Integer> getParticipationCount() {
+        return ExpressionUtils.as(JPAExpressions
+                .select(rentJoin.passengerNum.sum())
+                .from(rentJoin)
+                .where(rentJoin.rentId.eq(rent.id)
+                        .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
+                .groupBy(rentJoin.rentId, rentJoin.boardingDate), "participationCount");
+    }
 
     /**
      * 차 대절 메인 페이지 조회
@@ -52,28 +67,26 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
     ) {
         return queryFactory
                 .select(Projections.constructor(RentSummaryResponse.class,
-                        concert.concertInfo.title,
+                        rent.id,
+                        rent.detailInfo.title,
                         rent.operationInfo.boardingArea,
                         rent.additionalInfo.endDate,
-                        rent.additionalInfo.recruitmentCount,// count 어떻게 해야 할지
-                        rent.additionalInfo.recruitmentCount,
-                        rentBoardingDate.date,
-                        rent.isClosed,
-                        rent.detailInfo.image.url,
-                        rent.createdAt
+                        rent.detailInfo.image.url
                 ))
                 .from(rent)
-                .leftJoin(concert).on(rent.concertId.eq(concert.id))
-                .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
-                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
                 .where(
-                        rent.detailInfo.region.eq(region),
+                        rent.additionalInfo.endDate.goe(dateHolder.getDate()),
+                        getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate)
                 )
                 .groupBy(rent.id)
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
                 .fetch();
+    }
+
+    private BooleanExpression getRegionCondition(final Region region) {
+        return region == null ? null : rent.detailInfo.region.eq(region);
     }
 
     private BooleanExpression getPagingCondition(
@@ -129,49 +142,6 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
     }
 
     /**
-     * 자신이 참여한 차 대절 조회
-     */
-    @Override
-    public List<RentJoinSummaryResponse> findRentJoinSummariesByMemberId(final Long memberId) {
-        return queryFactory.select(Projections.constructor(RentJoinSummaryResponse.class,
-                        rent.detailInfo.title,
-                        rent.operationInfo.boardingArea,
-                        rent.additionalInfo.endDate,
-                        rent.additionalInfo.recruitmentCount,
-                        getParticipationCount(), // 현재 참여자 수
-                        rentBoardingDate.date,
-                        rent.isClosed,
-                        rent.createdAt,
-                        rentJoin.id,
-                        rentJoin.depositor.depositorName,
-                        rentJoin.depositor.phone,
-                        rentJoin.passengerNum,
-                        rentJoin.boardingType,
-                        rentJoin.depositor.depositorTime,
-                        rentJoin.refundType
-                ))
-                .from(rentJoin)
-                .join(rent).on(rentJoin.rentId.eq(rent.id))
-                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id)
-                        .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
-                .where(rentJoin.memberId.eq(memberId))
-                .groupBy(rent.id, rentBoardingDate.date)
-                .fetch();
-    }
-
-    /**
-     * 차 대절 현재 참여자 수 서브 쿼리
-     */
-    private Expression<Integer> getParticipationCount() {
-        return ExpressionUtils.as(JPAExpressions
-                .select(rentJoin.passengerNum.sum())
-                .from(rentJoin)
-                .where(rentJoin.rentId.eq(rent.id)
-                        .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
-                .groupBy(rentJoin.rentId, rentJoin.boardingDate), "participationCount");
-    }
-
-    /**
      * 차 대절 상세 조회
      */
     @Override
@@ -183,7 +153,7 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
                 .leftJoin(concert).on(rent.concertId.eq(concert.id))
                 .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
                 .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
-                .fetchOne();
+                .fetchFirst();
         return Optional.ofNullable(rentDetailResponse);
     }
 
@@ -223,30 +193,91 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
                         rent.detailInfo.depositAccount))
                 .from(rent)
                 .where(rent.id.eq(rentId))
-                .fetchOne();
+                .fetchFirst();
         return Optional.ofNullable(depositAccountResponse);
     }
 
     /**
-     * 이용 구분, 입금 처리 수 조회
+     * [Register] 등록한 차 대절 리스트 조회 O
+     */
+    public List<RentAdminSummaryResponse> findRentAdminSummariesByMemberId(final Long memberId) {
+        return queryFactory.select(Projections.constructor(RentAdminSummaryResponse.class,
+                        rent.id,
+                        rent.detailInfo.title,
+                        rentBoardingDate.date,
+                        rent.operationInfo.boardingArea,
+                        rent.operationInfo.bus.busSize,
+                        rent.operationInfo.bus.busType,
+                        rent.operationInfo.bus.maxPassenger,
+                        rent.additionalInfo.endDate,
+                        rent.createdAt,
+                        rent.additionalInfo.recruitmentCount,
+                        getParticipationCount(),
+                        rent.isClosed
+                ))
+                .from(rent)
+                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
+                .where(
+                        rent.memberId.eq(memberId),
+                        rentBoardingDate.date.goe(dateHolder.getDate()) // 마감 날짜 안지난것만
+                )
+                .groupBy(rent.id)
+                .fetch();
+    }
+
+    /**
+     * [Register] 내가 등록한 차 대절 상세 조회
+     * <p>
+     * 이용 구분, 입금 처리에 대한 count, 참여자 명단 리스트를 반환합니다.
      */
     @Override
-    public Optional<RentJoinCountDetailResponse> findRentJoinCountDetailById(final Long rentId) {
-        RentJoinCountDetailResponse rentCountResponse = queryFactory
-                .select(Projections.constructor(RentJoinCountDetailResponse.class,
+    public Optional<RentAdminDetailResponse> findRentAdminDetail(
+            final Long memberId,
+            final LocalDate boardingDate,
+            final Long rentId
+    ) {
+        RentAdminDetailResponse rentAdminDetailResponse = queryFactory
+                .select(Projections.constructor(RentAdminDetailResponse.class,
+                        rent.id,
+                        rent.additionalInfo.recruitmentCount,
+                        getParticipationCount(),
                         getRentBoardingCount(BoardingType.UP, "RentUpCount"),
                         getRentBoardingCount(BoardingType.DOWN, "RentDownCount"),
                         getRentBoardingCount(BoardingType.ROUND, "RentRoundCount"),
                         getRefundCount(RefundType.REFUND, "refundCount"),
-                        getRefundCount(RefundType.ADDITIONAL_DEPOSIT, "additionalDepositCount")))
-                .from(rent)
-                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
-                .join(rentJoin).on(rentJoin.rentId.eq(rent.id)
+                        getRefundCount(RefundType.ADDITIONAL_DEPOSIT, "additionalDepositCount"),
+                        list(Projections.constructor(RentJoinDetailResponse.class,
+                                rentJoin.id,
+                                rentJoin.depositor.depositorName,
+                                rentJoin.depositor.phone,
+                                rentJoin.passengerNum,
+                                rentJoin.boardingType,
+                                rentJoin.depositor.depositorTime,
+                                rentJoin.refundType
+                        ))
+                ))
+                .from(rentJoin)
+                .join(rent).on(rentJoin.rentId.eq(rent.id))
+                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id)
                         .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
-                .where(rent.id.eq(rentId))
-                .fetchOne();
-
-        return Optional.ofNullable(rentCountResponse);
+                .where(
+                        rent.memberId.eq(memberId),
+                        rentBoardingDate.date.eq(boardingDate),
+                        rent.id.eq(rentId)
+                )
+                .groupBy(
+                        rent.id,
+                        rentBoardingDate.date,
+                        rentJoin.boardingType,
+                        rentJoin.id,
+                        rentJoin.depositor.depositorName,
+                        rentJoin.depositor.phone,
+                        rentJoin.passengerNum,
+                        rentJoin.depositor.depositorTime,
+                        rentJoin.refundType
+                )
+                .fetchFirst();
+        return Optional.ofNullable(rentAdminDetailResponse);
     }
 
     private NumberExpression<Integer> getRentBoardingCount(final BoardingType boardingType, final String alias) {
@@ -270,11 +301,19 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
     }
 
     /**
-     * 차 대절 참여자 상세 조회
+     * [Participate] 자신이 참여한 차 대절 조회
      */
     @Override
-    public List<RentJoinDetailResponse> findRentJoinDetailsById(final Long rentId) {
-        return queryFactory.select(Projections.constructor(RentJoinDetailResponse.class,
+    public List<RentJoinSummaryResponse> findRentJoinSummariesByMemberId(final Long memberId) {
+        return queryFactory.select(Projections.constructor(RentJoinSummaryResponse.class,
+                        rent.detailInfo.title,
+                        rent.operationInfo.boardingArea,
+                        rent.additionalInfo.endDate,
+                        rent.additionalInfo.recruitmentCount,
+                        getParticipationCount(), // 현재 참여자 수
+                        rentBoardingDate.date,
+                        rent.isClosed,
+                        rent.createdAt,
                         rentJoin.id,
                         rentJoin.depositor.depositorName,
                         rentJoin.depositor.phone,
@@ -284,7 +323,11 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
                         rentJoin.refundType
                 ))
                 .from(rentJoin)
-                .where(rentJoin.rentId.eq(rentId))
+                .join(rent).on(rentJoin.rentId.eq(rent.id))
+                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id)
+                        .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
+                .where(rentJoin.memberId.eq(memberId))
+                .groupBy(rent.id, rentBoardingDate.date)
                 .fetch();
     }
 }

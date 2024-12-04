@@ -5,14 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentBoardingDate;
-import com.backend.allreva.rent.command.domain.RentJoin;
-import com.backend.allreva.rent.command.domain.RentJoinRepository;
 import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
-import com.backend.allreva.rent.command.domain.value.BoardingType;
 import com.backend.allreva.rent.command.domain.value.Bus;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
-import com.backend.allreva.rent.command.domain.value.Depositor;
 import com.backend.allreva.rent.command.domain.value.DetailInfo;
 import com.backend.allreva.rent.command.domain.value.OperationInfo;
 import com.backend.allreva.rent.command.domain.value.Price;
@@ -21,6 +17,7 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.infra.RentJpaRepository;
 import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.support.IntegrationTestSupport;
+import com.backend.allreva.survey.query.application.dto.SortType;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -29,36 +26,56 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Transactional
-class RentJoinSummariesReadTest extends IntegrationTestSupport {
+class RentMainSummaryReadTest extends IntegrationTestSupport {
 
     @Autowired
     private RentQueryService rentQueryService;
     @Autowired
     private RentJpaRepository rentJpaRepository;
-    @Autowired
-    private RentJoinRepository rentJoinRepository;
 
     @Test
-    void 자신이_참여중인_차량_대절_리스트를_조회한다() {
+    void 차량_대절_리스트를_지역별로_조회한다() {
         // given
         var registerId = 1L;
-        var user2Id = 2L;
-        var user3Id = 3L;
-        var savedRent = rentJpaRepository.save(createRentFixture(registerId, 1L));
-        var boardingDates = savedRent.getBoardingDates();
-        var gilDongRentJoin = rentJoinRepository.save(
-                createRentJoinFixture(savedRent.getId(), user2Id, "홍길동", boardingDates.get(0).getDate()));
-        rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user3Id, "김철수", boardingDates.get(1).getDate()));
+        var savedRent1 = rentJpaRepository.save(createRentFixture(
+                registerId, 1L, Region.서울, LocalDate.of(2024, 9, 20)));
+        rentJpaRepository.save(createRentFixture(
+                registerId, 2L, Region.경기, LocalDate.of(2024, 9, 21)));
 
         // when
-        var rentJoinSummaries = rentQueryService.getRentJoinSummariesByMemberId(user2Id);
+        var rentSummaries = rentQueryService.getRentSummaries(
+                Region.서울, SortType.LATEST, null, null, 10);
 
         // then
-        assertThat(rentJoinSummaries).hasSize(1);
-        assertThat(rentJoinSummaries.get(0).rentJoinId()).isEqualTo(gilDongRentJoin.getRentId());
+        assertThat(rentSummaries).hasSize(1);
+        assertThat(rentSummaries.get(0).rentId()).isEqualTo(savedRent1.getId());
     }
 
-    private Rent createRentFixture(Long memberId, Long concertId) {
+    @Test
+    void 차량_대절_리스트를_마감순으로_조회한다() {
+        // given
+        var registerId = 1L;
+        var savedRent1 = rentJpaRepository.save(createRentFixture(
+                registerId, 1L, Region.서울, LocalDate.of(2024, 9, 21)));
+        var savedRent2 = rentJpaRepository.save(createRentFixture(
+                registerId, 2L, Region.경기, LocalDate.of(2024, 9, 20)));
+
+        // when
+        var rentSummaries = rentQueryService.getRentSummaries(
+                null, SortType.CLOSING, null, null, 10);
+
+        // then
+        assertThat(rentSummaries).hasSize(2);
+        assertThat(rentSummaries.get(0).rentId()).isEqualTo(savedRent2.getId());
+        assertThat(rentSummaries.get(1).rentId()).isEqualTo(savedRent1.getId());
+    }
+
+    private Rent createRentFixture(
+            final Long memberId,
+            final Long concertId,
+            final Region region,
+            final LocalDate endDate
+    ) {
         Rent rent = Rent.builder()
                 .memberId(memberId)
                 .concertId(concertId)
@@ -67,7 +84,7 @@ class RentJoinSummariesReadTest extends IntegrationTestSupport {
                         .title("title")
                         .artistName("artistName")
                         .depositAccount("depositAccount")
-                        .region(Region.서울)
+                        .region(region)
                         .build())
                 .operationInfo(OperationInfo.builder()
                         .boardingArea("boardingArea")
@@ -89,7 +106,7 @@ class RentJoinSummariesReadTest extends IntegrationTestSupport {
                         .chatUrl("chatUrl")
                         .refundType(RefundType.BOTH)
                         .information("information")
-                        .endDate(LocalDate.of(2024, 9, 13))
+                        .endDate(endDate)
                         .build())
                 .build();
         rent.assignBoardingDates(List.of(
@@ -102,27 +119,5 @@ class RentJoinSummariesReadTest extends IntegrationTestSupport {
                         .date(LocalDate.of(2024, 9, 21))
                         .build()));
         return rent;
-    }
-
-    private RentJoin createRentJoinFixture(
-            final Long rentId,
-            final Long memberId,
-            final String depositorName,
-            final LocalDate boardingDate
-    ) {
-        return RentJoin.builder()
-                .rentId(rentId)
-                .memberId(memberId)
-                .depositor(Depositor.builder()
-                        .depositorName(depositorName)
-                        .depositorTime("21:30")
-                        .phone("010-1234-5678")
-                        .build())
-                .passengerNum(28)
-                .boardingType(BoardingType.ROUND)
-                .refundType(RefundType.BOTH)
-                .refundAccount("123-4567-4344-23")
-                .boardingDate(boardingDate)
-                .build();
     }
 }
