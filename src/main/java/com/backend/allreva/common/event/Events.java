@@ -1,15 +1,15 @@
 package com.backend.allreva.common.event;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class Events {
 
     private static ApplicationEventPublisher publisher;
-
-    private Events() {
-    }
 
     static void setPublisher(ApplicationEventPublisher publisher) {
         Events.publisher = publisher;
