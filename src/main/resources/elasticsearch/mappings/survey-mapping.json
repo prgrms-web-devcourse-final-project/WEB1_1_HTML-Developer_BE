@@ -1,0 +1,20 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "korean_mixed"
+    },
+    "region": {
+      "type": "keyword"
+    },
+    "participation_count": {
+      "type": "integer"
+    },
+    "eddate": {
+      "type": "date"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-package com.backend.allreva.search.query.domain;
+package com.backend.allreva.concert.command.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

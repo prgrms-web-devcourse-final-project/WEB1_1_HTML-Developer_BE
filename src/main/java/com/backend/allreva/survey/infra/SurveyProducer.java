@@ -15,10 +15,10 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class SurveyProducer {
     private final KafkaTemplate<Long, SurveyEvent> kafkaTemplate;
 
-    private static final String TOPIC = "survey-even";
+    private static final String TOPIC = "survey-event";
 
     @TransactionalEventListener
-    private void publishEvent(SurveyEvent event) {
+    public void publishEvent(SurveyEvent event) {
         try {
             ProducerRecord<Long, SurveyEvent> record =
                     new ProducerRecord<>(TOPIC, event.getEventId(), event);

@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.command.domain;
 
+import com.backend.allreva.survey.command.application.dto.SurveyEventDto;
 import com.backend.allreva.survey.command.domain.value.SurveyEventType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -13,16 +14,21 @@ import java.util.Objects;
 @JsonDeserialize(builder =
 SurveyEvent.SurveyEventBuilder.class)
 public class SurveyEvent {
+    @JsonProperty("eventId")
     private final Long eventId;
-    private final Survey survey;
+    @JsonProperty("survey")
+    private final SurveyEventDto survey;
+    @JsonProperty("eventType")
     private final SurveyEventType eventType;
+    @JsonProperty("timestamp")
     private final LocalDateTime timestamp;
+
 
 
     @Builder
     private SurveyEvent(
             @JsonProperty("eventId") final Long eventId,
-            @JsonProperty("survey") final Survey survey,
+            @JsonProperty("survey") SurveyEventDto survey,
             @JsonProperty("surveyEventType") final SurveyEventType eventType,
             @JsonProperty("timestamp") final LocalDateTime timestamp
     ) {

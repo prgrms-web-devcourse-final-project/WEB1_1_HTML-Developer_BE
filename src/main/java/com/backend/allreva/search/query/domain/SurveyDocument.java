@@ -1,17 +1,19 @@
 package com.backend.allreva.search.query.domain;
 
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.time.LocalDate;
 
 @Document(indexName = "survey")
+@Setting(settingPath = "elasticsearch/mappings/es-settings.json")
+@Mapping(mappingPath = "elasticsearch/mappings/survey-mapping.json")
 @Getter
 @ToString
+@AllArgsConstructor
 public class SurveyDocument {
     @Id
     private String id;

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Document(indexName = "concerts")
 @Setting(settingPath = "elasticsearch/mappings/es-settings.json")
-@Mapping(mappingPath = "elasticsearch/mappings/es-mapping.json")
+@Mapping(mappingPath = "elasticsearch/mappings/concert-mapping.json")
 @Getter
 @ToString
 public class ConcertDocument {

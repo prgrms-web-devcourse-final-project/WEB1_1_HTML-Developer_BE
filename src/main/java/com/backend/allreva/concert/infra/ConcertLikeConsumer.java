@@ -1,8 +1,9 @@
-package com.backend.allreva.search.infra;
+package com.backend.allreva.concert.infra;
 
 import com.backend.allreva.search.exception.EventConsumingException;
 import com.backend.allreva.search.exception.SearchResultNotFoundException;
-import com.backend.allreva.search.query.domain.ConcertLikeEvent;
+import com.backend.allreva.concert.command.domain.ConcertLikeEvent;
+import com.backend.allreva.search.infra.ConcertSearchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

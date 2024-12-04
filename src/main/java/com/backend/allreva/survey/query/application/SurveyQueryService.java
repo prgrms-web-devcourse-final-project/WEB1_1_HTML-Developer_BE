@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.query.application;
 
+import com.backend.allreva.search.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +34,9 @@ public class SurveyQueryService {
                                                       final LocalDate lastEndDate,
                                                       final int pageSize) {
         return surveyQueryRepository.findSurveyList(region, sortType, lastId, lastEndDate, pageSize);
+    }
+
+    public Optional<SurveyDocumentDto> findSurveyWithParticipationCount(final Long surveyId) {
+        return surveyQueryRepository.findSurveyWithParticipationCount(surveyId);
     }
 }

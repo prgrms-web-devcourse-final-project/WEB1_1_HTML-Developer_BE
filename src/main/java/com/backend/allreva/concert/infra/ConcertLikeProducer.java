@@ -1,7 +1,7 @@
-package com.backend.allreva.search.infra;
+package com.backend.allreva.concert.infra;
 
 import com.backend.allreva.search.exception.EventPublishingException;
-import com.backend.allreva.search.query.domain.ConcertLikeEvent;
+import com.backend.allreva.concert.command.domain.ConcertLikeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;

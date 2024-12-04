@@ -3,31 +3,33 @@ package com.backend.allreva.survey.command.application;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.concert.infra.ConcertJpaRepository;
 import com.backend.allreva.concert.infra.dto.ConcertDateInfoResponse;
-import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.*;
 import com.backend.allreva.survey.command.domain.*;
+import com.backend.allreva.survey.command.domain.value.SurveyEventType;
 import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
 import com.backend.allreva.survey.exception.SurveyNotWriterException;
+import com.backend.allreva.survey.infra.SurveyProducer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class SurveyCommandService {
     private final SurveyCommandRepository surveyCommandRepository;
     private final SurveyJoinCommandRepository surveyJoinCommandRepository;
     private final SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
     private final ConcertJpaRepository concertRepository;
     private final SurveyConverter surveyConverter;
-
+    private final SurveyProducer surveyProducer;
     /**
      * 수요조사 개설
      */
@@ -41,6 +43,20 @@ public class SurveyCommandService {
 
         Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, request));
         saveBoardingDates(survey, request.boardingDates());
+
+        surveyProducer.publishEvent(
+                SurveyEvent.builder()
+                        .eventId(survey.getId())
+                        .survey(SurveyEventDto.builder()
+                                .id(survey.getId())
+                                .title(survey.getTitle())
+                                .region(survey.getRegion())
+                                .endDate(survey.getEndDate())
+                                .build())
+                        .eventType(SurveyEventType.CREATE)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
 
         return survey.getId();
     }
