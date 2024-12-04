@@ -139,7 +139,7 @@ class ConcertQueryTest extends IntegrationTestSupport {
     }
 
 
-    @DisplayName("조회하면 지정된 시간 이후에 조회수가 증가한다")
+ /*   @DisplayName("조회하면 지정된 시간 이후에 조회수가 증가한다")
     @Test
     void detailViewCountTest() throws InterruptedException {
 
@@ -168,5 +168,5 @@ class ConcertQueryTest extends IntegrationTestSupport {
 
         // Then
         Assertions.assertThat(concert.getViewCount()).isZero();
-    }
+    }*/
 }

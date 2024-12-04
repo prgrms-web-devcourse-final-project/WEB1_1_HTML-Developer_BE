@@ -1,4 +1,4 @@
-package com.backend.allreva.search.query.domain;
+package com.backend.allreva.concert.query.application.domain;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -117,8 +117,8 @@ public class ConcertDocument {
     @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private LocalDateTime deletedAt;
 
-    public void updateViewCount(final Long increaseCount) {
-        viewCount = viewCount + increaseCount;
+    public void updateViewCount(final Long viewCount) {
+        this.viewCount = viewCount;
     }
 
     public void intiViewCount() {

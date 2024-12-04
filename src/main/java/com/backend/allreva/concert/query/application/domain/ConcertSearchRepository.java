@@ -1,6 +1,6 @@
-package com.backend.allreva.search.infra;
+package com.backend.allreva.concert.query.application.domain;
 
-import com.backend.allreva.search.query.domain.ConcertDocument;
+import com.backend.allreva.concert.infra.CustomConcertSearchRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;

@@ -1,6 +1,7 @@
 package com.backend.allreva.search.infra;
 
-import com.backend.allreva.search.query.domain.ConcertDocument;
+import com.backend.allreva.concert.query.application.domain.ConcertSearchRepository;
+import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 import com.backend.allreva.support.IntegrationTestSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
