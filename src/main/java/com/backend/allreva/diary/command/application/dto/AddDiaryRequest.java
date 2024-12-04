@@ -2,8 +2,10 @@ package com.backend.allreva.diary.command.application.dto;
 
 import com.backend.allreva.diary.command.domain.ConcertDiary;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record AddDiaryRequest(
 

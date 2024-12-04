@@ -3,7 +3,6 @@ package com.backend.allreva.common.application;
 import com.backend.allreva.common.exception.CustomException;
 import com.backend.allreva.common.exception.code.GlobalErrorCode;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.member.command.application.ImageService;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
@@ -23,7 +22,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class S3ImageService implements ImageService {
+public class S3ImageService {
 
     @Value("${spring.cloud.aws.s3.bucket:null}")
     private String bucketName;

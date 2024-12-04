@@ -29,9 +29,9 @@ class ConcertQueryTest extends IntegrationTestSupport {
     private ConcertQueryService concertQueryService;
 
     @Autowired
-    private ConcertJpaRepository concertJpaRepository;
-    @Autowired
     private ConcertRepository concertRepository;
+    @Autowired
+    private ConcertJpaRepository concertJpaRepository;
     @Autowired
     private ConcertHallRepository concertHallRepository;
 
