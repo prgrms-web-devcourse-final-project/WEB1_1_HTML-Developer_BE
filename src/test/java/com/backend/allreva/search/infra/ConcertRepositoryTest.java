@@ -22,7 +22,7 @@ class ConcertRepositoryTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("검색어 에 따라 연관성 상위 2개가 출력")
-    void findByTitleMixedTest(){
+    void findByTitleMixedTest() {
         //given
         PageRequest pageRequest = PageRequest.of(0, 2);
 
@@ -31,5 +31,37 @@ class ConcertRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(day6.size(), is(2));
+    }
+
+    @Test
+    @DisplayName("콘서트 코드로 검색")
+    void findByConcertCodeTest() {
+        //given
+        String concertCode = "PF246277";
+
+        //when
+        ConcertDocument concertDocument = concertSearchRepository.findByConcertCode(concertCode).get();
+
+        //then
+        log.info("concertDocument: {}", concertDocument.toString());
+        assertThat(concertDocument.getConcertCode(), is(concertCode));
+    }
+
+    @Test
+    @DisplayName("조회수 올라감 테스트")
+    void increaseViewCountTest() {
+        //given
+        String concertCode = "PF246277";
+        ConcertDocument concertDocument = concertSearchRepository.findByConcertCode(concertCode).get();
+        concertDocument.intiViewCount();
+        concertSearchRepository.save(concertDocument);
+        //when
+
+        concertDocument.updateViewCount(10L);
+        ConcertDocument save = concertSearchRepository.save(concertDocument);
+
+        //then
+        assertThat(concertDocument.getViewCount(), is(10L));
+
     }
 }

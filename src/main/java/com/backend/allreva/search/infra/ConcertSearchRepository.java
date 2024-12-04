@@ -7,6 +7,8 @@ import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ConcertSearchRepository extends
         ElasticsearchRepository<ConcertDocument, String>,
@@ -14,4 +16,5 @@ public interface ConcertSearchRepository extends
     @Query("{\"match\": {\"title.mixed\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}")
     Page<ConcertDocument> findByTitleMixed(String title, Pageable pageable);
 
+    Optional<ConcertDocument> findByConcertCode(String concertCode);
 }
