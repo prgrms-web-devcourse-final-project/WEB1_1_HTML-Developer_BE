@@ -39,7 +39,7 @@ public class EventPollingPublisher {
                 break;
             }
         }
-        eventRepository.updateAllRemainEvents(publishedEventIds);
+        eventRepository.deleteAllById(publishedEventIds);
     }
 
     private void handleException(Exception e) {

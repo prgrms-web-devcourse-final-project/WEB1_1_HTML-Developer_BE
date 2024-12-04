@@ -24,9 +24,6 @@ public class EventEntry {
     private String payload;
 
     @Column(nullable = false)
-    private boolean isPublished = false;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Builder
@@ -37,9 +34,5 @@ public class EventEntry {
         this.topic = topic;
         this.payload = payload;
         this.createdAt = LocalDateTime.now();
-    }
-
-    public void updateToSuccess() {
-        this.isPublished = true;
     }
 }
