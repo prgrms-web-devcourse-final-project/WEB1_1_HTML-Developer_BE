@@ -17,27 +17,6 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
-      
-      zookeeper:
-        image: confluentinc/cp-zookeeper:latest
-        ports:
-          - "2181:2181"
-        env:
-          ZOOKEEPER_CLIENT_PORT: 2181
-          ZOOKEEPER_TICK_TIME: 2000
-          
-      kafka:
-        image: confluentinc/cp-kafka:latest
-        ports:
-          - "9092:9092"
-        env:
-          KAFKA_BROKER_ID: 1
-          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-          KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-          KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-          KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-          KAFKA_CREATE_TOPICS: "concertLike-event:1:1,rent-event:1:1,survey-event:1:1"
 
     steps:
       - uses: actions/checkout@v3
@@ -59,6 +38,44 @@ jobs:
         uses: supercharge/redis-github-action@1.1.0
         with:
           redis-version: 6
+
+      - name: Start Zookeeper
+        run: |
+          echo "Starting Zookeeper..."
+          docker run -d --name zookeeper -p 2181:2181 \
+          -e ZOOKEEPER_CLIENT_PORT=2181 \
+          -e ZOOKEEPER_TICK_TIME=2000 \
+          confluentinc/cp-zookeeper:latest
+
+      - name: Wait for Zookeeper to be ready
+        run: |
+          echo "Waiting for Zookeeper to be ready..."
+          until nc -zv localhost 2181; do
+            sleep 1
+          done
+          echo "Zookeeper is ready!"
+            
+
+      - name: Start Kafka
+        run: |
+          echo "Starting Kafka..."
+          docker run -d --name kafka -p 9092:9092 \
+            -e KAFKA_BROKER_ID=1 \
+            -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 \
+            -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
+            -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT \
+            -e KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT \
+            -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+            -e KAFKA_CREATE_TOPICS="concertLike-event:1:1,rent-event:1:1,survey-event:1:1" \
+            confluentinc/cp-kafka:latest
+
+      - name: Wait for Kafka to be ready
+        run: |
+          echo "Waiting for Kafka to be ready..."
+          until nc -zv localhost 9092; do
+            sleep 1
+          done
+          echo "Kafka is ready!"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
