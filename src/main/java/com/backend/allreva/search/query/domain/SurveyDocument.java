@@ -29,4 +29,18 @@ public class SurveyDocument {
 
     @Field(type = FieldType.Date, name = "eddate")
     private LocalDate edDate;
+
+    public void updateSurveyDocument(
+            final String title,
+            final String region,
+            final LocalDate edDate
+    ){
+        this.title = title;
+        this.region = region;
+        this.edDate = edDate;
+    }
+
+    public void updateParticipationCount(final Integer participationCount) {
+        this.participationCount += participationCount;
+    }
 }

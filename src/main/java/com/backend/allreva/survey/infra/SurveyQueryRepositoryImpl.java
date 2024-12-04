@@ -12,6 +12,7 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -88,11 +89,13 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                         survey.id,
                         survey.title,
                         survey.region,
-                        JPAExpressions
-                                .select(surveyJoin.count().intValue())
-                                .from(surveyJoin)
-                                .where(surveyJoin.surveyId.eq(survey.id)
-                                        .and(surveyJoin.deletedAt.isNull())),
+                        Expressions.as(
+                                JPAExpressions
+                                        .select(surveyJoin.passengerNum.sum().coalesce(0))
+                                        .from(surveyJoin)
+                                        .where(surveyJoin.surveyId.eq(survey.id)
+                                                .and(surveyJoin.deletedAt.isNull())),
+                                "participationCount"),
                         survey.endDate))
                 .from(survey)
                 .where(survey.id.eq(surveyId)

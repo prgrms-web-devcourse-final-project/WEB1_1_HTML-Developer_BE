@@ -4,5 +4,5 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum SurveyEventType {
-    CREATE, UPDATE, DELETE
+    CREATE, UPDATE, DELETE, UPDATE_PARTICIPATION_COUNT
 }

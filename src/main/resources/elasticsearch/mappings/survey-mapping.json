@@ -5,7 +5,15 @@
     },
     "title": {
       "type": "text",
-      "analyzer": "korean_mixed"
+      "fields": {
+        "mixed": {
+          "type": "text",
+          "analyzer": "korean_mixed"
+        },
+        "keyword": {
+          "type": "keyword"
+        }
+      }
     },
     "region": {
       "type": "keyword"

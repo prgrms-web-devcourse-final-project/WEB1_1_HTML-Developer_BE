@@ -85,6 +85,20 @@ public class SurveyCommandService {
         );
 
         updateBoardingDates(survey, request.boardingDates());
+
+        surveyProducer.publishEvent(
+                SurveyEvent.builder()
+                        .eventId(survey.getId())
+                        .survey(SurveyEventDto.builder()
+                                .id(survey.getId())
+                                .title(survey.getTitle())
+                                .region(survey.getRegion())
+                                .endDate(survey.getEndDate())
+                                .build())
+                        .eventType(SurveyEventType.UPDATE)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 
     /**
@@ -99,6 +113,19 @@ public class SurveyCommandService {
 
         surveyCommandRepository.delete(survey);
         surveyBoardingDateCommandRepository.deleteAllBySurvey(survey);
+
+        surveyProducer.publishEvent(
+                SurveyEvent.builder()
+                        .eventId(survey.getId())
+                        .survey(SurveyEventDto.builder()
+                                .id(survey.getId())
+                                .title(survey.getTitle())
+                                .region(survey.getRegion())
+                                .endDate(survey.getEndDate())
+                                .build())
+                        .eventType(SurveyEventType.DELETE)
+                        .timestamp(LocalDateTime.now())
+                        .build());
     }
 
     /**
@@ -114,6 +141,23 @@ public class SurveyCommandService {
 
         SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
                 surveyConverter.toSurveyJoin(memberId, request));
+        log.info("passenger_num : {}", surveyJoin.getPassengerNum());
+
+        surveyProducer.publishEvent(
+                SurveyEvent.builder()
+                        .eventId(survey.getId())
+                        .survey(SurveyEventDto.builder()
+                                .id(survey.getId())
+                                .title(survey.getTitle())
+                                .region(survey.getRegion())
+                                .endDate(survey.getEndDate())
+                                .participationCount(surveyJoin.getPassengerNum())
+                                .build())
+                        .eventType(SurveyEventType.UPDATE_PARTICIPATION_COUNT)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+
         return surveyJoin.getId();
     }
 
