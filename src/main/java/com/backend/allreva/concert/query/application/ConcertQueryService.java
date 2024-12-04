@@ -7,7 +7,6 @@ import com.backend.allreva.concert.exception.ConcertSearchNotFoundException;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
-import com.backend.allreva.concert.query.application.domain.ConcertSearchRepository;
 import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

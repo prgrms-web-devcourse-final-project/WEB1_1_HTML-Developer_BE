@@ -24,11 +24,11 @@ public class DiaryCommandService {
 
     public Long add(
             final AddDiaryRequest request,
-            final List<MultipartFile> images,
+            final List<MultipartFile> imageFiles,
             final Long memberId
     ) {
         ConcertDiary diary = request.to();
-        List<Image> uploadedImages = s3ImageService.upload(images);
+        List<Image> uploadedImages = s3ImageService.upload(imageFiles);
 
         diary.addImages(uploadedImages);
         diary.addMemberId(memberId);
@@ -37,10 +37,10 @@ public class DiaryCommandService {
 
     public void update(
             final UpdateDiaryRequest request,
-            final List<MultipartFile> images,
+            final List<MultipartFile> imageFiles,
             final Long memberId
     ) {
-        List<Image> uploadedImages = s3ImageService.upload(images);
+        List<Image> uploadedImages = s3ImageService.upload(imageFiles);
         ConcertDiary diary = diaryRepository.findById(request.diaryId())
                 .orElseThrow(DiaryNotFoundException::new);
 
@@ -62,5 +62,11 @@ public class DiaryCommandService {
         diary.validateWriter(memberId);
 
         diaryRepository.deleteById(diaryId);
+    }
+
+    public void addImagesById(Long diaryId, List<Image> images) {
+        ConcertDiary diary = diaryRepository.findById(diaryId)
+                .orElseThrow();
+        diary.addImages(images);
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @Document(indexName = "concerts")
 @Setting(settingPath = "elasticsearch/mappings/es-settings.json")
 @Mapping(mappingPath = "elasticsearch/mappings/concert-mapping.json")
+
 @Getter
 @ToString
 public class ConcertDocument {
@@ -117,8 +118,9 @@ public class ConcertDocument {
     @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private LocalDateTime deletedAt;
 
-    public void updateViewCount(final Long increaseCount) {
-        viewCount = viewCount + increaseCount;
+
+    public void updateViewCount(final Long viewCount) {
+        this.viewCount = viewCount;
     }
 
     public void intiViewCount() {
