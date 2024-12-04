@@ -85,6 +85,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Build with Gradle
         run: |
           chmod +x gradlew
@@ -121,26 +131,48 @@ jobs:
             --port 22 \
             --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
+      - name: Create .env file
+        run: |
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> .env
+
+      - name: Send docker-compose.yml
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "docker-compose.yml, .env"
+          target: "/home/ec2-user"
+
+      - name: Send deploy.sh
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "deploy.sh"
+          target: "/home/ec2-user"
+
       - name: AWS EC2 배포
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
             sudo chmod 666 /var/run/docker.sock
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             
-            # 기존 컨테이너와 이미지 정리
-            docker stop $(docker ps -a -q) || true
-            docker rm $(docker ps -a -q) || true
-            docker rmi $(docker images -q) || true
-            docker system prune -af --volumes
-            
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
-            docker stop $(docker ps -a -q) || true
-            docker rm $(docker ps -a -q) || true
-            docker run -d -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
+            chmod 777 ./deploy.sh
+            export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            export APP_NAME=${{ secrets.APP_NAME }}
+            ./deploy.sh
+            sudo docker image prune -f 
 
       - name: 보안 그룹에서 GitHub Actions IP 제거
         if: always()
