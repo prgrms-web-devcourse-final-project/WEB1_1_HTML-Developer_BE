@@ -1,6 +1,5 @@
 package com.backend.allreva.diary.command.domain;
 
-import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.diary.exception.DiaryNotWriterException;
@@ -69,7 +68,6 @@ public class ConcertDiary extends BaseEntity {
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
-        Events.raise();
     }
 
     public void addImages(final List<Image> images) {
