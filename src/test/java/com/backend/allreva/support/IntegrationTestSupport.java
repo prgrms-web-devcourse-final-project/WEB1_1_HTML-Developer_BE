@@ -31,8 +31,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
-        "aws.region=us-east-1",
-        "view.count.schedule.rate=20" // 이거 숫자를 낮추면 스케줄러 몇백번씩 실행????
+        "aws.region=us-east-1"
+//        , "view.count.schedule.rate=20" // 이거 숫자를 낮추면 스케줄러 몇백번씩 실행????
 })
 @MockBean(JpaAuditingConfig.class)
 @AutoConfigureMockMvc(addFilters = false)

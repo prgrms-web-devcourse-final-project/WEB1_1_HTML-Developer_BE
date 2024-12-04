@@ -3,14 +3,11 @@ package com.backend.allreva.concert.infra;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
-import com.backend.allreva.search.infra.ConcertLikeProducer;
-import com.backend.allreva.search.query.domain.ConcertLikeEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +20,6 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
     private final ConcertJpaRepository concertJpaRepository;
 
-    private final ConcertLikeProducer concertLikeProducer;
 
     @Override
     public Concert save(final Concert concert) {
@@ -66,7 +62,7 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     }
 
     @Override
-    public boolean existsById(Long concertId) {
+    public boolean existsById(final Long concertId) {
         return concertJpaRepository.existsById(concertId);
     }
 
@@ -76,19 +72,9 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     public void addViewCounts() {
         viewCountCache.entrySet().stream()
                 .filter(entry -> entry.getValue() > 0)
-                .forEach(entry ->
-                        concertJpaRepository.findById(entry.getKey())
-                                .ifPresent(concert -> {
-                                    concert.addViewCount(entry.getValue());
-
-                                    concertLikeProducer.publishEvent(
-                                            ConcertLikeEvent.builder()
-                                                    .increaseCount(entry.getValue())
-                                                    .eventId(concert.getCode().getConcertCode())
-                                                    .timestamp(LocalDateTime.now())
-                                                    .build()
-                                    );
-                                })
+                .forEach(
+                        entry -> concertJpaRepository.findById(entry.getKey())
+                                .ifPresent(concert -> concert.addViewCount(entry.getValue()))
                 );
         viewCountCache.clear();
     }

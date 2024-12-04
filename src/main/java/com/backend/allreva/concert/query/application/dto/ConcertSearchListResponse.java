@@ -1,6 +1,4 @@
-package com.backend.allreva.search.query.application.dto;
-
-import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
+package com.backend.allreva.concert.query.application.dto;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.backend.allreva.concert.query.application.dto;
 
-import com.backend.allreva.search.query.domain.ConcertDocument;
+import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 
 import java.time.LocalDate;
 

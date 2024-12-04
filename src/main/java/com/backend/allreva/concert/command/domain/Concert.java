@@ -1,5 +1,6 @@
 package com.backend.allreva.concert.command.domain;
 
+import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.value.Code;
@@ -96,6 +97,10 @@ public class Concert extends BaseEntity {
 
     public void addViewCount(final int count) {
         this.viewCount += count;
-
+        Events.raise(
+                ViewAddedEvent.builder()
+                        .concertCode(this.code.getConcertCode())
+                        .viewCount(this.viewCount)
+                        .build());
     }
 }

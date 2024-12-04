@@ -1,4 +1,4 @@
-package com.backend.allreva.search.exception;
+package com.backend.allreva.concert.exception.exception;
 
 import com.backend.allreva.common.exception.code.ErrorCode;
 import com.backend.allreva.common.exception.code.ErrorCodeInterface;

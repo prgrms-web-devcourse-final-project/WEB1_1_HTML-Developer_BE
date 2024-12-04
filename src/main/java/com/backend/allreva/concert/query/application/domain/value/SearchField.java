@@ -1,4 +1,4 @@
-package com.backend.allreva.search.query.domain.value;
+package com.backend.allreva.concert.query.application.domain.value;
 
 public enum SearchField {
     ADDRESS("concert_hall_address.mixed"),

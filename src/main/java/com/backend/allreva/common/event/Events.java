@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Component
 public class Events {
 
     private static ApplicationEventPublisher publisher;
