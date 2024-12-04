@@ -1,6 +1,6 @@
-package com.backend.allreva.search.query.application.dto;
+package com.backend.allreva.survey.query.application.dto;
 
-import com.backend.allreva.search.query.domain.SurveyDocument;
+import com.backend.allreva.survey.query.application.domain.SurveyDocument;
 import com.backend.allreva.survey.command.domain.value.Region;
 
 import java.time.LocalDate;

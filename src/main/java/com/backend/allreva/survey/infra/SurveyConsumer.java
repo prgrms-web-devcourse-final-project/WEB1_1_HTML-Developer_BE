@@ -2,10 +2,10 @@ package com.backend.allreva.survey.infra;
 
 import com.backend.allreva.common.exception.CustomException;
 import com.backend.allreva.common.exception.code.GlobalErrorCode;
-import com.backend.allreva.search.exception.SearchResultNotFoundException;
-import com.backend.allreva.search.infra.SurveyDocumentRepository;
-import com.backend.allreva.search.query.application.dto.SurveyDocumentDto;
-import com.backend.allreva.search.query.domain.SurveyDocument;
+import com.backend.allreva.concert.exception.exception.SearchResultNotFoundException;
+import com.backend.allreva.survey.query.application.domain.SurveyDocumentRepository;
+import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
+import com.backend.allreva.survey.query.application.domain.SurveyDocument;
 import com.backend.allreva.survey.command.domain.SurveyEvent;
 import com.backend.allreva.survey.exception.SurveyEventConsumingException;
 import com.backend.allreva.survey.query.application.SurveyQueryService;

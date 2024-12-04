@@ -1,6 +1,6 @@
 package com.backend.allreva.survey.infra;
 
-import com.backend.allreva.search.query.application.dto.SurveyDocumentDto;
+import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;

@@ -1,4 +1,4 @@
-package com.backend.allreva.search.query.domain;
+package com.backend.allreva.survey.query.application.domain;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

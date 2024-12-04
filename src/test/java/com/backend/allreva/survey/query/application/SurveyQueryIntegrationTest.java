@@ -4,7 +4,7 @@ import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.search.query.application.dto.SurveyDocumentDto;
+import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDateCommandRepository;

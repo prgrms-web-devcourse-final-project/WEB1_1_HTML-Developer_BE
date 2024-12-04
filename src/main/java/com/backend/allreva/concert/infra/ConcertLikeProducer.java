@@ -1,6 +1,6 @@
 package com.backend.allreva.concert.infra;
 
-import com.backend.allreva.search.exception.EventPublishingException;
+import com.backend.allreva.concert.exception.exception.EventPublishingException;
 import com.backend.allreva.concert.command.domain.ConcertLikeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

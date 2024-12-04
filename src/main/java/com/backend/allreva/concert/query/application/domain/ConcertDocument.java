@@ -1,4 +1,4 @@
-package com.backend.allreva.search.query.domain;
+package com.backend.allreva.concert.query.application.domain;
 
 import lombok.Getter;
 import lombok.ToString;

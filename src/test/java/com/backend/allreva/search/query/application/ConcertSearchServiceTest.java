@@ -1,8 +1,9 @@
 package com.backend.allreva.search.query.application;
 
+import com.backend.allreva.concert.query.application.ConcertSearchService;
 import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
-import com.backend.allreva.search.exception.SearchResultNotFoundException;
-import com.backend.allreva.search.query.application.dto.ConcertSearchListResponse;
+import com.backend.allreva.concert.exception.exception.SearchResultNotFoundException;
+import com.backend.allreva.concert.query.application.dto.ConcertSearchListResponse;
 import com.backend.allreva.support.IntegrationTestSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

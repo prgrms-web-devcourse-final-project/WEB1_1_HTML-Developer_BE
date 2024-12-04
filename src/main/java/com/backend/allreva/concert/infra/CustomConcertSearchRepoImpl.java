@@ -1,12 +1,12 @@
-package com.backend.allreva.search.infra;
+package com.backend.allreva.concert.infra;
 
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import com.backend.allreva.search.exception.ElasticSearchException;
-import com.backend.allreva.search.query.domain.ConcertDocument;
-import com.backend.allreva.search.query.domain.value.SearchField;
-import com.backend.allreva.search.query.domain.value.SortDirection;
+import com.backend.allreva.concert.exception.exception.ElasticSearchException;
+import com.backend.allreva.concert.query.application.domain.ConcertDocument;
+import com.backend.allreva.concert.query.application.domain.value.SearchField;
+import com.backend.allreva.concert.query.application.domain.value.SortDirection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
