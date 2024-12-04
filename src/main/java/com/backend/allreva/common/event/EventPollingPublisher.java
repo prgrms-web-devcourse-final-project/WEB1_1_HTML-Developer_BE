@@ -26,11 +26,21 @@ public class EventPollingPublisher {
      */
     @Scheduled(fixedDelay = FIVE_SECONDS) // 5초
     public void processRemains() {
-        List<Long> publishedEventIds = new ArrayList<>();
         List<EventEntry> remains = eventRepository.findAllRemainEvents();
+
+        List<Long> publishedEventIds = sendEventToKafka(remains);
+        eventRepository.deleteAllById(publishedEventIds);
+    }
+
+
+    private List<Long> sendEventToKafka(List<EventEntry> remains) {
+        List<Long> publishedEventIds = new ArrayList<>();
 
         for (EventEntry event : remains) {
             try {
+                if (event.getTopic() == null) {
+                    continue;
+                }
                 kafkaTemplate.send(event.getTopic(), event.getId().toString(), event.getPayload())
                         .get();
                 publishedEventIds.add(event.getId());
@@ -39,7 +49,7 @@ public class EventPollingPublisher {
                 break;
             }
         }
-        eventRepository.deleteAllById(publishedEventIds);
+        return publishedEventIds;
     }
 
     private void handleException(Exception e) {
