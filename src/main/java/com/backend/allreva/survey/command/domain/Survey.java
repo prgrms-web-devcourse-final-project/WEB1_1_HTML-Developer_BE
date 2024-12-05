@@ -2,6 +2,8 @@ package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
+import com.backend.allreva.survey.exception.SurveyNotWriterException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -56,13 +58,13 @@ public class Survey extends BaseEntity {
 
     @Builder
     private Survey(final Long memberId,
-                  final Long concertId,
-                  final String title,
-                  final String artistName,
-                  final Region region,
-                  final LocalDate endDate,
-                  final int maxPassenger,
-                  final String information) {
+                   final Long concertId,
+                   final String title,
+                   final String artistName,
+                   final Region region,
+                   final LocalDate endDate,
+                   final int maxPassenger,
+                   final String information) {
         this.memberId = memberId;
         this.concertId = concertId;
         this.title = title;
@@ -86,12 +88,16 @@ public class Survey extends BaseEntity {
         this.information = information;
     }
 
-    public boolean isWriter(final Long loginMemberId) {
-        return this.memberId.equals(loginMemberId);
+    public void isWriter(final Long loginMemberId) {
+
+        if (!this.memberId.equals(loginMemberId))
+            throw new SurveyNotWriterException();
     }
 
-    public boolean containsBoardingDate(final LocalDate boardingDate) {
-        return this.boardingDates.stream()
-                .anyMatch(bd -> bd.getDate().equals(boardingDate));
+    public void containsBoardingDate(final LocalDate boardingDate) {
+        if (this.boardingDates.stream()
+                .noneMatch(bd -> bd.getDate().equals(boardingDate))) {
+            throw new SurveyInvalidBoardingDateException();
+        }
     }
 }

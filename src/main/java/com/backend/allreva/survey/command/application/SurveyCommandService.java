@@ -10,7 +10,6 @@ import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.*;
 import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
-import com.backend.allreva.survey.exception.SurveyNotWriterException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,13 +34,10 @@ public class SurveyCommandService {
                            final OpenSurveyRequest request) {
 
         //가용 날짜가 콘서트 진행 날짜인지 확인
-        if (!validateBoardingDates(request.concertId(), request.boardingDates())) {
-            throw new SurveyInvalidBoardingDateException();
-        }
+        validateBoardingDates(request.concertId(), request.boardingDates());
 
         Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, request));
         saveBoardingDates(survey, request.boardingDates());
-
         return survey.getId();
     }
 
@@ -53,14 +49,9 @@ public class SurveyCommandService {
         Survey survey = findSurvey(request.surveyId());
 
         //가용 날짜가 콘서트 진행 날짜인지 확인
-        if (!validateBoardingDates(survey.getConcertId(), request.boardingDates())) {
-            throw new SurveyInvalidBoardingDateException();
-        }
+        validateBoardingDates(survey.getConcertId(), request.boardingDates());
 
-        if (!survey.isWriter(memberId)) {
-            throw new SurveyNotWriterException();
-        }
-
+        survey.isWriter(memberId);
         survey.update(request.title(),
                 request.region(),
                 request.endDate(),
@@ -77,9 +68,8 @@ public class SurveyCommandService {
     public void removeSurvey(final Long memberId, final SurveyIdRequest surveyIdRequest) {
         Survey survey = findSurvey(surveyIdRequest.surveyId());
 
-        if (!survey.isWriter(memberId)) {
-            throw new SurveyNotWriterException();
-        }
+        //작성자 확인
+        survey.isWriter(memberId);
 
         surveyCommandRepository.delete(survey);
         surveyBoardingDateCommandRepository.deleteAllBySurvey(survey);
@@ -92,9 +82,8 @@ public class SurveyCommandService {
                                      final JoinSurveyRequest request) {
         Survey survey = findSurvey(request.surveyId());
 
-        if (!survey.containsBoardingDate(request.boardingDate())) {
-            throw new SurveyInvalidBoardingDateException();
-        }
+        //신청 가능한 날짜인지 확인
+        survey.containsBoardingDate(request.boardingDate());
 
         SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
                 surveyConverter.toSurveyJoin(memberId, request));
@@ -118,7 +107,7 @@ public class SurveyCommandService {
         saveBoardingDates(survey, boardingDates);
     }
 
-    private boolean validateBoardingDates(Long concertId, List<LocalDate> boardingDates) {
+    private void validateBoardingDates(Long concertId, List<LocalDate> boardingDates) {
         ConcertDateInfoResponse dateInfo = findStartDateAndEndDateById(concertId);
 
         LocalDate concertStartDate = dateInfo.getStartDate();
@@ -126,10 +115,9 @@ public class SurveyCommandService {
 
         for (LocalDate boardingDate : boardingDates) {
             if (boardingDate.isBefore(concertStartDate) || boardingDate.isAfter(concertEndDate)) {
-                return false;
+                throw new SurveyInvalidBoardingDateException();
             }
         }
-        return true;
     }
 
     private ConcertDateInfoResponse findStartDateAndEndDateById(final Long concertId) {
