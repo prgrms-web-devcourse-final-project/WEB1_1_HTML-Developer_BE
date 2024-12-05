@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/search/survey")
+@RequestMapping("/api/v1/search/surveys")
 public class SurveySearchController {
     private final SurveySearchService surveySearchService;
 
