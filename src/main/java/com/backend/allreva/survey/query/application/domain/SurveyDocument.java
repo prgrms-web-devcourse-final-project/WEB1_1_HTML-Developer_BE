@@ -2,6 +2,7 @@ package com.backend.allreva.survey.query.application.domain;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.elasticsearch.annotations.*;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Mapping(mappingPath = "elasticsearch/mappings/survey-mapping.json")
 @Getter
 @ToString
+@Builder
 @AllArgsConstructor
 public class SurveyDocument {
     @Id
@@ -40,7 +42,7 @@ public class SurveyDocument {
         this.edDate = edDate;
     }
 
-    public void updateParticipationCount(final Integer participationCount) {
+    public void updateParticipationCount(final int participationCount) {
         this.participationCount += participationCount;
     }
 }

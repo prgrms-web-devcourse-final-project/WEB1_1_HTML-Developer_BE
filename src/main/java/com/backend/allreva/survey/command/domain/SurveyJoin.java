@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.command.domain;
 
+import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import jakarta.persistence.*;
@@ -55,6 +56,6 @@ public class SurveyJoin extends BaseEntity {
         this.boardingType = boardingType;
         this.passengerNum = passengerNum;
         this.notified = notified;
-
+        Events.raise(new SurveyJoinEvent(surveyId, passengerNum));
     }
 }

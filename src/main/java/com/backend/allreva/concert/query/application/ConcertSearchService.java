@@ -1,9 +1,10 @@
 package com.backend.allreva.concert.query.application;
 
+
 import com.backend.allreva.concert.query.application.domain.ConcertSearchRepository;
 import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
-import com.backend.allreva.concert.exception.exception.ElasticSearchException;
-import com.backend.allreva.concert.exception.exception.SearchResultNotFoundException;
+import com.backend.allreva.concert.exception.search.ElasticSearchException;
+import com.backend.allreva.concert.exception.search.SearchResultNotFoundException;
 import com.backend.allreva.concert.query.application.dto.ConcertSearchListResponse;
 import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 import lombok.RequiredArgsConstructor;

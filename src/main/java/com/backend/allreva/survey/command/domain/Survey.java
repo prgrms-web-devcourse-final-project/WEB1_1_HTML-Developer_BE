@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.command.domain;
 
+import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.Region;
 import jakarta.persistence.*;
@@ -56,13 +57,13 @@ public class Survey extends BaseEntity {
 
     @Builder
     private Survey(final Long memberId,
-                  final Long concertId,
-                  final String title,
-                  final String artistName,
-                  final Region region,
-                  final LocalDate endDate,
-                  final int maxPassenger,
-                  final String information) {
+                   final Long concertId,
+                   final String title,
+                   final String artistName,
+                   final Region region,
+                   final LocalDate endDate,
+                   final int maxPassenger,
+                   final String information) {
         this.memberId = memberId;
         this.concertId = concertId;
         this.title = title;
@@ -84,6 +85,15 @@ public class Survey extends BaseEntity {
         this.endDate = endDate;
         this.maxPassenger = maxPassenger;
         this.information = information;
+
+        Events.raise(
+                SurveySavedEvent.builder()
+                        .surveyId(id)
+                        .title(title)
+                        .endDate(endDate)
+                        .region(region)
+                        .build()
+        );
     }
 
     public boolean isWriter(final Long loginMemberId) {

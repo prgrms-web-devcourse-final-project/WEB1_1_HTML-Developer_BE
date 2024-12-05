@@ -5,13 +5,17 @@ import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
+import com.backend.allreva.survey.command.application.SurveyCommandService;
+import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDateCommandRepository;
 import com.backend.allreva.survey.command.domain.SurveyCommandRepository;
-import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -39,6 +44,9 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
     private SurveyCommandRepository surveyCommandRepository;
     @Autowired
     private ConcertRepository concertRepository;
+
+    @Autowired
+    private SurveyQueryRepository surveyQueryRepository;
     @Autowired
     private SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
     private Member testMember;
@@ -133,4 +141,24 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
         assertEquals(lastId, responseList.get(2).surveyId());
     }
 
+    @Test
+    @DisplayName("수요조사 검색에 필요한 데이터 조회에 성공한다")
+    public void findSurveyWithParticipationCount() {
+        //given
+        LocalDate now = LocalDate.now().plusDays(2);
+        Long surveyId = surveyCommandService.openSurvey(testMember.getId(), createOpenSurveyRequest(testConcert.getId(),now , Region.서울)); // 두번째
+        JoinSurveyRequest joinSurveyRequest = new JoinSurveyRequest(surveyId,
+                LocalDate.of(2030, 12, 1), BoardingType.DOWN, 2, true
+        );
+        Long surveyJoinId = surveyCommandService.createSurveyResponse(testMember.getId(), joinSurveyRequest);
+
+        //when
+        Optional<SurveyDocumentDto> surveyWithParticipationCount = surveyQueryService.findSurveyWithParticipationCount(surveyId);
+
+        assertThat(surveyWithParticipationCount).isPresent();
+        assertThat(surveyWithParticipationCount.get().participationCount()).isEqualTo(2);
+        assertThat(surveyWithParticipationCount.get().id()).isEqualTo(surveyId);
+        assertThat(surveyWithParticipationCount.get().region()).isEqualTo(Region.서울);
+        assertThat(surveyWithParticipationCount.get().edDate()).isEqualTo(now);
+    }
 }

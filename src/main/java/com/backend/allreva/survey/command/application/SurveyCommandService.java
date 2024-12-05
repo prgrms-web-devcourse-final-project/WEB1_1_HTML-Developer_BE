@@ -1,8 +1,9 @@
 package com.backend.allreva.survey.command.application;
 
+import com.backend.allreva.common.event.Events;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
-import com.backend.allreva.concert.infra.ConcertJpaRepository;
 import com.backend.allreva.concert.infra.dto.ConcertDateInfoResponse;
+import com.backend.allreva.concert.infra.repository.ConcertJpaRepository;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
@@ -12,6 +13,7 @@ import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
 import com.backend.allreva.survey.exception.SurveyNotWriterException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class SurveyCommandService {
     private final SurveyCommandRepository surveyCommandRepository;
     private final SurveyJoinCommandRepository surveyJoinCommandRepository;
@@ -33,15 +36,21 @@ public class SurveyCommandService {
      */
     public Long openSurvey(final Long memberId,
                            final OpenSurveyRequest request) {
-
         //가용 날짜가 콘서트 진행 날짜인지 확인
         if (!validateBoardingDates(request.concertId(), request.boardingDates())) {
             throw new SurveyInvalidBoardingDateException();
         }
-
         Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, request));
         saveBoardingDates(survey, request.boardingDates());
 
+        Events.raise(
+                SurveySavedEvent.builder()
+                        .surveyId(survey.getId())
+                        .title(survey.getTitle())
+                        .region(survey.getRegion())
+                        .endDate(survey.getEndDate())
+                        .build()
+        );
         return survey.getId();
     }
 
@@ -56,7 +65,6 @@ public class SurveyCommandService {
         if (!validateBoardingDates(survey.getConcertId(), request.boardingDates())) {
             throw new SurveyInvalidBoardingDateException();
         }
-
         if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
         }
@@ -67,38 +75,41 @@ public class SurveyCommandService {
                 request.maxPassenger(),
                 request.information()
         );
-
         updateBoardingDates(survey, request.boardingDates());
     }
 
     /**
      * 수요조사 삭제
      */
-    public void removeSurvey(final Long memberId, final SurveyIdRequest surveyIdRequest) {
+    public void removeSurvey(
+            final Long memberId,
+            final SurveyIdRequest surveyIdRequest
+    ) {
         Survey survey = findSurvey(surveyIdRequest.surveyId());
-
         if (!survey.isWriter(memberId)) {
             throw new SurveyNotWriterException();
         }
 
         surveyCommandRepository.delete(survey);
         surveyBoardingDateCommandRepository.deleteAllBySurvey(survey);
+        Events.raise(new SurveyDeletedEvent(survey.getId()));
     }
 
     /**
      * 수요조사 응답(신청)
      */
-    public Long createSurveyResponse(final Long memberId,
-                                     final JoinSurveyRequest request) {
+    public Long createSurveyResponse(
+            final Long memberId,
+            final JoinSurveyRequest request
+    ) {
         Survey survey = findSurvey(request.surveyId());
-
         if (!survey.containsBoardingDate(request.boardingDate())) {
             throw new SurveyInvalidBoardingDateException();
         }
 
-        SurveyJoin surveyJoin = surveyJoinCommandRepository.save(
-                surveyConverter.toSurveyJoin(memberId, request));
-        return surveyJoin.getId();
+        SurveyJoin surveyJoin = surveyConverter.toSurveyJoin(memberId, request);
+        log.info("passenger_num : {}", surveyJoin.getPassengerNum());
+        return surveyJoinCommandRepository.save(surveyJoin).getId();
     }
 
     private void saveBoardingDates(final Survey survey,

@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.infra;
 
+import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
@@ -11,12 +12,15 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.backend.allreva.survey.command.domain.QSurvey.survey;
 import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
@@ -76,6 +80,27 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
                 .fetch();
+    }
+
+    @Override
+    public Optional<SurveyDocumentDto> findSurveyWithParticipationCount(final Long surveyId) {
+        return Optional.ofNullable(queryFactory
+                .select(Projections.constructor(SurveyDocumentDto.class,
+                        survey.id,
+                        survey.title,
+                        survey.region,
+                        Expressions.as(
+                                JPAExpressions
+                                        .select(surveyJoin.passengerNum.sum().coalesce(0))
+                                        .from(surveyJoin)
+                                        .where(surveyJoin.surveyId.eq(survey.id)
+                                                .and(surveyJoin.deletedAt.isNull())),
+                                "participationCount"),
+                        survey.endDate))
+                .from(survey)
+                .where(survey.id.eq(surveyId)
+                        .and(survey.deletedAt.isNull()))
+                .fetchOne());
     }
 
     private ConstructorExpression<SurveySummaryResponse> surveySummaryProjections() {
