@@ -6,6 +6,7 @@ import com.backend.allreva.auth.domain.RefreshTokenRepository;
 import com.backend.allreva.auth.util.CookieUtil;
 import com.backend.allreva.auth.util.JwtProvider;
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,17 +66,17 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         CookieUtil.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
         CookieUtil.addCookie(response, REFRESH_COOKIE_NAME, refreshToken, REFRESH_TIME);
 
-        //sendRedirect(response, member);
+        sendRedirect(response, member);
     }
 
     private void sendRedirect(
             final HttpServletResponse response,
             final Member member
     ) throws IOException {
-        /*if (member.getMemberRole().equals(MemberRole.USER)) {
+        if (member.getMemberRole().equals(MemberRole.USER)) {
             response.sendRedirect(FRONT_BASE_URL);
         } else {
             response.sendRedirect(FRONT_BASE_URL + FRONT_SIGNUP_URL);
-        }*/
+        }
     }
 }
