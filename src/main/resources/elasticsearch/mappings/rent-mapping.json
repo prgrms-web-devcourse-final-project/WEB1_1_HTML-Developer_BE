@@ -15,14 +15,14 @@
         }
       }
     },
-    "region": {
+    "boarding_area": {
       "type": "keyword"
-    },
-    "participation_count": {
-      "type": "integer"
     },
     "eddate": {
       "type": "date"
+    },
+    "image": {
+      "type" : "keyword"
     }
   }
 }

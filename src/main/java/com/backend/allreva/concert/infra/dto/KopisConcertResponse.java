@@ -1,6 +1,6 @@
 package com.backend.allreva.concert.infra.dto;
 
-import com.backend.allreva.common.converter.DataConverter;
+import com.backend.allreva.common.converter.DateConverter;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.value.*;
@@ -102,8 +102,8 @@ public class KopisConcertResponse {
                 .performStatus(ConcertStatus.convertToConcertStatus(db.prfstate))
                 .dateInfo(
                         DateInfo.builder()
-                                .startDate(DataConverter.convertToLocalDate(db.prfpdfrom))
-                                .endDate(DataConverter.convertToLocalDate(db.prfpdto))
+                                .startDate(DateConverter.convertToLocalDate(db.prfpdfrom))
+                                .endDate(DateConverter.convertToLocalDate(db.prfpdto))
                                 .timeTable(db.getDtguidance())
                                 .build()
                 )
