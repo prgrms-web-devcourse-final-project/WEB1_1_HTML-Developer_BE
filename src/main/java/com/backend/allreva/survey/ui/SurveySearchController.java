@@ -4,6 +4,7 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.survey.query.application.SurveySearchService;
 import com.backend.allreva.survey.query.application.dto.SurveySearchListResponse;
 import com.backend.allreva.survey.query.application.dto.SurveyThumbnail;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,10 @@ public class SurveySearchController {
     private final SurveySearchService surveySearchService;
 
     @GetMapping("/")
+    @Operation(
+            summary = "전체 검색시 수요조사 상위 2개 썸네일 API",
+            description = "검색어에 따라 관련도 상위 2개의 썸네일에 필요한 정보를 출력"
+    )
     public Response<List<SurveyThumbnail>> searchSurveyThumbnail(@RequestParam final String query) {
         return Response.onSuccess(
                 surveySearchService.searchSurveyThumbnails(query)
@@ -30,6 +35,10 @@ public class SurveySearchController {
     }
 
     @GetMapping("/list")
+    @Operation(
+            summary = "수요조사 검색 더보기 API",
+            description = "검색어에 따라 관련도 순으로 무한 스크롤 searchAfter1, searchAfter2에 이전 SearchAfter에 있는 값들을 순서대로 넣어주어야 합니다."
+    )
     public Response<SurveySearchListResponse> searchSurveyList(
             @RequestParam
             @NotEmpty(message = "검색어를 입력해야 합니다.")
