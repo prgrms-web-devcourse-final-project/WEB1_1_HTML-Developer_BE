@@ -19,7 +19,7 @@ public final class CookieUtil {
             final int maxAge
     ) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
-                .domain(COOKIE_DOMAIN)
+                //.domain(COOKIE_DOMAIN)
                 .path("/")
                 .maxAge(maxAge)
                 .httpOnly(true)

@@ -1,12 +1,11 @@
 package com.backend.allreva.auth.oauth2.handler;
 
-import com.backend.allreva.auth.application.dto.LoginSuccessResponse;
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
+import com.backend.allreva.auth.domain.RefreshToken;
+import com.backend.allreva.auth.domain.RefreshTokenRepository;
 import com.backend.allreva.auth.util.CookieUtil;
 import com.backend.allreva.auth.util.JwtProvider;
-import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,13 +21,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private static final String FRONT_BASE_URL = "http://localhost:3000";
+    private static final String FRONT_BASE_URL = "http://localhost:8080";
     private static final String FRONT_SIGNUP_URL = "/signup";
 
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
+    private final RefreshTokenRepository refreshTokenRepository;
     @Value("${jwt.refresh.expiration}")
     private int REFRESH_TIME;
+    @Value("${jwt.access.expiration}")
+    private int ACCESS_TIME;
+    @Value("${jwt.refresh.cookie-name}")
+    private String REFRESH_COOKIE_NAME;
 
     /**
      * OAuth2 인증 success시 JWT 반환하는 메서드
@@ -46,42 +50,32 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         Member member = oAuth2User.member();
 
         // token 생성
-        String memberId = String.valueOf(member.getId());
-        String accessToken = jwtProvider.generateAccessToken(memberId);
-        String refreshToken = jwtProvider.generateRefreshToken(memberId);
+        Long memberId = member.getId();
+        String accessToken = jwtProvider.generateAccessToken(String.valueOf(memberId));
+        String refreshToken = jwtProvider.generateRefreshToken(String.valueOf(memberId));
 
-        // access token 응답객체 생성
-        LoginSuccessResponse loginSuccessResponse = LoginSuccessResponse.of(
-                accessToken,
-                refreshToken,
-                jwtProvider.getREFRESH_TIME(),
-                member.getEmail().getEmail(),
-                member.getMemberInfo().getProfileImageUrl()
-        );
-
-        // TODO: db or cache에 RefreshToken 저장
+        // redis에 RefreshToken 저장
+        RefreshToken refreshTokenEntity = RefreshToken.builder()
+                .token(refreshToken)
+                .memberId(memberId)
+                .build();
+        refreshTokenRepository.save(refreshTokenEntity);
 
         // refreshToken 쿠키 등록
-        CookieUtil.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
+        CookieUtil.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
+        CookieUtil.addCookie(response, REFRESH_COOKIE_NAME, refreshToken, REFRESH_TIME);
 
-        setResponseBody(response, loginSuccessResponse);
-        if (member.getMemberRole().equals(MemberRole.USER)) {
+        //sendRedirect(response, member);
+    }
+
+    private void sendRedirect(
+            final HttpServletResponse response,
+            final Member member
+    ) throws IOException {
+        /*if (member.getMemberRole().equals(MemberRole.USER)) {
             response.sendRedirect(FRONT_BASE_URL);
         } else {
             response.sendRedirect(FRONT_BASE_URL + FRONT_SIGNUP_URL);
-        }
-    }
-
-    private void setResponseBody(
-            final HttpServletResponse response,
-            final LoginSuccessResponse loginSuccessResponse
-    ) throws IOException {
-        Response<LoginSuccessResponse> apiResponse = Response.onSuccess(loginSuccessResponse);
-        String jsonResponse = objectMapper.writeValueAsString(apiResponse);
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(jsonResponse);
+        }*/
     }
 }
