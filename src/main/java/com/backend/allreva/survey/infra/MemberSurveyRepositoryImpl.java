@@ -1,9 +1,5 @@
 package com.backend.allreva.survey.infra;
 
-import static com.backend.allreva.survey.command.domain.QSurvey.survey;
-import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
-import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
-
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.query.application.domain.MemberSurveyRepository;
 import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
@@ -18,10 +14,15 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static com.backend.allreva.survey.command.domain.QSurvey.survey;
+import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
+import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
 
 @Repository
 @RequiredArgsConstructor

@@ -8,6 +8,6 @@ public record SurveySummaryResponse(
         Long surveyId,
         String title,
         Region region,
-        Integer participationCount,
+        int participationCount,
         LocalDate endDate) {
 }
