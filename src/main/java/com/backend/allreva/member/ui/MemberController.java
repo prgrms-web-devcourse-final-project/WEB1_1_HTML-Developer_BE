@@ -6,14 +6,13 @@ import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.query.application.MemberQueryService;
-import com.backend.allreva.member.query.application.dto.MemberDetail;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,17 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberCommandFacade memberCommandFacade;
-    private final MemberQueryService memberQueryService;
 
-    @Operation(summary = "회원 프로필 조회", description = "회원 프로필 조회 API")
-    @GetMapping
-    public Response<MemberDetail> getMemberDetail(
-            final @AuthMember Member member
-    ) {
-        return Response.onSuccess(memberQueryService.getById(member.getId()));
-    }
-
-    @Operation(summary = "회원 프로필 수정", description = "회원 프로필 수정 API")
     @PatchMapping("/info")
     public Response<Void> updateMemberInfo(
             final @AuthMember Member member,
@@ -42,7 +31,6 @@ public class MemberController {
         return Response.onSuccess();
     }
 
-    @Operation(summary = "회원 환불 계좌 등록", description = "회원 환불 계좌 등록 API")
     @PostMapping("/refund-account")
     public Response<Void> registerRefundAccount(
             final @AuthMember Member member,
@@ -53,7 +41,6 @@ public class MemberController {
         return Response.onSuccess();
     }
 
-    @Operation(summary = "회원 환불 계좌 삭제", description = "회원 환불 계좌 삭제 API")
     @DeleteMapping("/refund-account")
     public Response<Void> deleteRefundAccount(
             final @AuthMember Member member
