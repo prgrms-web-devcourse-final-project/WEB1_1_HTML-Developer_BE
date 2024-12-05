@@ -1,0 +1,28 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "fields": {
+        "mixed": {
+          "type": "text",
+          "analyzer": "korean_mixed"
+        },
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "boarding_area": {
+      "type": "keyword"
+    },
+    "eddate": {
+      "type": "date"
+    },
+    "image": {
+      "type" : "keyword"
+    }
+  }
+}

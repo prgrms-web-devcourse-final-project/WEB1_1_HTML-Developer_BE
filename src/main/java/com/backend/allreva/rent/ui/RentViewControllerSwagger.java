@@ -1,9 +1,13 @@
 package com.backend.allreva.rent.ui;
 
 import com.backend.allreva.common.dto.Response;
+import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
+import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
 import com.backend.allreva.rent.query.application.dto.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +18,19 @@ import java.util.List;
 
 @Tag(name = "차량 대절 폼 조회 API", description = "차량 대절 폼 조회 API")
 public interface RentViewControllerSwagger {
+
+    @Operation(
+            summary = "차량 대절 폼 리스트 조회 API",
+            description = """
+                    차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
+                    """)
+    Response<List<RentSummaryResponse>> getRentSummaries(
+            Region region,
+            SortType sortType,
+            Long lastId,
+            LocalDate lastEndDate,
+            @Min(10) int pageSize
+    );
 
     @Operation(
             summary = "차량 대절 폼 상세 조회 API",
@@ -37,15 +54,30 @@ public interface RentViewControllerSwagger {
     );
 
     @Operation(
-            summary = "차량 대절 폼 리스트 조회 API",
+            summary = "내가 등록한 차 대절 리스트 조회 API",
             description = """
-                    차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
+                    사용자가 등록한 차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
                     """)
-    Response<List<RentSummaryResponse>> getRentSummaries(
-            Region region,
-            SortType sortType,
-            Long lastId,
-            LocalDate lastEndDate,
-            @Min(10) int pageSize
+    Response<List<RentAdminSummaryResponse>> getRentAdminSummaries(
+            Member member
+    );
+
+    @Operation(
+            summary = "내가 등록한 차 대절 상세 조회 API",
+            description = """
+                    사용자가 등록한 특정 차량 대절 폼의 상세 정보를 조회합니다.
+                    """)
+    Response<RentAdminDetailResponse> getRentAdminDetail(
+            Long rentId,
+            Member member
+    );
+
+    @Operation(
+            summary = "내가 참여한 차 대절 리스트 조회 API",
+            description = """
+                    사용자가 참여한 차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
+                    """)
+    Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
+            Member member
     );
 }

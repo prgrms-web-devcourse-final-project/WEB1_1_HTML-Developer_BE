@@ -1,10 +1,16 @@
 package com.backend.allreva.rent.command.application;
 
 import com.backend.allreva.rent.command.application.dto.RentIdRequest;
+import com.backend.allreva.rent.command.application.dto.RentJoinApplyRequest;
+import com.backend.allreva.rent.command.application.dto.RentJoinIdRequest;
+import com.backend.allreva.rent.command.application.dto.RentJoinUpdateRequest;
 import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
 import com.backend.allreva.rent.command.domain.Rent;
+import com.backend.allreva.rent.command.domain.RentJoin;
+import com.backend.allreva.rent.command.domain.RentJoinRepository;
 import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.exception.RentJoinNotFoundException;
 import com.backend.allreva.rent.exception.RentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RentCommandService {
 
     private final RentRepository rentRepository;
+    private final RentJoinRepository rentJoinRepository;
 
     public Long registerRent(
             final RentRegisterRequest rentRegisterRequest,
@@ -48,5 +55,41 @@ public class RentCommandService {
 
         rent.validateMine(memberId);
         rent.close();
+    }
+
+    public Long applyRent(
+            final RentJoinApplyRequest rentJoinApplyRequest,
+            final Long memberId
+    ) {
+        if (!rentRepository.existsById(rentJoinApplyRequest.rentId())) {
+            throw new RentNotFoundException();
+        }
+
+        RentJoin rentJoin = rentJoinApplyRequest.toEntity(memberId);
+
+        RentJoin savedRentJoin = rentJoinRepository.save(rentJoin);
+        return savedRentJoin.getId();
+    }
+
+    public void updateRentJoin(
+            final RentJoinUpdateRequest rentJoinUpdateRequest,
+            final Long memberId
+    ) {
+        RentJoin rentJoin = rentJoinRepository.findById(rentJoinUpdateRequest.rentJoinId())
+                .orElseThrow(RentJoinNotFoundException::new);
+
+        rentJoin.validateMine(memberId);
+        rentJoin.updateRentJoin(rentJoinUpdateRequest);
+    }
+
+    public void deleteRentJoin(
+            final RentJoinIdRequest rentJoinIdRequest,
+            final Long memberId
+    ) {
+        RentJoin rentJoin = rentJoinRepository.findById(rentJoinIdRequest.rentJoinId())
+                .orElseThrow(RentJoinNotFoundException::new);
+
+        rentJoin.validateMine(memberId);
+        rentJoinRepository.delete(rentJoin);
     }
 }
