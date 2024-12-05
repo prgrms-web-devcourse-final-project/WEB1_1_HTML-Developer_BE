@@ -1,7 +1,7 @@
 package com.backend.allreva.survey.query.application;
 
-import com.backend.allreva.concert.exception.exception.ElasticSearchException;
-import com.backend.allreva.concert.exception.exception.SearchResultNotFoundException;
+import com.backend.allreva.concert.exception.search.ElasticSearchException;
+import com.backend.allreva.survey.exception.SearchResultNotFoundException;
 import com.backend.allreva.survey.query.application.domain.SurveyDocument;
 import com.backend.allreva.survey.query.application.domain.SurveyDocumentRepository;
 import com.backend.allreva.survey.query.application.dto.SurveySearchListResponse;

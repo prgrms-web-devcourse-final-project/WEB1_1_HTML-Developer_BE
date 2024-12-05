@@ -1,11 +1,12 @@
 package com.backend.allreva.rent.query.application;
 
-import com.backend.allreva.concert.exception.exception.ElasticSearchException;
-import com.backend.allreva.concert.exception.exception.SearchResultNotFoundException;
+
+import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.rent.query.application.domain.RentDocument;
 import com.backend.allreva.rent.query.application.domain.RentDocumentRepository;
 import com.backend.allreva.rent.query.application.dto.RentSearchListResponse;
 import com.backend.allreva.rent.query.application.dto.RentThumbnail;
+import com.backend.allreva.survey.exception.SearchResultNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.SearchHit;

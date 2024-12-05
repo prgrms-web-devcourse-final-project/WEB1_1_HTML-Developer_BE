@@ -36,6 +36,7 @@ public class SurveyListener {
         SurveySavedEvent event = deserializeSavedEvent(message);
         SurveyDocument surveyDocument = event.to();
         surveyDocumentRepository.save(surveyDocument);
+        log.info("수요조사 es 저장 성공: {}", event.getSurveyId());
     }
 
     @Transactional
@@ -48,6 +49,7 @@ public class SurveyListener {
         SurveyDeletedEvent event = deserializeDeleteEvent(message);
         Long surveyId = event.getSurveyId();
         surveyDocumentRepository.deleteById(surveyId.toString());
+        log.info("수요조사 삭제 성공: {}", event.getSurveyId());
     }
 
     @Transactional
@@ -63,6 +65,7 @@ public class SurveyListener {
                 .orElseThrow(NotFoundException::new);
 
         surveyDocument.updateParticipationCount(event.getParticipationCount());
+        log.info("수요조사 Join 성공: {}", event.getParticipationCount());
     }
 
 

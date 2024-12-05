@@ -6,6 +6,7 @@ import com.backend.allreva.common.event.EventEntry;
 import com.backend.allreva.common.event.EventRepository;
 import com.backend.allreva.common.event.JsonParsingError;
 import com.backend.allreva.survey.command.domain.SurveyDeletedEvent;
+import com.backend.allreva.survey.command.domain.SurveyJoinEvent;
 import com.backend.allreva.survey.command.domain.SurveySavedEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +25,19 @@ public class SurveyInternalHandler {
     private final ObjectMapper objectMapper;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void onMessage(SurveySavedEvent event) {
+    public void onMessage(final SurveySavedEvent event) {
+        String payload = serializeEvent(event);
+        EventEntry eventEntry = EventEntry.builder()
+                .topic(event.getTopic())
+                .payload(payload)
+                .build();
+
+        eventRepository.save(eventEntry);
+        log.info("savedEvent outbox 저장 성공");
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void onMessage(final SurveyDeletedEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
                 .topic(event.getTopic())
@@ -35,7 +48,7 @@ public class SurveyInternalHandler {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void onMessage(SurveyDeletedEvent event) {
+    public void onMessage(final SurveyJoinEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
                 .topic(event.getTopic())
