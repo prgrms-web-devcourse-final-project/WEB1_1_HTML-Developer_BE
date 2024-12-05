@@ -1,7 +1,7 @@
 package com.backend.allreva.search.ui;
 
 import com.backend.allreva.common.dto.Response;
-import com.backend.allreva.search.query.application.PopularKeywordService;
+import com.backend.allreva.search.query.application.PopularKeywordQueryService;
 import com.backend.allreva.search.query.application.dto.PopularKeywordResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/search")
 public class PopularKeywordController {
 
-    private final PopularKeywordService popularKeywordService;
+    private final PopularKeywordQueryService popularKeywordService;
 
     @GetMapping("/popular")
     public Response<List<PopularKeywordResponse>> getPopularKeywordRank() {

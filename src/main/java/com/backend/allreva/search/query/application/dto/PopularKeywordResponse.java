@@ -6,6 +6,6 @@ import lombok.Builder;
 public record PopularKeywordResponse(
         int rank,
         String keyword,
-        String changeStatus) {
+        ChangeStatus changeStatus) {
 
 }

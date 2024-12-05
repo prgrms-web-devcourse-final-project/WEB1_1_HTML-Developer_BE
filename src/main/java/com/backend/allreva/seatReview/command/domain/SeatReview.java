@@ -41,6 +41,7 @@ public class SeatReview extends BaseEntity {
             joinColumns = @JoinColumn(name = "id") // 외래 키 설정
     )
     @Column(nullable = false)
+    @Builder.Default
     private List<Image> images = new ArrayList<>();
 
     @Column(nullable = false)

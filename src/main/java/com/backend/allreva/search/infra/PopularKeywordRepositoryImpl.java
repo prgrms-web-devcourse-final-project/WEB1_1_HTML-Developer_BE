@@ -1,10 +1,9 @@
 package com.backend.allreva.search.infra;
 
-import com.backend.allreva.search.query.application.PopularKeywordRepository;
-import com.backend.allreva.search.query.application.dto.ChangeStatus;
+import com.backend.allreva.search.query.application.dto.PopularKeywordResponses;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
@@ -16,42 +15,26 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PopularKeywordRepositoryImpl implements PopularKeywordRepository {
     private static final String KEYWORD_KEY = "keyword";
-    private static final String ONE_HOUR_KEYWORD_KEY = "one-hour-keyword";
-    private static final String HASH_KEYWORD_KEY = "keyword-change-status";
+    private static final String POPULAR_KEYWORD_KEY = "popular-keyword";
 
     @Resource(name = "redisTemplate")
     private ZSetOperations<String, String> zSetOperations;
 
     @Resource(name = "redisTemplate")
-    private HashOperations<String, String, String> hashOperations;
+    private ValueOperations<String, Object> valueOperations;
+
 
     /**
      * 인기 검색어 top 10 조회
      */
     @Override
-    public List<String> getPopularKeyword() {
-        Set<String> result = zSetOperations.reverseRange(KEYWORD_KEY, 0, 10);
-        if (result == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(result);
+    public PopularKeywordResponses getPopularKeywordRank() {
+        return (PopularKeywordResponses) valueOperations.get(POPULAR_KEYWORD_KEY);
     }
 
-    /**
-     * keyword의 status 조회
-     */
     @Override
-    public String getKeywordChangeStatus(String keyword) {
-        return hashOperations.get(HASH_KEYWORD_KEY, keyword);
-    }
-
-    /**
-     * keyword의 status set
-     */
-    @Override
-
-    public void setKeywordChangeStatus(String keyword, ChangeStatus status) {
-        hashOperations.put(HASH_KEYWORD_KEY, keyword, status.name());
+    public void updatePopularKeywordRank(PopularKeywordResponses list) {
+        valueOperations.set(POPULAR_KEYWORD_KEY, list);
     }
 
 
@@ -60,12 +43,17 @@ public class PopularKeywordRepositoryImpl implements PopularKeywordRepository {
      */
     @Override
     public void updateKeywordCount(String keyword, Double count) {
-        zSetOperations.incrementScore(ONE_HOUR_KEYWORD_KEY, keyword, count);
+        zSetOperations.incrementScore(KEYWORD_KEY, keyword, count);
     }
 
+    /**
+     * 가중치 낮춤
+     */
     @Override
     public void decreaseAllKeywordCount() {
         Set<ZSetOperations.TypedTuple<String>> keywords = zSetOperations.rangeWithScores(KEYWORD_KEY, 0, -1);
+
+        if (keywords == null) return;
 
         keywords.forEach(keyword -> {
             if (keyword.getValue() == null || keyword.getScore() == null) return;
@@ -76,29 +64,16 @@ public class PopularKeywordRepositoryImpl implements PopularKeywordRepository {
         });
     }
 
-
-    @Override
-    public void deleteOneHourKeyword() {
-        zSetOperations.removeRange(ONE_HOUR_KEYWORD_KEY, 0, -1); // 1시간 검색어 삭제
-    }
-
     /**
-     * 전체 one hour keyword zset 조회
+     * 현재 top 10 조회
      */
     @Override
-
-    public Set<String> getAllOneHourKeywords() {
-        return zSetOperations.range(ONE_HOUR_KEYWORD_KEY, 0, -1);
+    public List<String> getTop10Keywords() {
+        Set<String> result = zSetOperations.reverseRange(KEYWORD_KEY, 0, 9);
+        if (result == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(result);
     }
-
-    /**
-     * 해당 키워드의 one hour count 수 조회
-     */
-    @Override
-
-    public Double getOneHourKeywordScore(String keyword) {
-        return zSetOperations.score(ONE_HOUR_KEYWORD_KEY, keyword);
-    }
-
 
 }
