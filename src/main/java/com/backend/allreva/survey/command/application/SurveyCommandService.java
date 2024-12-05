@@ -43,14 +43,7 @@ public class SurveyCommandService {
         Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, request));
         saveBoardingDates(survey, request.boardingDates());
 
-        Events.raise(
-                SurveySavedEvent.builder()
-                        .surveyId(survey.getId())
-                        .title(survey.getTitle())
-                        .region(survey.getRegion())
-                        .endDate(survey.getEndDate())
-                        .build()
-        );
+        Events.raise(new SurveySavedEvent(survey));
         return survey.getId();
     }
 

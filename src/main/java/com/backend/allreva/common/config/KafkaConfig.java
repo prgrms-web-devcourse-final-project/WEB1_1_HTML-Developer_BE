@@ -13,9 +13,16 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaConfig {
 
     public static final String TOPIC_CONCERT_VIEW = "concertLike-event";
+
     public static final String TOPIC_SURVEY_SAVE = "survey-save";
     public static final String TOPIC_SURVEY_DELETE = "survey-delete";
     public static final String TOPIC_SURVEY_JOIN = "survey-join";
+
+    public static final String TOPIC_RENT_SAVE = "rent-save";
+    public static final String TOPIC_RENT_DELETE = "rent-delete";
+
+    public static final String TOPIC_RENT_JOIN_SAVE = "rent-join-delete";
+    public static final String TOPIC_RENT_JOIN_DELETE = "rent-join-delete";
 
     // 토픽 설정
     @Bean
@@ -44,6 +51,13 @@ public class KafkaConfig {
     @Bean
     public NewTopic surveyDeleteTopic() {
         return TopicBuilder.name(TOPIC_SURVEY_DELETE)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+    @Bean
+    public NewTopic surveyJoinTopic() {
+        return TopicBuilder.name(TOPIC_SURVEY_JOIN)
                 .partitions(1)
                 .replicas(1)
                 .build();

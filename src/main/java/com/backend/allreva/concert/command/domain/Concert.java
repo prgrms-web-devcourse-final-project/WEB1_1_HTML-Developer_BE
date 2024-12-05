@@ -97,10 +97,6 @@ public class Concert extends BaseEntity {
 
     public void addViewCount(final int count) {
         this.viewCount += count;
-        Events.raise(
-                ViewAddedEvent.builder()
-                        .concertCode(this.code.getConcertCode())
-                        .viewCount(this.viewCount)
-                        .build());
+        Events.raise(new ViewAddedEvent(this));
     }
 }

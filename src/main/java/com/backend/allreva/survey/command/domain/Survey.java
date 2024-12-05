@@ -86,14 +86,7 @@ public class Survey extends BaseEntity {
         this.maxPassenger = maxPassenger;
         this.information = information;
 
-        Events.raise(
-                SurveySavedEvent.builder()
-                        .surveyId(id)
-                        .title(title)
-                        .endDate(endDate)
-                        .region(region)
-                        .build()
-        );
+        Events.raise(new SurveySavedEvent(this));
     }
 
     public boolean isWriter(final Long loginMemberId) {

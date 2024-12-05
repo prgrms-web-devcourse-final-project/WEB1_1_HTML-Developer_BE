@@ -19,7 +19,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class SurveyInternalHandler {
+public class SurveyInternalEventHandler {
 
     private final EventRepository eventRepository;
     private final ObjectMapper objectMapper;
@@ -33,7 +33,6 @@ public class SurveyInternalHandler {
                 .build();
 
         eventRepository.save(eventEntry);
-        log.info("savedEvent outbox 저장 성공");
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
