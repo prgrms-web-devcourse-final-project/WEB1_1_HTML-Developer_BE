@@ -4,17 +4,18 @@ import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.support.IntegrationTestSupport;
+import com.backend.allreva.survey.command.application.SurveyCommandService;
 import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDateCommandRepository;
 import com.backend.allreva.survey.command.domain.SurveyCommandRepository;
-import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
 
@@ -42,6 +44,9 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
     private SurveyCommandRepository surveyCommandRepository;
     @Autowired
     private ConcertRepository concertRepository;
+
+    @Autowired
+    private SurveyQueryRepository surveyQueryRepository;
     @Autowired
     private SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
     private Member testMember;
@@ -151,7 +156,7 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
         Optional<SurveyDocumentDto> surveyWithParticipationCount = surveyQueryService.findSurveyWithParticipationCount(surveyId);
 
         assertThat(surveyWithParticipationCount).isPresent();
-        assertThat(surveyWithParticipationCount.get().participationCount()).isEqualTo(1);
+        assertThat(surveyWithParticipationCount.get().participationCount()).isEqualTo(2);
         assertThat(surveyWithParticipationCount.get().id()).isEqualTo(surveyId);
         assertThat(surveyWithParticipationCount.get().region()).isEqualTo(Region.서울);
         assertThat(surveyWithParticipationCount.get().edDate()).isEqualTo(now);

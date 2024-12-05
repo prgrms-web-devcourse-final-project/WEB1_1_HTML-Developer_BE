@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum GlobalErrorCode implements ErrorCodeInterface {
@@ -19,6 +20,7 @@ public enum GlobalErrorCode implements ErrorCodeInterface {
     SERVER_ERROR(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR.name(), "서버 에러, 관리자에게 문의해주세요."),
     UNAUTHORIZED_ERROR(UNAUTHORIZED.value(), UNAUTHORIZED.name(), "인증되지 않았습니다."),
     ACCESS_DENIED(FORBIDDEN.value(), FORBIDDEN.name(), "올바르지 않은 권한입니다."),
+    NOT_FOUND_DATA(NOT_FOUND.value(), NOT_FOUND.name(), "해당 데이터가 존재하지 않습니다.")
     ;
 
     private final Integer status;

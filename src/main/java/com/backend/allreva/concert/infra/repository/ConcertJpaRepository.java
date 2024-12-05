@@ -1,4 +1,4 @@
-package com.backend.allreva.concert.infra;
+package com.backend.allreva.concert.infra.repository;
 
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.infra.dto.ConcertDateInfoResponse;

@@ -1,7 +1,7 @@
 package com.backend.allreva.survey.exception;
 
 import com.backend.allreva.common.exception.CustomException;
-import com.backend.allreva.concert.exception.exception.SearchErrorCode;
+import com.backend.allreva.concert.exception.search.SearchErrorCode;
 
 public class SearchResultNotFoundException extends CustomException {
     public SearchResultNotFoundException() {
