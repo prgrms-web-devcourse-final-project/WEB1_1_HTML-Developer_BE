@@ -40,6 +40,7 @@ public class AdminConcertService {
     }
 
     // 매일 업데이트 함수
+    @Transactional
     public void fetchDailyConcertInfoList(String today) {
         List<String> hallCodes = CsvUtil.readConcertHallCodes();
 
@@ -67,7 +68,6 @@ public class AdminConcertService {
     }
 
     // 기존 공연 정보 업데이트
-    @Transactional
     protected void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
         Concert existingConcert = concertRepository.findByConcertCode(concertCode);
         existingConcert.updateFrom(hallCode, response.getDb());
