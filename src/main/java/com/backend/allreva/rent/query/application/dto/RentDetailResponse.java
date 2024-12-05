@@ -18,6 +18,7 @@ public record RentDetailResponse(
         String upTime,
         String downTime,
         List<LocalDate> rentBoardingDates,
+        List<Integer> currentRecruitmentCounts,
         BusSize busSize,
         BusType busType,
         int maxPassenger,

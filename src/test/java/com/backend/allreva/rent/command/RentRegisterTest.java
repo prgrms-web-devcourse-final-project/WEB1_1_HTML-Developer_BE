@@ -38,10 +38,10 @@ class RentRegisterTest {
         rentCommandService.registerRent(rentFormRequest, memberId);
 
         // then
-        var capturedRentForm = getArgumentCaptorValue();
+        var capturedRent = getArgumentCaptorValue();
         assertSoftly(softly -> {
-            softly.assertThat(capturedRentForm.getMemberId()).isEqualTo(memberId);
-            softly.assertThat(capturedRentForm.getDetailInfo().getTitle()).isEqualTo(rentFormRequest.title());
+            softly.assertThat(capturedRent.getMemberId()).isEqualTo(memberId);
+            softly.assertThat(capturedRent.getDetailInfo().getTitle()).isEqualTo(rentFormRequest.title());
         });
     }
 

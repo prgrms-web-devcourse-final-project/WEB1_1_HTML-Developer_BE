@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
+@Transactional
 class RentReadTest extends IntegrationTestSupport {
 
     @Autowired
@@ -26,7 +27,6 @@ class RentReadTest extends IntegrationTestSupport {
     }
 
     @Test
-    @Transactional
     void 차량_대절_폼_조회를_성공한다() {
         // given
         Rent savedRent = rentJpaRepository.save(createRentFixture(1L, 1L));
@@ -44,3 +44,4 @@ class RentReadTest extends IntegrationTestSupport {
         });
     }
 }
+

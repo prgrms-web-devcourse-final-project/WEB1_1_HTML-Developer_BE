@@ -1,5 +1,9 @@
 package com.backend.allreva.survey.infra;
 
+import static com.backend.allreva.survey.command.domain.QSurvey.survey;
+import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
+import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
+
 import com.backend.allreva.survey.command.domain.value.BoardingType;
 import com.backend.allreva.survey.query.application.domain.MemberSurveyRepository;
 import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
@@ -14,15 +18,10 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
-
-import static com.backend.allreva.survey.command.domain.QSurvey.survey;
-import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
-import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,7 +36,7 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
                                                             final int pageSize) {
 
         return jpaQueryFactory
-                .select(CreatedSurveyProjections())
+                .select(createdSurveyProjections())
                 .from(survey)
                 .join(surveyBoardingDate)
                 .on(survey.id.eq(surveyBoardingDate.survey.id))
@@ -52,8 +51,7 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
                 .fetch();
     }
 
-    private ConstructorExpression<CreatedSurveyResponse> CreatedSurveyProjections() {
-
+    private ConstructorExpression<CreatedSurveyResponse> createdSurveyProjections() {
         return Projections.constructor(CreatedSurveyResponse.class,
                 Projections.constructor(SurveyResponse.class,
                         survey.id,
@@ -62,13 +60,12 @@ public class MemberSurveyRepositoryImpl implements MemberSurveyRepository {
                         survey.region,
                         survey.createdAt,
                         survey.endDate,
-                        surveyJoin.passengerNum.sum().coalesce(0),
+                        getParticipationCount(),
                         survey.maxPassenger),
                 getPassengerSumByBoardingType(BoardingType.UP),
                 getPassengerSumByBoardingType(BoardingType.DOWN),
                 getPassengerSumByBoardingType(BoardingType.ROUND));
     }
-
 
     private BooleanExpression getPagingCondition(final Long lastId, final LocalDate lastBoardingDate) {
         //첫페이지인 경우 조건 없음
