@@ -83,10 +83,10 @@ public class RentCommandService {
     }
 
     public void deleteRentJoin(
-            final RentJoinIdRequest rentJoinUpdateRequest,
+            final RentJoinIdRequest rentJoinIdRequest,
             final Long memberId
     ) {
-        RentJoin rentJoin = rentJoinRepository.findById(rentJoinUpdateRequest.rentJoinId())
+        RentJoin rentJoin = rentJoinRepository.findById(rentJoinIdRequest.rentJoinId())
                 .orElseThrow(RentJoinNotFoundException::new);
 
         rentJoin.validateMine(memberId);

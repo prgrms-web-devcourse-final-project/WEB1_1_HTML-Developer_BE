@@ -51,7 +51,7 @@ public class RentJoin extends BaseEntity {
     @Column(nullable = false)
     private LocalDate boardingDate; //이용날짜
 
-    public void updateRentJoin(RentJoinUpdateRequest request) {
+    public void updateRentJoin(final RentJoinUpdateRequest request) {
         this.depositor = Depositor.builder()
                 .depositorName(request.depositorName())
                 .depositorTime(request.depositorTime())

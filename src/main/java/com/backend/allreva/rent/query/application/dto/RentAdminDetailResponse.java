@@ -19,14 +19,14 @@ public class RentAdminDetailResponse {
 
     // for queryDsl
     public RentAdminDetailResponse(
-            Long rentId,
-            int maxRecruitmentCount,
-            int currentRecruitmentCount,
-            int rentUpCount,
-            int rentDownCount,
-            int rentRoundCount,
-            int additionalDepositCount,
-            int refundCount
+            final Long rentId,
+            final int maxRecruitmentCount,
+            final int currentRecruitmentCount,
+            final int rentUpCount,
+            final int rentDownCount,
+            final int rentRoundCount,
+            final int additionalDepositCount,
+            final int refundCount
     ) {
         this.rentId = rentId;
         this.maxRecruitmentCount = maxRecruitmentCount;
