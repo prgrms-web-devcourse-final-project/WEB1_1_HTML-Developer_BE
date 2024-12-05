@@ -1,35 +1,35 @@
 package com.backend.allreva.concert.command.application;
 
+import com.backend.allreva.common.converter.DateConverter;
 import com.backend.allreva.common.util.CsvUtil;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.infra.dto.KopisConcertResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AdminConcertService {
     private final KopisConcertService kopisConcertService;
     private final ConcertRepository concertRepository;
 
-    @Value("${public-data.kopis.stdate}")
-    private String startDate;
-
-    @Value("${public-data.kopis.eddate}")
-    private String endDate;
-
-
-    public void fetchConcertInfoList() {
+    public void fetchConcertInfoList(int year, int month) {
         List<String> hallCodes = CsvUtil.readConcertHallCodes();
+
+        // 해당 월의 첫째 날과 마지막 날
+        String[] dates = getStartAndEndDate(year, month);
         hallCodes.parallelStream().forEach(hallCode -> {
-            List<String> concertCodes = kopisConcertService.fetchConcertCodes(hallCode, startDate, endDate);
+            List<String> concertCodes = kopisConcertService.fetchConcertCodes(
+                    hallCode, dates[0], dates[1]);
 
             concertCodes.forEach(concertCode -> {
                 KopisConcertResponse response = kopisConcertService.fetchConcertDetail(concertCode);
@@ -40,13 +40,14 @@ public class AdminConcertService {
     }
 
     // 매일 업데이트 함수
-    @Transactional
     public void fetchDailyConcertInfoList(String today) {
         List<String> hallCodes = CsvUtil.readConcertHallCodes();
 
-        hallCodes.parallelStream().forEach(hallCode -> {
-            List<String> concertCodes = kopisConcertService.fetchDailyConcertCodes(hallCode, startDate, endDate, today);
+        LocalDate date = LocalDate.now();
+        String[] dates = getStartAndEndDate(date.getYear(), date.getMonthValue());
 
+        hallCodes.parallelStream().forEach(hallCode -> {
+            List<String> concertCodes = kopisConcertService.fetchDailyConcertCodes(hallCode, dates[0], dates[1], today);
             concertCodes.forEach(concertCode -> {
                 KopisConcertResponse response = kopisConcertService.fetchConcertDetail(concertCode);
                 processConcertUpdateOrInsert(hallCode, response);
@@ -68,9 +69,16 @@ public class AdminConcertService {
     }
 
     // 기존 공연 정보 업데이트
-    protected void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
+    private void updateConcert(String hallCode, KopisConcertResponse response, String concertCode) {
         Concert existingConcert = concertRepository.findByConcertCode(concertCode);
         existingConcert.updateFrom(hallCode, response.getDb());
         concertRepository.save(existingConcert);
+    }
+
+    private static String[] getStartAndEndDate(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        String startDate = DateConverter.convertToyyyyMMdd(yearMonth.atDay(1));
+        String endDate = DateConverter.convertToyyyyMMdd(yearMonth.atEndOfMonth());
+        return new String[]{startDate, endDate};
     }
 }
