@@ -53,7 +53,7 @@ public class ConcertController {
             final String region,
             @RequestParam(defaultValue = "DATE")
             final SortDirection sortDirection,
-            @RequestParam(defaultValue = "4")
+            @RequestParam(defaultValue = "7")
             final int PageSize,
             @RequestParam(required = false)
             final String searchAfter1,

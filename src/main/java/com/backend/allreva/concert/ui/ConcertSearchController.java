@@ -2,7 +2,6 @@ package com.backend.allreva.concert.ui;
 
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.concert.query.application.ConcertSearchService;
-import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 import com.backend.allreva.concert.query.application.dto.ConcertSearchListResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,16 +18,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("/avi/v1/search")
+@RequestMapping("/avi/v1/search/concert")
 @RequiredArgsConstructor
-public class SearchController {
+public class ConcertSearchController {
     private final ConcertSearchService concertSearchService;
 
     @Operation(
             summary = "콘서트 검색시 상위 2개 썸네일 API",
             description = "콘서트 검색어에 따라 관련도 상위 2개의 썸네일에 필요한 정보를 출력"
     )
-    @GetMapping("/concert")
+    @GetMapping("/")
     public Response<List<ConcertThumbnail>> searchConcertThumbnail(@RequestParam final String query) {
         return Response.onSuccess(
                 concertSearchService.searchConcertThumbnails(query)
@@ -42,7 +41,7 @@ public class SearchController {
                     searchAfter1, searchAfter2에 이전 SearchAfter에 있는 값들을 순서대로 넣어주어야 합니다.
                     """
     )
-    @GetMapping("/concert/list")
+    @GetMapping("/list")
     public Response<ConcertSearchListResponse> searchConcertList(
             @RequestParam
             @NotEmpty(message = "검색어를 입력해야 합니다.")
