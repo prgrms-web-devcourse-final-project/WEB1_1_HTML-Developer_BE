@@ -169,8 +169,6 @@ jobs:
             
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.APP_NAME }}:latest
             chmod 777 ./deploy.sh
-            export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-            export APP_NAME=${{ secrets.APP_NAME }}
             ./deploy.sh
             sudo docker image prune -f 
 
