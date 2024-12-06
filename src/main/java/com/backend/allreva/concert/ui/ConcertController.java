@@ -67,6 +67,4 @@ public class ConcertController {
         ConcertMainResponse concertMain = concertQueryService.getConcertMain(region, searchAfter, PageSize, sortDirection);
         return Response.onSuccess(concertMain);
     }
-
-
 }

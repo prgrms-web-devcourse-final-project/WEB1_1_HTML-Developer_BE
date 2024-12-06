@@ -118,4 +118,9 @@ public class SurveyController {
                                                                 @Min(10) @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return Response.onSuccess(memberSurveyQueryService.getJoinSurveyList(member.getId(), lastId, pageSize));
     }
+
+    @GetMapping("/main")
+    public Response<List<SurveySummaryResponse>> findSurveyMainList(){
+        return Response.onSuccess(surveyQueryService.findSurveyMainList());
+    }
 }
