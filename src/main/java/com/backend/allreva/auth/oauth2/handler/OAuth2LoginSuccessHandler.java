@@ -11,7 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.MessageFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -64,18 +63,17 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         CookieUtil.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
 
         // response url에 param으로 accessToken을 전달하고 싶습니다.
-        sendRedirect(response, member, accessToken);
+        sendRedirect(response, member);
     }
 
     private void sendRedirect(
             final HttpServletResponse response,
-            final Member member,
-            final String accessToken
+            final Member member
     ) throws IOException {
         if (member.getMemberRole().equals(MemberRole.USER)) {
-            response.sendRedirect(MessageFormat.format("{0}?accessToken={1}", FRONT_BASE_URL, accessToken));
+            response.sendRedirect(FRONT_BASE_URL);
         } else {
-            response.sendRedirect(MessageFormat.format("{0}{1}?accessToken={2}", FRONT_BASE_URL, FRONT_SIGNUP_URL, accessToken));
+            response.sendRedirect(FRONT_BASE_URL + FRONT_SIGNUP_URL);
         }
     }
 }
