@@ -1,5 +1,12 @@
 #!/bin/bash
 
+docker-compose pull redis
+docker-compose pull zookeeper
+docker-compose pull kafka
+docker-compose up -d redis
+docker-compose up zookeeper
+docker-compose up kafka
+
 IS_GREEN=$(docker ps | grep green) # 현재 실행중인 App이 blue인지 확인합니다.
 
 if [ -z "$IS_GREEN" ]; then # green이 없으면 blue라면
