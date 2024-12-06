@@ -12,10 +12,10 @@ if [ -z "$IS_GREEN" ]; then # green이 없으면 blue라면
   echo "2. green container up"
   docker-compose up -d green # green 컨테이너 실행
 
-  for cnt in {1..10}
+  for cnt in {1..20}
   do
     echo "3. green health check..."
-    echo "서버 응답 확인중(${cnt}/10)";
+    echo "서버 응답 확인중(${cnt}/20)";
 
     REQUEST=$(curl http://127.0.0.1:8080) # green으로 request
     if [ -n "$REQUEST" ]
@@ -48,10 +48,10 @@ else
   echo "2. blue container up"
   docker-compose up -d blue
 
-  for cnt in {1..10}
+  for cnt in {1..20}
   do
     echo "3. blue health check..."
-    echo "서버 응답 확인중(${cnt}/10)";
+    echo "서버 응답 확인중(${cnt}/20)";
 
     REQUEST=$(curl http://127.0.0.1:8081) # blue로 request
 
