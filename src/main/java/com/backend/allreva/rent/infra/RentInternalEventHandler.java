@@ -1,6 +1,9 @@
 package com.backend.allreva.rent.infra;
 
 
+import static com.backend.allreva.rent.command.domain.RentDeleteEvent.TOPIC_RENT_DELETE;
+import static com.backend.allreva.rent.command.domain.RentSaveEvent.TOPIC_RENT_SAVE;
+
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.common.event.EventEntry;
 import com.backend.allreva.common.event.EventRepository;
@@ -27,7 +30,7 @@ public class RentInternalEventHandler {
     public void onMessage(final RentSaveEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
-                .topic(event.getTopic())
+                .topic(TOPIC_RENT_SAVE)
                 .payload(payload)
                 .build();
 
@@ -38,7 +41,7 @@ public class RentInternalEventHandler {
     public void onMessage(final RentDeleteEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
-                .topic(event.getTopic())
+                .topic(TOPIC_RENT_DELETE)
                 .payload(payload)
                 .build();
 

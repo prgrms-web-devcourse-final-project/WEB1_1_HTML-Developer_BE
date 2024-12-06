@@ -1,6 +1,10 @@
 package com.backend.allreva.survey.infra;
 
 
+import static com.backend.allreva.survey.command.domain.SurveyDeletedEvent.TOPIC_SURVEY_DELETE;
+import static com.backend.allreva.survey.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.survey.command.domain.SurveySavedEvent.TOPIC_SURVEY_SAVE;
+
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.common.event.EventEntry;
 import com.backend.allreva.common.event.EventRepository;
@@ -28,7 +32,7 @@ public class SurveyInternalEventHandler {
     public void onMessage(final SurveySavedEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
-                .topic(event.getTopic())
+                .topic(TOPIC_SURVEY_SAVE)
                 .payload(payload)
                 .build();
 
@@ -39,7 +43,7 @@ public class SurveyInternalEventHandler {
     public void onMessage(final SurveyDeletedEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
-                .topic(event.getTopic())
+                .topic(TOPIC_SURVEY_DELETE)
                 .payload(payload)
                 .build();
 
@@ -50,7 +54,7 @@ public class SurveyInternalEventHandler {
     public void onMessage(final SurveyJoinEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
-                .topic(event.getTopic())
+                .topic(TOPIC_SURVEY_JOIN)
                 .payload(payload)
                 .build();
 
