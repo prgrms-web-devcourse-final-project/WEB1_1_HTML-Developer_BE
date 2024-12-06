@@ -23,7 +23,7 @@ public final class CookieUtil {
                 .path("/")
                 .maxAge(maxAge)
                 .httpOnly(true)
-                .secure(true) // 임시로 false
+                .secure(false) // 임시로 false
                 .sameSite("None")
                 .build();
 
