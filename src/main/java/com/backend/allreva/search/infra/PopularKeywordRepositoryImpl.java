@@ -33,7 +33,7 @@ public class PopularKeywordRepositoryImpl implements PopularKeywordRepository {
     }
 
     @Override
-    public void updatePopularKeywordRank(PopularKeywordResponses list) {
+    public void updatePopularKeywordRank(final PopularKeywordResponses list) {
         valueOperations.set(POPULAR_KEYWORD_KEY, list);
     }
 
@@ -42,7 +42,7 @@ public class PopularKeywordRepositoryImpl implements PopularKeywordRepository {
      * 키워드 count update
      */
     @Override
-    public void updateKeywordCount(String keyword, Double count) {
+    public void updateKeywordCount(final String keyword, final Double count) {
         zSetOperations.incrementScore(KEYWORD_KEY, keyword, count);
     }
 

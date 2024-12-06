@@ -19,7 +19,7 @@ public class PopularKeywordCommandService {
     /**
      * 검색어 count update
      */
-    public void updateKeywordCount(String keyword) {
+    public void updateKeywordCount(final String keyword) {
         popularKeywordRepository.updateKeywordCount(keyword, 1.0);
     }
 
@@ -34,18 +34,18 @@ public class PopularKeywordCommandService {
      * 인기검색어 스케줄러를 통해 1시간마다 순위 업데이트
      */
     public void updatePopularKeywordRank() {
-        // 1. 인기 검색어 목록 가져오기
+        //1. 인기 검색어 목록 가져오기
         List<String> top10 = popularKeywordRepository.getPopularKeywordRank().popularKeywordResponses()
                 .stream().map(PopularKeywordResponse::keyword).collect(Collectors.toList()); // 기존 top10
 
-        //3. 현재 랭킹가져오기
+        //2. 현재 랭킹가져오기
         List<String> updatedTop10 = popularKeywordRepository.getTop10Keywords();
 
-        //4. 랭킹 업데이트
+        //3. 랭킹 업데이트
         compareAndSaveRankChanges(top10, updatedTop10);
     }
 
-    public void compareAndSaveRankChanges(List<String> top10, List<String> updatedTop10) {
+    public void compareAndSaveRankChanges(final List<String> top10, final List<String> updatedTop10) {
         List<PopularKeywordResponse> list = new ArrayList<>();
         for (int i = 0; i < updatedTop10.size(); i++) {
             String keyword = updatedTop10.get(i);
