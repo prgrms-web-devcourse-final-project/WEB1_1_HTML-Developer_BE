@@ -61,6 +61,12 @@ public class SecurityConfig {
                         .requestMatchers(ALLOW_URLS).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/oauth2/**").hasRole("GUEST")
+                        .requestMatchers("/api/v1/search/**").permitAll()
+                        .requestMatchers("/api/v1/concerts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/surveys/list").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/surveys").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/rents/list").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/rents").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable);
 

@@ -1,14 +1,13 @@
 package com.backend.allreva.artist.command;
 
 import com.backend.allreva.artist.command.domain.Artist;
-import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +16,9 @@ public class ArtistCommandService {
 
     private final ArtistRepository artistRepository;
 
-    public void saveIfNotExist(final List<MemberInfoRequest.MemberArtistRequest> artists) {
+    public void saveIfNotExist(final List<MemberArtistRequest> artists) {
         List<String> ids = artists.stream()
-                .map(MemberInfoRequest.MemberArtistRequest::spotifyArtistId)
+                .map(MemberArtistRequest::spotifyArtistId)
                 .toList();
 
         List<Artist> existingEntities = artistRepository
@@ -31,7 +30,7 @@ public class ArtistCommandService {
 
         List<Artist> list = artists.stream()
                 .filter(artist -> !existingIds.contains(artist.spotifyArtistId()))
-                .map(MemberInfoRequest.MemberArtistRequest::to)
+                .map(MemberArtistRequest::to)
                 .toList();
 
         artistRepository.saveAll(list);

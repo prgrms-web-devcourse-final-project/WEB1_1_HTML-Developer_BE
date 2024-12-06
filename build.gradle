@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.1.4'
 
-    //jaxb
+    // jaxb
     implementation 'io.github.openfeign:feign-jaxb:11.0'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
@@ -72,6 +72,7 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'it.ozimov:embedded-redis:0.7.2'
 
     // aws s3
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0'
@@ -88,9 +89,6 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    //kafka
-    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 tasks.named('test') {
