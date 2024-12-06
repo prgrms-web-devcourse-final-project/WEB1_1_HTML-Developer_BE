@@ -3,7 +3,9 @@ package com.backend.allreva.rent.infra;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.json.JsonData;
 import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.rent.query.application.domain.RentDocument;
 import lombok.RequiredArgsConstructor;
@@ -52,16 +54,32 @@ public class CustomRentDocumentRepoImpl implements CustomRentDocumentRepo {
     }
 
     private Query buildSearchQuery(final String searchTerm) {
+        BoolQuery.Builder boolQuery = new BoolQuery.Builder();
+
+        // 날짜 필터 추가 (현재 시점 이후 데이터만)
+        boolQuery.filter(f -> f
+                .range(r -> r
+                        .field("eddate")
+                        .gte(JsonData.of("now"))
+                )
+        );
+
+        // 검색어가 있는 경우
         if (StringUtils.hasText(searchTerm)) {
-            return Query.of(q -> q
-                    .match(m -> m
+            boolQuery.must(m -> m
+                    .match(mt -> mt
                             .field("title.mixed")
                             .query(searchTerm)
                             .fuzziness("AUTO")
                     )
             );
+        } else {
+            boolQuery.must(m -> m
+                    .matchAll(ma -> ma)
+            );
         }
-        return Query.of(q -> q.matchAll(m -> m));
+
+        return Query.of(q -> q.bool(boolQuery.build()));
     }
 
 
