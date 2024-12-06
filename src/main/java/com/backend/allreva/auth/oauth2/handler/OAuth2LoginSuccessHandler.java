@@ -1,33 +1,35 @@
 package com.backend.allreva.auth.oauth2.handler;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
-
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
-import com.backend.allreva.auth.application.dto.LoginSuccessResponse;
+import com.backend.allreva.auth.domain.RefreshToken;
+import com.backend.allreva.auth.domain.RefreshTokenRepository;
+import com.backend.allreva.auth.util.CookieUtil;
 import com.backend.allreva.auth.util.JwtProvider;
-import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.backend.allreva.member.command.domain.value.MemberRole;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private static final String FRONT_BASE_URL = "http://localhost:8080";
+    private static final String FRONT_SIGNUP_URL = "/signup";
+
     private final JwtProvider jwtProvider;
-    private final ObjectMapper objectMapper;
+    private final RefreshTokenRepository refreshTokenRepository;
     @Value("${jwt.refresh.expiration}")
-    private Long REFRESH_TIME;
+    private int REFRESH_TIME;
+    @Value("${jwt.access.expiration}")
+    private int ACCESS_TIME;
 
     /**
      * OAuth2 인증 success시 JWT 반환하는 메서드
@@ -45,44 +47,32 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         Member member = oAuth2User.member();
 
         // token 생성
-        String memberId = String.valueOf(member.getId());
-        String accessToken = jwtProvider.generateAccessToken(memberId);
-        String refreshToken = jwtProvider.generateRefreshToken(memberId);
+        Long memberId = member.getId();
+        String accessToken = jwtProvider.generateAccessToken(String.valueOf(memberId));
+        String refreshToken = jwtProvider.generateRefreshToken(String.valueOf(memberId));
 
-        // access token 응답객체 생성
-        LoginSuccessResponse loginSuccessResponse = LoginSuccessResponse.of(
-                accessToken,
-                refreshToken,
-                jwtProvider.getREFRESH_TIME(),
-                member.getEmail().getEmail(),
-                member.getMemberInfo().getProfileImageUrl());
-
-        // TODO: db or cache에 RefreshToken 저장
+        // redis에 RefreshToken 저장
+        RefreshToken refreshTokenEntity = RefreshToken.builder()
+                .token(refreshToken)
+                .memberId(memberId)
+                .build();
+        refreshTokenRepository.save(refreshTokenEntity);
 
         // refreshToken 쿠키 등록
-        setHeader(response, refreshToken);
+        CookieUtil.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
+        CookieUtil.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        Response<LoginSuccessResponse> apiResponse = Response.onSuccess(loginSuccessResponse);
-        String jsonResponse = objectMapper.writeValueAsString(apiResponse);
-        response.getWriter().write(jsonResponse);
+        sendRedirect(response, member);
     }
 
-    // refreshToken 쿠키 설정
-    public void setHeader(final HttpServletResponse response, final String refreshToken) {
-        if (refreshToken != null) {
-            response.addHeader("refresh_token", refreshToken);
-            response.addHeader("Set-Cookie", createRefreshToken(refreshToken).toString());
+    private void sendRedirect(
+            final HttpServletResponse response,
+            final Member member
+    ) throws IOException {
+        if (member.getMemberRole().equals(MemberRole.USER)) {
+            response.sendRedirect(FRONT_BASE_URL);
+        } else {
+            response.sendRedirect(FRONT_BASE_URL + FRONT_SIGNUP_URL);
         }
-    }
-
-    // refreshToken 쿠키 생성
-    public ResponseCookie createRefreshToken(final String refreshToken) {
-        return ResponseCookie.from("refreshToken", refreshToken)
-                .path("/")
-                .maxAge(REFRESH_TIME)
-                .httpOnly(true)
-                .build();
     }
 }

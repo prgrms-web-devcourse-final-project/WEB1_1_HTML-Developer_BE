@@ -1,5 +1,6 @@
 package com.backend.allreva.member.command.application;
 
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
@@ -18,14 +19,15 @@ public class MemberInfoCommandService {
      */
     public Member registerMember(
             final MemberInfoRequest memberInfoRequest,
-            final Member member
+            final Member member,
+            final Image image
     ) {
         member.setMemberInfo(
                 memberInfoRequest.nickname(),
                 memberInfoRequest.introduce(),
-                memberInfoRequest.profileImageUrl()
+                image.getUrl()
         );
-        member.upgradeToUser();
+        member.upgradeToUser(); // USER 권한으로 변경
         return memberRepository.save(member);
     }
 
@@ -34,12 +36,13 @@ public class MemberInfoCommandService {
      */
     public Member updateMemberInfo(
             final MemberInfoRequest memberInfoRequest,
-            final Member member
+            final Member member,
+            final Image image
     ) {
         member.setMemberInfo(
                 memberInfoRequest.nickname(),
                 memberInfoRequest.introduce(),
-                memberInfoRequest.profileImageUrl()
+                image.getUrl()
         );
         return memberRepository.save(member);
     }

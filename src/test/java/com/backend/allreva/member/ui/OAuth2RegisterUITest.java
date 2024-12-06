@@ -1,22 +1,25 @@
 package com.backend.allreva.member.ui;
 
-import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
-import com.backend.allreva.member.command.application.dto.MemberInfoRequest.MemberArtistRequest;
-import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.support.ApiTestSupport;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
+import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
+import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.support.ApiTestSupport;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
+import org.springframework.web.multipart.MultipartFile;
+
 @SuppressWarnings("NonAsciiCharacters")
-public class OAuth2RegisterUITest extends ApiTestSupport {
+class OAuth2RegisterUITest extends ApiTestSupport {
 
     @Test
     void oauth2_회원가입_API() throws Exception {
@@ -28,15 +31,16 @@ public class OAuth2RegisterUITest extends ApiTestSupport {
         var memberInfoRequest = new MemberInfoRequest(
                 "updated nickname",
                 "test introduce",
-                "updated profile image url",
                 memberArtistRequests
         );
-        willDoNothing().given(memberCommandFacade).registerMember(any(MemberInfoRequest.class), any(Member.class));
+        var uploadedImage = new MockMultipartFile("image", "test.jpg", "image/jpeg", "test".getBytes());
+        willDoNothing().given(memberCommandFacade).registerMember(any(MemberInfoRequest.class), any(Member.class), any(MultipartFile.class));
 
         // when
-        var resultActions = mockMvc.perform(post("/api/v1/oauth2/register")
-                .content(objectMapper.writeValueAsString(memberInfoRequest))
-                .contentType(MediaType.APPLICATION_JSON)
+        var resultActions = mockMvc.perform(multipart(HttpMethod.POST, "/api/v1/oauth2/register")
+                .file(uploadedImage)
+                .part(new MockPart("memberInfoRequest", "application/json", objectMapper.writeValueAsBytes(memberInfoRequest)))
+                .contentType(MediaType.MULTIPART_FORM_DATA)
         );
 
         // then
