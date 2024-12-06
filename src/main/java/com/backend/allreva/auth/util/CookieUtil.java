@@ -22,7 +22,9 @@ public final class CookieUtil {
                 //.domain(COOKIE_DOMAIN)
                 .path("/")
                 .maxAge(maxAge)
-                .httpOnly(true)
+                //.httpOnly(true)
+                //.secure(true) // 임시로 false
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
