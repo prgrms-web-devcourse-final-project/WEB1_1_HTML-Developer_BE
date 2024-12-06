@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.allreva.common.config.KafkaConfig.*;
+import static com.backend.allreva.survey.command.domain.SurveyDeletedEvent.TOPIC_SURVEY_DELETE;
+import static com.backend.allreva.survey.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.survey.command.domain.SurveySavedEvent.TOPIC_SURVEY_SAVE;
 
 @Slf4j
 @RequiredArgsConstructor

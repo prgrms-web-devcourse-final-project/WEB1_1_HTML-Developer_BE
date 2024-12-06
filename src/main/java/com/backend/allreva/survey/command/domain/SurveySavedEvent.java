@@ -3,36 +3,28 @@ package com.backend.allreva.survey.command.domain;
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyDocument;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-import static com.backend.allreva.common.config.KafkaConfig.TOPIC_SURVEY_SAVE;
-
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveySavedEvent extends Event {
 
-    private final String topic = TOPIC_SURVEY_SAVE;
+    public static final String TOPIC_SURVEY_SAVE = "survey-save";
 
-    private final Long surveyId;
-    private final String title;
-    private final Region region;
-    private final LocalDate endDate;
+    private Long surveyId;
+    private String title;
+    private Region region;
+    private LocalDate endDate;
 
-
-    @Builder
-    private SurveySavedEvent(
-            @JsonProperty("surveyId") final Long surveyId,
-            @JsonProperty("title") final String title,
-            @JsonProperty("region") final Region region,
-            @JsonProperty("endDate") final LocalDate endDate
-    ) {
-        this.surveyId = surveyId;
-        this.title = title;
-        this.region = region;
-        this.endDate = endDate;
+    public SurveySavedEvent(final Survey survey) {
+        this.surveyId = survey.getId();
+        this.title = survey.getTitle();
+        this.region = survey.getRegion();
+        this.endDate = survey.getEndDate();
     }
 
     public SurveyDocument to() {

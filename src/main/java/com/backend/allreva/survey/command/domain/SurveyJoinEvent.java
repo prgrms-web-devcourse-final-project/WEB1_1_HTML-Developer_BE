@@ -1,22 +1,22 @@
 package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.common.event.Event;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Getter;
-
-import static com.backend.allreva.common.config.KafkaConfig.TOPIC_SURVEY_JOIN;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveyJoinEvent extends Event {
 
-    private final String topic = TOPIC_SURVEY_JOIN;
+    public static final String TOPIC_SURVEY_JOIN = "survey-join";
 
-    private final Long surveyId;
-    private final int participationCount;
+    private Long surveyId;
+    private int participationCount;
 
     public SurveyJoinEvent(
-            @JsonProperty("surveyId") Long surveyId,
-            @JsonProperty("participationCount") int participationCount
+            final Long surveyId,
+            final int participationCount
     ) {
         this.surveyId = surveyId;
         this.participationCount = participationCount;

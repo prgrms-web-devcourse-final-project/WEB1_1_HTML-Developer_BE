@@ -1,5 +1,7 @@
 package com.backend.allreva.concert.infra;
 
+import static com.backend.allreva.concert.command.domain.ViewAddedEvent.TOPIC_CONCERT_VIEW;
+
 import com.backend.allreva.common.event.EventEntry;
 import com.backend.allreva.common.event.EventRepository;
 import com.backend.allreva.common.event.JsonParsingError;
@@ -24,7 +26,7 @@ public class ConcertInternalEventHandler {
     public void onMessage(ViewAddedEvent event) {
         String payload = serializeEvent(event);
         EventEntry eventEntry = EventEntry.builder()
-                .topic(event.getTopic())
+                .topic(TOPIC_CONCERT_VIEW)
                 .payload(payload)
                 .build();
 

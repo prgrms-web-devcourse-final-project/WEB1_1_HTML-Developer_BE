@@ -1,32 +1,18 @@
 package com.backend.allreva.rent.command.domain;
 
+import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
-import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
-import com.backend.allreva.rent.command.domain.value.Bus;
-import com.backend.allreva.rent.command.domain.value.DetailInfo;
-import com.backend.allreva.rent.command.domain.value.OperationInfo;
-import com.backend.allreva.rent.command.domain.value.Price;
+import com.backend.allreva.rent.command.domain.value.*;
 import com.backend.allreva.rent.exception.RentAccessDeniedException;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -107,6 +93,8 @@ public class Rent extends BaseEntity {
                 .toList();
         assignBoardingDates(rentBoardingDates);
         isClosed = false;
+
+        Events.raise(new RentSaveEvent(this));
     }
 
     public void validateMine(Long memberId) {
@@ -117,5 +105,6 @@ public class Rent extends BaseEntity {
 
     public void close() {
         isClosed = true;
+        Events.raise(new RentDeleteEvent(id));
     }
 }

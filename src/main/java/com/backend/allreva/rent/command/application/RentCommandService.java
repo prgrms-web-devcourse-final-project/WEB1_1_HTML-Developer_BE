@@ -1,15 +1,13 @@
 package com.backend.allreva.rent.command.application;
 
+import com.backend.allreva.common.event.Events;
 import com.backend.allreva.rent.command.application.dto.RentIdRequest;
 import com.backend.allreva.rent.command.application.dto.RentJoinApplyRequest;
 import com.backend.allreva.rent.command.application.dto.RentJoinIdRequest;
 import com.backend.allreva.rent.command.application.dto.RentJoinUpdateRequest;
 import com.backend.allreva.rent.command.application.dto.RentRegisterRequest;
 import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
-import com.backend.allreva.rent.command.domain.Rent;
-import com.backend.allreva.rent.command.domain.RentJoin;
-import com.backend.allreva.rent.command.domain.RentJoinRepository;
-import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.command.domain.*;
 import com.backend.allreva.rent.exception.RentJoinNotFoundException;
 import com.backend.allreva.rent.exception.RentNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +28,7 @@ public class RentCommandService {
     ) {
         Rent rent = rentRegisterRequest.toEntity(memberId);
         Rent savedRent = rentRepository.save(rent);
+        Events.raise(new RentSaveEvent(savedRent));
         return savedRent.getId();
     }
 
