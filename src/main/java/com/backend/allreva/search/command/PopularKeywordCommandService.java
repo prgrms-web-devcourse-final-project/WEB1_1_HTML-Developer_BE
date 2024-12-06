@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PopularKeywordCommandService {
     private final PopularKeywordRepository popularKeywordRepository;
+    public static final Integer NOT_EXIST_RANK = -1;
 
     /**
      * 검색어 count update
@@ -35,8 +35,10 @@ public class PopularKeywordCommandService {
      */
     public void updatePopularKeywordRank() {
         //1. 인기 검색어 목록 가져오기
-        List<String> top10 = popularKeywordRepository.getPopularKeywordRank().popularKeywordResponses()
-                .stream().map(PopularKeywordResponse::keyword).collect(Collectors.toList()); // 기존 top10
+        PopularKeywordResponses responses = popularKeywordRepository.getPopularKeywordRank();
+        List<String> top10 = responses.popularKeywordResponses().stream()
+                .map(PopularKeywordResponse::keyword)
+                .toList(); // 기존 top10
 
         //2. 현재 랭킹가져오기
         List<String> updatedTop10 = popularKeywordRepository.getTop10Keywords();
@@ -49,22 +51,12 @@ public class PopularKeywordCommandService {
         List<PopularKeywordResponse> list = new ArrayList<>();
         for (int i = 0; i < updatedTop10.size(); i++) {
             String keyword = updatedTop10.get(i);
-            int oldRank = top10.indexOf(keyword);
+            int rank = top10.indexOf(keyword);
 
             // 순위 비교
-            ChangeStatus status;
-            if (oldRank == -1) {
-                status = ChangeStatus.UP;
-            } else if (i < oldRank) {
-                status = ChangeStatus.UP;
-            } else if (i > oldRank) {
-                status = ChangeStatus.DOWN;
-            } else {
-                status = ChangeStatus.STAY;
-            }
+            ChangeStatus status = getChangeStatus(rank, i);
 
-            list.add(PopularKeywordResponse
-                    .builder()
+            list.add(PopularKeywordResponse.builder()
                     .rank(i + 1)
                     .keyword(keyword)
                     .changeStatus(status)
@@ -72,5 +64,18 @@ public class PopularKeywordCommandService {
         }
 
         popularKeywordRepository.updatePopularKeywordRank(new PopularKeywordResponses(list));
+    }
+
+    private ChangeStatus getChangeStatus(int oldRank, int rank) {
+        if (oldRank == NOT_EXIST_RANK) {
+            return ChangeStatus.UP;
+        }
+        if (rank < oldRank) {
+            return ChangeStatus.UP;
+        }
+        if (rank > oldRank) {
+            return ChangeStatus.DOWN;
+        }
+        return ChangeStatus.STAY;
     }
 }

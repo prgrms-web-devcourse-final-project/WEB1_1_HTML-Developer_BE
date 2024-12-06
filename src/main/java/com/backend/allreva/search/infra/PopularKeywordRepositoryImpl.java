@@ -51,6 +51,7 @@ public class PopularKeywordRepositoryImpl implements PopularKeywordRepository {
      */
     @Override
     public void decreaseAllKeywordCount() {
+        //전체 범위의 키워드 받아오기
         Set<ZSetOperations.TypedTuple<String>> keywords = zSetOperations.rangeWithScores(KEYWORD_KEY, 0, -1);
 
         if (keywords == null) return;
