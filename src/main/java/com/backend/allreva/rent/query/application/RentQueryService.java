@@ -2,18 +2,13 @@ package com.backend.allreva.rent.query.application;
 
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.exception.RentNotFoundException;
-import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminJoinDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
-import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
-import com.backend.allreva.rent.query.application.dto.RentSummaryResponse;
+import com.backend.allreva.rent.query.application.dto.*;
 import com.backend.allreva.survey.query.application.dto.SortType;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +24,10 @@ public class RentQueryService {
             final int pageSize
     ) {
         return rentQueryRepository.findRentSummaries(region, sortType, lastEndDate, lastId, pageSize);
+    }
+
+    public List<RentSummaryResponse> getRentMainSummaries(){
+        return rentQueryRepository.findRentMainSummaries();
     }
 
     public RentDetailResponse getRentDetailById(final Long id) {
