@@ -54,4 +54,8 @@ public class ConcertQueryService {
 
     }
 
+    public List<ConcertThumbnail> getConcertMainList() {
+        return concertRepository.getConcertMainThumbnails();
+    }
+
 }

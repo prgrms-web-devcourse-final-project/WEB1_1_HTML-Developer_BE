@@ -120,6 +120,10 @@ public class SurveyController {
     }
 
     @GetMapping("/main")
+    @Operation(
+            summary = "첫 화면 survey API 입니다.",
+            description = "첫 화면 survey API 입니다. 현재 날짜에서 가장 가까운 콘서트 순으로 5개 정렬"
+    )
     public Response<List<SurveySummaryResponse>> findSurveyMainList(){
         return Response.onSuccess(surveyQueryService.findSurveyMainList());
     }

@@ -5,6 +5,7 @@ import com.backend.allreva.concert.query.application.domain.value.SortDirection;
 import com.backend.allreva.concert.query.application.ConcertQueryService;
 import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
+import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,23 +49,27 @@ public class ConcertController {
                     "이전 SearchAfter에 있는 값들을 순서대로 넣어주어야 합니다."
     )
     @GetMapping("/list")
-    public Response<ConcertMainResponse> getConcertMain(
-            @RequestParam(defaultValue = "")
-            final String region,
-            @RequestParam(defaultValue = "DATE")
-            final SortDirection sortDirection,
-            @RequestParam(defaultValue = "7")
-            final int PageSize,
-            @RequestParam(required = false)
-            final String searchAfter1,
-            @RequestParam(required = false)
-            final String searchAfter2
+    public Response<ConcertMainResponse> getConcertList(
+            @RequestParam(defaultValue = "") final String region,
+            @RequestParam(defaultValue = "DATE") final SortDirection sortDirection,
+            @RequestParam(defaultValue = "7") final int PageSize,
+            @RequestParam(required = false) final String searchAfter1,
+            @RequestParam(required = false) final String searchAfter2
 
-    ){
+    ) {
         List<Object> searchAfter = Stream.of(searchAfter1, searchAfter2)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         ConcertMainResponse concertMain = concertQueryService.getConcertMain(region, searchAfter, PageSize, sortDirection);
         return Response.onSuccess(concertMain);
+    }
+
+    @GetMapping("/main")
+    @Operation(
+            summary = "첫 화면 콘서트 API 입니다.",
+            description = "첫 화면 콘서트 API 입니다. 현재 날짜에서 가장 가까운 콘서트 순으로 5개 정렬"
+    )
+    public Response<List<ConcertThumbnail>> getConcertMainList(){
+        return Response.onSuccess(concertQueryService.getConcertMainList());
     }
 }

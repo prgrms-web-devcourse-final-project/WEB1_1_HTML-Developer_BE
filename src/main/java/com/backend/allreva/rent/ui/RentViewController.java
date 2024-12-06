@@ -7,6 +7,7 @@ import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.rent.query.application.dto.*;
 import com.backend.allreva.survey.query.application.dto.SortType;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +37,10 @@ public class RentViewController implements RentViewControllerSwagger {
     }
 
     @GetMapping("/main")
+    @Operation(
+            summary = "첫 화면 survey API 입니다.",
+            description = "첫 화면 survey API 입니다. 현재 날짜에서 가장 가까운 콘서트 순으로 5개 정렬"
+    )
     public Response<List<RentSummaryResponse>> getRentMainSummaries(){
         return Response.onSuccess(rentQueryService.getRentMainSummaries());
     }

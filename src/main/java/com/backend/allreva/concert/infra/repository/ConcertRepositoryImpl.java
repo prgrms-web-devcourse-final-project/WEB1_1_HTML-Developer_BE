@@ -3,11 +3,13 @@ package com.backend.allreva.concert.infra.repository;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
+import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -78,4 +80,10 @@ public class ConcertRepositoryImpl implements ConcertRepository {
                 );
         viewCountCache.clear();
     }
+
+    @Override
+    public List<ConcertThumbnail> getConcertMainThumbnails(){
+        return concertJpaRepository.getConcertMainThumbnails();
+    }
+
 }
