@@ -3,7 +3,7 @@ package com.backend.allreva.survey.infra;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import com.backend.allreva.concert.exception.exception.ElasticSearchException;
+import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.survey.query.application.domain.SurveyDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

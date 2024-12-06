@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-
 public class ViewAddedEvent extends Event {
 
     private final String topic;

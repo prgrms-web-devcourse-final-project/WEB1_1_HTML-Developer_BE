@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import com.backend.allreva.concert.exception.exception.ElasticSearchException;
+import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.rent.query.application.domain.RentDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

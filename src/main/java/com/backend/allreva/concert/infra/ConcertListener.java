@@ -1,8 +1,8 @@
 package com.backend.allreva.concert.infra;
 
 import com.backend.allreva.common.event.JsonParsingError;
+import com.backend.allreva.common.exception.NotFoundException;
 import com.backend.allreva.concert.command.domain.ViewAddedEvent;
-import com.backend.allreva.concert.exception.exception.SearchResultNotFoundException;
 import com.backend.allreva.concert.query.application.domain.ConcertDocument;
 import com.backend.allreva.concert.query.application.domain.ConcertSearchRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,9 +31,8 @@ public class ConcertListener {
         ViewAddedEvent event = deserializeEvent(message);
 
         ConcertDocument concertDocument = concertSearchRepository.findByConcertCode(event.getConcertCode())
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
         concertDocument.updateViewCount(event.getViewCount());
-        concertSearchRepository.save(concertDocument);
         log.info("이벤트 수신, 조회수: {}", event.getViewCount());
     }
 

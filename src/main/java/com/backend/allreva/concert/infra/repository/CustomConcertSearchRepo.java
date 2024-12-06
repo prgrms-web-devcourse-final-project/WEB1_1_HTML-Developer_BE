@@ -1,4 +1,4 @@
-package com.backend.allreva.concert.infra;
+package com.backend.allreva.concert.infra.repository;
 
 import com.backend.allreva.concert.query.application.domain.value.SortDirection;
 import com.backend.allreva.concert.query.application.domain.ConcertDocument;
