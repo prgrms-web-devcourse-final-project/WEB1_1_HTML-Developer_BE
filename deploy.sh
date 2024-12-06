@@ -27,7 +27,7 @@ if [ -z "$IS_GREEN" ]; then # green이 없으면 blue라면
     fi
   done;
 
-  if [ $cnt -eq 10 ]
+  if [ $cnt -eq 20 ]
   then
     echo "서버가 정상적으로 구동되지 않았습니다."
     exit 1
@@ -64,7 +64,7 @@ else
     fi
   done;
 
-  if [ $cnt -eq 10 ]
+  if [ $cnt -eq 20 ]
   then
     echo "서버가 정상적으로 구동되지 않았습니다."
     exit 1

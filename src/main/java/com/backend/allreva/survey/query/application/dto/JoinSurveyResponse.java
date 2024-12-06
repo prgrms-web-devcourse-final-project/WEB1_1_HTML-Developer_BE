@@ -18,7 +18,7 @@ public final class JoinSurveyResponse {
                               final Long surveyJoinId,
                               final LocalDateTime applyDate,
                               final BoardingType boardingType,
-                              final Integer passengerNum) {
+                              final int passengerNum) {
         this.surveyResponse = surveyResponse;
         this.surveyJoinId = surveyJoinId;
         this.applyDate = applyDate.toLocalDate();

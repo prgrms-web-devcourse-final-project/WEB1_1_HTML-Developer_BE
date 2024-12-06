@@ -3,6 +3,8 @@ package com.backend.allreva.survey.command.domain;
 import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.survey.command.domain.value.Region;
+import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
+import com.backend.allreva.survey.exception.SurveyNotWriterException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -89,12 +91,17 @@ public class Survey extends BaseEntity {
         Events.raise(new SurveySavedEvent(this));
     }
 
-    public boolean isWriter(final Long loginMemberId) {
-        return this.memberId.equals(loginMemberId);
+    public void isWriter(final Long loginMemberId) {
+
+        if (!this.memberId.equals(loginMemberId))
+            throw new SurveyNotWriterException();
     }
 
-    public boolean containsBoardingDate(final LocalDate boardingDate) {
-        return this.boardingDates.stream()
-                .anyMatch(bd -> bd.getDate().equals(boardingDate));
+    public void containsBoardingDate(final LocalDate boardingDate) {
+        boolean contain = this.boardingDates.stream()
+                .noneMatch(bd -> bd.getDate().equals(boardingDate));
+
+        if (contain)
+            throw new SurveyInvalidBoardingDateException();
     }
 }

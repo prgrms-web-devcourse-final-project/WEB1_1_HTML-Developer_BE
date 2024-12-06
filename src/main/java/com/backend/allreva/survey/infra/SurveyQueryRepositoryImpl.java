@@ -1,5 +1,6 @@
 package com.backend.allreva.survey.infra;
 
+import com.backend.allreva.common.util.DateHolder;
 import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
@@ -30,6 +31,7 @@ import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
 @RequiredArgsConstructor
 public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
     private final JPAQueryFactory queryFactory;
+    private final DateHolder dateHolder;
 
     @Override
     public SurveyDetailResponse findSurveyDetail(final Long surveyId) {
@@ -54,7 +56,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                         Projections.constructor(
                                 SurveyBoardingDateResponse.class,
                                 surveyBoardingDate.date,
-                                surveyJoin.passengerNum.sum().coalesce(0)
+                                surveyJoin.passengerNum.sum()
                         )),
                 survey.information,
                 survey.isClosed
@@ -73,7 +75,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 .select(surveySummaryProjections())
                 .from(survey)
                 .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
-                .where(survey.endDate.goe(LocalDate.now()),
+                .where(survey.endDate.goe(dateHolder.getDate()),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate))
                 .groupBy(survey.id)
@@ -108,7 +110,7 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
                 survey.id,
                 survey.title,
                 survey.region,
-                surveyJoin.passengerNum.sum().coalesce(0),
+                surveyJoin.passengerNum.sum(),
                 survey.endDate
         );
     }

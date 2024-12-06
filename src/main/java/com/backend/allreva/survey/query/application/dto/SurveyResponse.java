@@ -23,8 +23,8 @@ public final class SurveyResponse {
                           final Region region,
                           final LocalDateTime surveyStartDate,
                           final LocalDate surveyEndDate,
-                          final Integer participationCount,
-                          final Integer maxPassenger) {
+                          final int participationCount,
+                          final int maxPassenger) {
         this.surveyId = surveyId;
         this.title = title;
         this.boardingDate = boardingDate;

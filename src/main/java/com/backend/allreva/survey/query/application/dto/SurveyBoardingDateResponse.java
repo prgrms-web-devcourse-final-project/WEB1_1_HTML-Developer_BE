@@ -4,6 +4,6 @@ import java.time.LocalDate;
 
 public record SurveyBoardingDateResponse(
         LocalDate date,
-        Integer participationCount
+        int participationCount
 ) {
 }
