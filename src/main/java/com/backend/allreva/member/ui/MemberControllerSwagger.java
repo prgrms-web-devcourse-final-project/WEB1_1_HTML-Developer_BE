@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +22,7 @@ public interface MemberControllerSwagger {
             content = @Content(
                 encoding = @Encoding(
                         name = "memberInfoRequest", contentType = MediaType.APPLICATION_JSON_VALUE)))
-    ResponseEntity<Void> registerMember(
+    Response<Void> registerMember(
             @AuthMember Member member,
             @RequestPart MemberInfoRequest memberInfoRequest,
             @RequestPart(value = "image", required = false) MultipartFile image

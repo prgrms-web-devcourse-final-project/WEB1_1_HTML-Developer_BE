@@ -8,7 +8,6 @@ import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,13 +30,13 @@ public class MemberController implements MemberControllerSwagger {
      * OAuth2 기본 이미지
      */
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> registerMember(
+    public Response<Void> registerMember(
             @AuthMember final Member member,
             @RequestPart final MemberInfoRequest memberInfoRequest,
             @RequestPart(value = "image", required = false) final MultipartFile image
     ) {
         memberCommandFacade.registerMember(memberInfoRequest, member, image);
-        return ResponseEntity.noContent().build();
+        return Response.onSuccess();
     }
 
     @PatchMapping(path = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

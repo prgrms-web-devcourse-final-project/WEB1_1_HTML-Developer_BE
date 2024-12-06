@@ -7,7 +7,6 @@ import com.backend.allreva.auth.util.CookieUtil;
 import com.backend.allreva.auth.util.JwtProvider;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.MemberRole;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,14 +25,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private static final String FRONT_SIGNUP_URL = "/signup";
 
     private final JwtProvider jwtProvider;
-    private final ObjectMapper objectMapper;
     private final RefreshTokenRepository refreshTokenRepository;
     @Value("${jwt.refresh.expiration}")
     private int REFRESH_TIME;
     @Value("${jwt.access.expiration}")
     private int ACCESS_TIME;
-    @Value("${jwt.refresh.cookie-name}")
-    private String REFRESH_COOKIE_NAME;
 
     /**
      * OAuth2 인증 success시 JWT 반환하는 메서드
@@ -64,7 +60,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // refreshToken 쿠키 등록
         CookieUtil.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
-        CookieUtil.addCookie(response, REFRESH_COOKIE_NAME, refreshToken, REFRESH_TIME);
+        CookieUtil.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
 
         sendRedirect(response, member);
     }

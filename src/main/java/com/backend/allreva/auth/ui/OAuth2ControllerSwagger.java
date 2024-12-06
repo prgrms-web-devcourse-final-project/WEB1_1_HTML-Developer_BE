@@ -22,7 +22,7 @@ public interface OAuth2ControllerSwagger {
             <b>oauth2 로그인 API</b>
             
             먼저 로그인을 다음 주소로 login한 후 token 주소를 얻습니다.
-            - `http://{host}:{port}/api/v1/oauth2/login/{provider}`
+            - ex) `/api/v1/oauth2/login/kakao`
             
             이후 token을 이용하여 회원가입 절차를 진행합니다.
             
