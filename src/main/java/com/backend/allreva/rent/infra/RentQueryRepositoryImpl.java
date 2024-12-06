@@ -6,7 +6,6 @@ import com.backend.allreva.rent.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentQueryRepository;
 import com.backend.allreva.rent.query.application.dto.*;
-import com.backend.allreva.survey.query.application.SurveyQueryService;
 import com.backend.allreva.survey.query.application.dto.SortType;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -33,7 +32,6 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
     private final DateHolder dateHolder;
-    private final SurveyQueryService surveyQueryService;
 
     /**
      * [SubQuery] 차 대절 현재 참여자 수
