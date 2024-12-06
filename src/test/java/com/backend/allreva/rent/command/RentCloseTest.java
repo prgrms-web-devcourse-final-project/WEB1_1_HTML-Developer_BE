@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rent.command.application.dto.RentIdRequest;
+import com.backend.allreva.rent.command.application.request.RentIdRequest;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;

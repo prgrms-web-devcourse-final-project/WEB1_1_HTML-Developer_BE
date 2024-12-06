@@ -1,8 +1,8 @@
 package com.backend.allreva.diary.query;
 
 import com.backend.allreva.diary.command.domain.DiaryRepository;
-import com.backend.allreva.diary.query.dto.DiaryDetailResponse;
-import com.backend.allreva.diary.query.dto.DiarySummaryResponse;
+import com.backend.allreva.diary.query.response.DiaryDetailResponse;
+import com.backend.allreva.diary.query.response.DiarySummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

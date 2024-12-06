@@ -5,8 +5,8 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentQueryService;
-import com.backend.allreva.rent.query.application.dto.*;
-import com.backend.allreva.survey.query.application.dto.SortType;
+import com.backend.allreva.rent.query.application.response.*;
+import com.backend.allreva.survey.query.application.response.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -75,10 +75,4 @@ public class RentViewController implements RentViewControllerSwagger {
         return Response.onSuccess(rentQueryService.getRentAdminDetail(member.getId(), LocalDate.now(), rentId));
     }
 
-    @GetMapping("/join/list")
-    public Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
-            @AuthMember Member member
-    ) {
-        return Response.onSuccess(rentQueryService.getRentJoinSummariesByMemberId(member.getId()));
-    }
 }

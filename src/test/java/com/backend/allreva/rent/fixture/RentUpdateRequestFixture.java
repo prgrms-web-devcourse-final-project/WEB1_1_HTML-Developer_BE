@@ -1,9 +1,9 @@
 package com.backend.allreva.rent.fixture;
 
-import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
+import com.backend.allreva.rent.command.application.request.RentUpdateRequest;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
-import com.backend.allreva.rent.command.domain.value.RefundType;
+import com.backend.allreva.rentJoin.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
 import java.time.LocalDate;
 import java.util.List;

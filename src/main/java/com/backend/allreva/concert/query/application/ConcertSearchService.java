@@ -1,12 +1,12 @@
 package com.backend.allreva.concert.query.application;
 
 
-import com.backend.allreva.concert.query.application.domain.ConcertSearchRepository;
-import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
+import com.backend.allreva.concert.infra.elasticsearch.ConcertSearchRepository;
+import com.backend.allreva.concert.query.application.response.ConcertThumbnail;
 import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.concert.exception.search.SearchResultNotFoundException;
-import com.backend.allreva.concert.query.application.dto.ConcertSearchListResponse;
-import com.backend.allreva.concert.query.application.domain.ConcertDocument;
+import com.backend.allreva.concert.query.application.response.ConcertSearchListResponse;
+import com.backend.allreva.concert.infra.elasticsearch.ConcertDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.SearchHit;

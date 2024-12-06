@@ -3,8 +3,8 @@ package com.backend.allreva.diary.command;
 import com.backend.allreva.concert.command.domain.Concert;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.diary.command.application.DiaryCommandService;
-import com.backend.allreva.diary.command.application.dto.AddDiaryRequest;
-import com.backend.allreva.diary.command.application.dto.UpdateDiaryRequest;
+import com.backend.allreva.diary.command.application.request.AddDiaryRequest;
+import com.backend.allreva.diary.command.application.request.UpdateDiaryRequest;
 import com.backend.allreva.diary.command.domain.ConcertDiary;
 import com.backend.allreva.diary.command.domain.DiaryRepository;
 import com.backend.allreva.member.command.domain.Member;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 class DiaryCommandTest extends IntegrationTestSupport {
 

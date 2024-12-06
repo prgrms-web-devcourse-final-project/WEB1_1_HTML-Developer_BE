@@ -1,9 +1,9 @@
 package com.backend.allreva.survey.command.application;
 
-import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.surveyJoin.command.application.request.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.Survey;
-import com.backend.allreva.survey.command.domain.SurveyJoin;
+import com.backend.allreva.surveyJoin.command.domain.SurveyJoin;
 import org.springframework.stereotype.Component;
 
 @Component

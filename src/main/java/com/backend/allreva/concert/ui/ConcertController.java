@@ -1,11 +1,11 @@
 package com.backend.allreva.concert.ui;
 
 import com.backend.allreva.common.dto.Response;
-import com.backend.allreva.concert.query.application.domain.value.SortDirection;
+import com.backend.allreva.concert.infra.elasticsearch.SortDirection;
 import com.backend.allreva.concert.query.application.ConcertQueryService;
-import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
-import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
-import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
+import com.backend.allreva.concert.query.application.response.ConcertMainResponse;
+import com.backend.allreva.concert.query.application.response.ConcertDetailResponse;
+import com.backend.allreva.concert.query.application.response.ConcertThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

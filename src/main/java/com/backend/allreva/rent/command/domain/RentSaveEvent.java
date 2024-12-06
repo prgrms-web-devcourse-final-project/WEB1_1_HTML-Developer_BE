@@ -2,7 +2,7 @@ package com.backend.allreva.rent.command.domain;
 
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.rent.query.application.domain.RentDocument;
+import com.backend.allreva.rent.infra.elasticsearch.RentDocument;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

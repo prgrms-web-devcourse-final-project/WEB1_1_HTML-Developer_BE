@@ -6,8 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rent.command.application.dto.RentJoinIdRequest;
-import com.backend.allreva.rent.command.domain.RentJoinRepository;
+import com.backend.allreva.rentJoin.command.application.request.RentJoinIdRequest;
+import com.backend.allreva.rentJoin.command.domain.RentJoinRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

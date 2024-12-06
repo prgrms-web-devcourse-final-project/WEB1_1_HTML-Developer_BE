@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.backend.allreva.artist.command.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
-import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
-import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
+import com.backend.allreva.member.command.application.request.MemberArtistRequest;
+import com.backend.allreva.member.command.application.request.MemberInfoRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.MemberRole;

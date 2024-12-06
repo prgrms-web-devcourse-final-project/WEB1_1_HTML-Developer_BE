@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.command.domain.value;
 
+import com.backend.allreva.rentJoin.command.domain.value.RefundType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;

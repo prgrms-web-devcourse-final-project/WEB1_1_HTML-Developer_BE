@@ -1,7 +1,7 @@
 package com.backend.allreva.artist.ui;
 
 import com.backend.allreva.artist.query.application.ArtistQueryService;
-import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
+import com.backend.allreva.artist.query.application.response.SpotifySearchResponse;
 import com.backend.allreva.common.dto.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

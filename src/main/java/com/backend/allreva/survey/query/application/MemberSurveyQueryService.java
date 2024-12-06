@@ -1,8 +1,8 @@
 package com.backend.allreva.survey.query.application;
 
-import com.backend.allreva.survey.query.application.domain.MemberSurveyRepository;
-import com.backend.allreva.survey.query.application.dto.CreatedSurveyResponse;
-import com.backend.allreva.survey.query.application.dto.JoinSurveyResponse;
+import com.backend.allreva.survey.infra.rdb.MemberSurveyRepository;
+import com.backend.allreva.survey.query.application.response.CreatedSurveyResponse;
+import com.backend.allreva.surveyJoin.query.JoinSurveyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -2,8 +2,8 @@ package com.backend.allreva.rent.query.application;
 
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.exception.RentNotFoundException;
-import com.backend.allreva.rent.query.application.dto.*;
-import com.backend.allreva.survey.query.application.dto.SortType;
+import com.backend.allreva.rent.query.application.response.*;
+import com.backend.allreva.survey.query.application.response.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +58,4 @@ public class RentQueryService {
         return rentAdminDetailResponse;
     }
 
-    public List<RentJoinSummaryResponse> getRentJoinSummariesByMemberId(final Long memberId) {
-        return rentQueryRepository.findRentJoinSummariesByMemberId(memberId);
-    }
 }

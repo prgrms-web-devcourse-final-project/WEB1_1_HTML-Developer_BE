@@ -6,16 +6,18 @@ import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
-import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.surveyJoin.command.application.request.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.request.SurveyIdRequest;
+import com.backend.allreva.survey.command.application.request.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.*;
-import com.backend.allreva.survey.command.domain.value.BoardingType;
+import com.backend.allreva.surveyJoin.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
 import com.backend.allreva.survey.exception.SurveyNotWriterException;
+import com.backend.allreva.surveyJoin.command.domain.SurveyJoin;
+import com.backend.allreva.surveyJoin.command.domain.SurveyJoinCommandRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +38,7 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
     @Autowired
     private SurveyCommandService surveyCommandService;
     @Autowired
-    private SurveyCommandRepository surveyCommandRepository;
+    private SurveyRepository surveyRepository;
     @Autowired
     private SurveyJoinCommandRepository surveyJoinCommandRepository;
     @Autowired
@@ -58,7 +60,7 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
     void tearDown() {
         memberRepository.deleteAllInBatch();
         surveyBoardingDateCommandRepository.deleteAllInBatch();
-        surveyCommandRepository.deleteAllInBatch();
+        surveyRepository.deleteAllInBatch();
         surveyJoinCommandRepository.deleteAllInBatch();
         concertRepository.deleteAllInBatch();
     }
@@ -71,7 +73,7 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
 
         // When
         Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
-        Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
+        Survey savedSurvey = surveyRepository.findById(surveyId).orElse(null);
 
         // Then
         assertNotNull(surveyId);
@@ -108,11 +110,11 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
-        surveyCommandRepository.flush();
+        surveyRepository.flush();
 
         // When
         surveyCommandService.removeSurvey(testMember.getId(), new SurveyIdRequest(surveyId));
-        Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
+        Survey savedSurvey = surveyRepository.findById(surveyId).orElse(null);
         List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
 
         // Then
@@ -127,7 +129,7 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
-        surveyCommandRepository.flush();
+        surveyRepository.flush();
 
         UpdateSurveyRequest updateSurveyRequest = new UpdateSurveyRequest(
                 surveyId,
@@ -141,7 +143,7 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
 
         // When
         surveyCommandService.updateSurvey(testMember.getId(), updateSurveyRequest);
-        Survey savedSurvey = surveyCommandRepository.findById(surveyId).orElse(null);
+        Survey savedSurvey = surveyRepository.findById(surveyId).orElse(null);
         List<SurveyBoardingDate> boardingDates = surveyBoardingDateCommandRepository.findAllBySurvey(savedSurvey);
         // Then
         assertNotNull(savedSurvey);
@@ -168,7 +170,7 @@ class SurveyCommandIntegrationTest extends IntegrationTestSupport {
         OpenSurveyRequest openSurveyRequest = createOpenSurveyRequest(testConcert.getId(), LocalDate.now(), Region.서울);
 
         Long surveyId = surveyCommandService.openSurvey(testMember.getId(), openSurveyRequest);
-        surveyCommandRepository.flush();
+        surveyRepository.flush();
 
         // When & Then
         assertThrows(SurveyNotWriterException.class, () -> {

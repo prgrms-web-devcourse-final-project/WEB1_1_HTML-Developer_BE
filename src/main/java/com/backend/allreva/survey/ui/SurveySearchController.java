@@ -2,8 +2,8 @@ package com.backend.allreva.survey.ui;
 
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.survey.query.application.SurveySearchService;
-import com.backend.allreva.survey.query.application.dto.SurveySearchListResponse;
-import com.backend.allreva.survey.query.application.dto.SurveyThumbnail;
+import com.backend.allreva.survey.query.application.response.SurveySearchListResponse;
+import com.backend.allreva.survey.query.application.response.SurveyThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;

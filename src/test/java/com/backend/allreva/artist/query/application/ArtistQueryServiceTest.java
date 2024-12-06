@@ -1,7 +1,7 @@
 package com.backend.allreva.artist.query.application;
 
 import com.backend.allreva.artist.exception.ArtistSearchNoContentException;
-import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
+import com.backend.allreva.artist.query.application.response.SpotifySearchResponse;
 import com.backend.allreva.support.IntegrationTestSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -6,17 +6,16 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.surveyJoin.command.application.request.JoinSurveyRequest;
+import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.SurveyBoardingDateCommandRepository;
-import com.backend.allreva.survey.command.domain.SurveyCommandRepository;
-import com.backend.allreva.survey.command.domain.value.BoardingType;
+import com.backend.allreva.survey.command.domain.SurveyRepository;
+import com.backend.allreva.surveyJoin.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
-import com.backend.allreva.survey.query.application.dto.SortType;
-import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
-import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
-import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
+import com.backend.allreva.survey.query.application.response.SortType;
+import com.backend.allreva.survey.query.application.response.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.response.SurveyDocumentDto;
+import com.backend.allreva.survey.query.application.response.SurveySummaryResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +40,7 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
     @Autowired
     private SurveyQueryService surveyQueryService;
     @Autowired
-    private SurveyCommandRepository surveyCommandRepository;
+    private SurveyRepository surveyRepository;
     @Autowired
     private ConcertRepository concertRepository;
 
@@ -64,7 +63,7 @@ public class SurveyQueryIntegrationTest extends IntegrationTestSupport {
     void tearDown() {
         memberRepository.deleteAllInBatch();
         surveyBoardingDateCommandRepository.deleteAllInBatch();
-        surveyCommandRepository.deleteAllInBatch();
+        surveyRepository.deleteAllInBatch();
     }
 
     @Test

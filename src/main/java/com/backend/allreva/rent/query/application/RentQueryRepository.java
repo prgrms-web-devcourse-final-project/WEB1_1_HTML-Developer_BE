@@ -1,14 +1,14 @@
 package com.backend.allreva.rent.query.application;
 
 import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
-import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminJoinDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
-import com.backend.allreva.rent.query.application.dto.RentSummaryResponse;
-import com.backend.allreva.survey.query.application.dto.SortType;
+import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
+import com.backend.allreva.rent.query.application.response.RentDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminJoinDetailResponse;
+import com.backend.allreva.rentJoin.query.response.RentJoinSummaryResponse;
+import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
+import com.backend.allreva.survey.query.application.response.SortType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;

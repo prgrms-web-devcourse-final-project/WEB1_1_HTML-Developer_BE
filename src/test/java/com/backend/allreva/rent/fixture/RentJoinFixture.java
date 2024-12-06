@@ -1,9 +1,9 @@
 package com.backend.allreva.rent.fixture;
 
-import com.backend.allreva.rent.command.domain.RentJoin;
-import com.backend.allreva.rent.command.domain.value.BoardingType;
-import com.backend.allreva.rent.command.domain.value.Depositor;
-import com.backend.allreva.rent.command.domain.value.RefundType;
+import com.backend.allreva.rentJoin.command.domain.RentJoin;
+import com.backend.allreva.rentJoin.command.domain.value.BoardingType;
+import com.backend.allreva.rentJoin.command.domain.value.Depositor;
+import com.backend.allreva.rentJoin.command.domain.value.RefundType;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

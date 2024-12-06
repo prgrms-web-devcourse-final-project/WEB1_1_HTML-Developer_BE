@@ -1,7 +1,7 @@
 package com.backend.allreva.diary.infra;
 
-import com.backend.allreva.diary.query.dto.DiaryDetailResponse;
-import com.backend.allreva.diary.query.dto.DiarySummaryResponse;
+import com.backend.allreva.diary.query.response.DiaryDetailResponse;
+import com.backend.allreva.diary.query.response.DiarySummaryResponse;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;

@@ -2,7 +2,7 @@ package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.domain.SurveyDocument;
+import com.backend.allreva.survey.infra.elasticsearch.SurveyDocument;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

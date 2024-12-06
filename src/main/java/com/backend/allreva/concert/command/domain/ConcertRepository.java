@@ -1,7 +1,7 @@
 package com.backend.allreva.concert.command.domain;
 
-import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
-import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
+import com.backend.allreva.concert.query.application.response.ConcertDetailResponse;
+import com.backend.allreva.concert.query.application.response.ConcertThumbnail;
 
 import java.util.List;
 

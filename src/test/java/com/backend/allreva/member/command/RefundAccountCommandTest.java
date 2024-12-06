@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.backend.allreva.member.command.application.MemberInfoCommandService;
 import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
+import com.backend.allreva.member.command.application.request.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import org.junit.jupiter.api.BeforeEach;

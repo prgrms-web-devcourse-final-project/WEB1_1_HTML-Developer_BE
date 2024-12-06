@@ -1,7 +1,7 @@
 package com.backend.allreva.artist.command;
 
 import com.backend.allreva.artist.command.domain.Artist;
-import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
+import com.backend.allreva.member.command.application.request.MemberArtistRequest;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

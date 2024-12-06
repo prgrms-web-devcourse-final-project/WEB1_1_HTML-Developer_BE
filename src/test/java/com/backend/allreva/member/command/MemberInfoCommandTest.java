@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.backend.allreva.common.application.S3ImageService;
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.member.command.application.MemberInfoCommandService;
-import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
+import com.backend.allreva.member.command.application.request.MemberInfoRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.LoginProvider;

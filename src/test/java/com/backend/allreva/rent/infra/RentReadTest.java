@@ -6,6 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentRepository;
+import com.backend.allreva.rent.infra.rdb.RentJpaRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

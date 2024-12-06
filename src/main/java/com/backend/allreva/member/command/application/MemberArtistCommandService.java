@@ -2,7 +2,7 @@ package com.backend.allreva.member.command.application;
 
 import com.backend.allreva.artist.command.ArtistCommandService;
 import com.backend.allreva.artist.query.application.ArtistQueryService;
-import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
+import com.backend.allreva.member.command.application.request.MemberArtistRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberArtist;
 import com.backend.allreva.member.command.domain.MemberArtistRepository;

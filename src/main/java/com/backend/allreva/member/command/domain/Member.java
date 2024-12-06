@@ -6,7 +6,7 @@ import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberInfo;
 import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.backend.allreva.member.command.domain.value.RefundAccount;
-import com.backend.allreva.member.infra.converter.RefundAccountConverter;
+import com.backend.allreva.member.infra.RefundAccountConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;

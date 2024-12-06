@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.query.application.ArtistQueryService;
-import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
-import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
+import com.backend.allreva.artist.query.application.response.SpotifySearchResponse;
+import com.backend.allreva.member.command.application.request.MemberArtistRequest;
 import com.backend.allreva.support.IntegrationTestSupport;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

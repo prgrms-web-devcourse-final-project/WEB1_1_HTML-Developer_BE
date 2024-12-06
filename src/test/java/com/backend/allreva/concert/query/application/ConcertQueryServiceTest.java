@@ -1,7 +1,7 @@
 package com.backend.allreva.concert.query.application;
 
-import com.backend.allreva.concert.query.application.domain.value.SortDirection;
-import com.backend.allreva.concert.query.application.dto.ConcertMainResponse;
+import com.backend.allreva.concert.infra.elasticsearch.SortDirection;
+import com.backend.allreva.concert.query.application.response.ConcertMainResponse;
 import com.backend.allreva.support.IntegrationTestSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;

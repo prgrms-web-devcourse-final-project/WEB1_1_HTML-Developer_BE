@@ -3,10 +3,10 @@ package com.backend.allreva.survey.infra;
 import com.backend.allreva.common.event.JsonParsingError;
 import com.backend.allreva.common.exception.NotFoundException;
 import com.backend.allreva.survey.command.domain.SurveyDeletedEvent;
-import com.backend.allreva.survey.command.domain.SurveyJoinEvent;
+import com.backend.allreva.surveyJoin.command.domain.SurveyJoinEvent;
 import com.backend.allreva.survey.command.domain.SurveySavedEvent;
-import com.backend.allreva.survey.query.application.domain.SurveyDocument;
-import com.backend.allreva.survey.query.application.domain.SurveyDocumentRepository;
+import com.backend.allreva.survey.infra.elasticsearch.SurveyDocument;
+import com.backend.allreva.survey.infra.elasticsearch.SurveyDocumentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.allreva.common.config.KafkaConfig.*;
 import static com.backend.allreva.survey.command.domain.SurveyDeletedEvent.TOPIC_SURVEY_DELETE;
-import static com.backend.allreva.survey.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.surveyJoin.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
 import static com.backend.allreva.survey.command.domain.SurveySavedEvent.TOPIC_SURVEY_SAVE;
 
 @Slf4j

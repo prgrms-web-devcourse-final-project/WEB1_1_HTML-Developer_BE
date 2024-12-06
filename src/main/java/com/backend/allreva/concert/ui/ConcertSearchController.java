@@ -2,8 +2,8 @@ package com.backend.allreva.concert.ui;
 
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.concert.query.application.ConcertSearchService;
-import com.backend.allreva.concert.query.application.dto.ConcertSearchListResponse;
-import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
+import com.backend.allreva.concert.query.application.response.ConcertSearchListResponse;
+import com.backend.allreva.concert.query.application.response.ConcertThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import static com.backend.allreva.concert.command.domain.ViewAddedEvent.TOPIC_CO
 import static com.backend.allreva.rent.command.domain.RentDeleteEvent.TOPIC_RENT_DELETE;
 import static com.backend.allreva.rent.command.domain.RentSaveEvent.TOPIC_RENT_SAVE;
 import static com.backend.allreva.survey.command.domain.SurveyDeletedEvent.TOPIC_SURVEY_DELETE;
-import static com.backend.allreva.survey.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.surveyJoin.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
 import static com.backend.allreva.survey.command.domain.SurveySavedEvent.TOPIC_SURVEY_SAVE;
 
 import org.apache.kafka.clients.admin.NewTopic;

@@ -3,11 +3,10 @@ package com.backend.allreva.survey.command.application;
 import com.backend.allreva.common.event.Events;
 import com.backend.allreva.concert.exception.ConcertNotFoundException;
 import com.backend.allreva.concert.infra.dto.ConcertDateInfoResponse;
-import com.backend.allreva.concert.infra.repository.ConcertJpaRepository;
-import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
+import com.backend.allreva.concert.infra.rdb.ConcertJpaRepository;
+import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.request.SurveyIdRequest;
+import com.backend.allreva.survey.command.application.request.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.*;
 import com.backend.allreva.survey.exception.SurveyInvalidBoardingDateException;
 import com.backend.allreva.survey.exception.SurveyNotFoundException;
@@ -24,8 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SurveyCommandService {
-    private final SurveyCommandRepository surveyCommandRepository;
-    private final SurveyJoinCommandRepository surveyJoinCommandRepository;
+    private final SurveyRepository surveyRepository;
     private final SurveyBoardingDateCommandRepository surveyBoardingDateCommandRepository;
     private final ConcertJpaRepository concertRepository;
     private final SurveyConverter surveyConverter;
@@ -38,7 +36,7 @@ public class SurveyCommandService {
         //가용 날짜가 콘서트 진행 날짜인지 확인
         validateBoardingDates(request.concertId(), request.boardingDates());
 
-        Survey survey = surveyCommandRepository.save(surveyConverter.toSurvey(memberId, request));
+        Survey survey = surveyRepository.save(surveyConverter.toSurvey(memberId, request));
         saveBoardingDates(survey, request.boardingDates());
 
         Events.raise(new SurveySavedEvent(survey));
@@ -77,7 +75,7 @@ public class SurveyCommandService {
         //작성자 확인
         survey.isWriter(memberId);
 
-        surveyCommandRepository.delete(survey);
+        surveyRepository.delete(survey);
         surveyBoardingDateCommandRepository.deleteAllBySurvey(survey);
         Events.raise(new SurveyDeletedEvent(survey.getId()));
     }
@@ -85,19 +83,6 @@ public class SurveyCommandService {
     /**
      * 수요조사 응답(신청)
      */
-    public Long createSurveyResponse(
-            final Long memberId,
-            final JoinSurveyRequest request
-    ) {
-        Survey survey = findSurvey(request.surveyId());
-
-        //신청 가능한 날짜인지 확인
-        survey.containsBoardingDate(request.boardingDate());
-
-        SurveyJoin surveyJoin = surveyConverter.toSurveyJoin(memberId, request);
-        log.info("passenger_num : {}", surveyJoin.getPassengerNum());
-        return surveyJoinCommandRepository.save(surveyJoin).getId();
-    }
 
     private void saveBoardingDates(final Survey survey,
                                    final List<LocalDate> boardingDates) {
@@ -136,7 +121,7 @@ public class SurveyCommandService {
 
 
     private Survey findSurvey(final Long surveyId) {
-        return surveyCommandRepository.findById(surveyId)
+        return surveyRepository.findById(surveyId)
                 .orElseThrow(SurveyNotFoundException::new);
     }
 

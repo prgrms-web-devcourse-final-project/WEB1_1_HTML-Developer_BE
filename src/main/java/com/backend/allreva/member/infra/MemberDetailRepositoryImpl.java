@@ -4,8 +4,8 @@ import static com.backend.allreva.artist.command.domain.QArtist.artist;
 import static com.backend.allreva.member.command.domain.QMember.member;
 import static com.backend.allreva.member.command.domain.QMemberArtist.memberArtist;
 
-import com.backend.allreva.member.query.application.dto.MemberDetail;
-import com.backend.allreva.member.query.application.dto.MemberDetail.MemberArtistDetail;
+import com.backend.allreva.member.query.application.response.MemberDetail;
+import com.backend.allreva.member.query.application.response.MemberDetail.MemberArtistDetail;
 import com.backend.allreva.member.query.application.MemberDetailRepository;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;

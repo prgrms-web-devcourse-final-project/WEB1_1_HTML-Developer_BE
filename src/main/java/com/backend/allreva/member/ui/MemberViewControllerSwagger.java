@@ -3,7 +3,7 @@ package com.backend.allreva.member.ui;
 import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.query.application.dto.MemberDetail;
+import com.backend.allreva.member.query.application.response.MemberDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

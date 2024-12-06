@@ -1,7 +1,7 @@
 package com.backend.allreva.hall.infra;
 
-import com.backend.allreva.hall.query.application.dto.ConcertHallDetail;
+import com.backend.allreva.hall.query.application.response.ConcertHallDetailResponse;
 
 public interface ConcertHallRepositoryCustom {
-    ConcertHallDetail findDetailByHallCode(String hallCode);
+    ConcertHallDetailResponse findDetailByHallCode(String hallCode);
 }
