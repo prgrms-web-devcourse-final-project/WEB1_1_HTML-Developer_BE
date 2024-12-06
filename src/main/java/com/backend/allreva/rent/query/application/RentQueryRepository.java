@@ -23,4 +23,6 @@ public interface RentQueryRepository {
     List<RentAdminJoinDetailResponse> findRentAdminJoinDetails(Long memberId, Long rentId, LocalDate boardingDate);
 
     List<RentJoinSummaryResponse> findRentJoinSummariesByMemberId(Long memberId);
+
+    List<RentSummaryResponse> findRentMainSummaries();
 }

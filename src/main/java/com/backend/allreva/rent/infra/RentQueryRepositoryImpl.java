@@ -1,39 +1,30 @@
 package com.backend.allreva.rent.infra;
 
+import com.backend.allreva.common.util.DateHolder;
+import com.backend.allreva.rent.command.domain.value.BoardingType;
+import com.backend.allreva.rent.command.domain.value.RefundType;
+import com.backend.allreva.rent.command.domain.value.Region;
+import com.backend.allreva.rent.query.application.RentQueryRepository;
+import com.backend.allreva.rent.query.application.dto.*;
+import com.backend.allreva.survey.query.application.dto.SortType;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import static com.backend.allreva.concert.command.domain.QConcert.concert;
 import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
 import static com.backend.allreva.rent.command.domain.QRent.rent;
 import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoardingDate;
 import static com.backend.allreva.rent.command.domain.QRentJoin.rentJoin;
 import static com.querydsl.core.types.Projections.list;
-
-import com.backend.allreva.common.util.DateHolder;
-import com.backend.allreva.rent.command.domain.value.BoardingType;
-import com.backend.allreva.rent.command.domain.value.RefundType;
-import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.query.application.RentQueryRepository;
-import com.backend.allreva.rent.query.application.dto.DepositAccountResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminSummaryResponse;
-import com.backend.allreva.rent.query.application.dto.RentDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentAdminJoinDetailResponse;
-import com.backend.allreva.rent.query.application.dto.RentJoinSummaryResponse;
-import com.backend.allreva.rent.query.application.dto.RentSummaryResponse;
-import com.backend.allreva.survey.query.application.dto.SortType;
-import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -84,6 +75,26 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
                 .groupBy(rent.id)
                 .orderBy(orderSpecifiers(sortType))
                 .limit(pageSize)
+                .fetch();
+    }
+    @Override
+    public List<RentSummaryResponse> findRentMainSummaries(){
+        return queryFactory
+                .select(Projections.constructor(RentSummaryResponse.class,
+                        rent.id,
+                        rent.detailInfo.title,
+                        rent.operationInfo.boardingArea,
+                        rent.additionalInfo.endDate,
+                        rent.detailInfo.image.url
+                ))
+                .from(rent)
+                .where(
+                        rent.additionalInfo.endDate.goe(dateHolder.getDate()),
+                        rent.isClosed.eq(false)
+                )
+                .groupBy(rent.id)
+                .orderBy(rent.additionalInfo.endDate.asc())
+                .limit(3)
                 .fetch();
     }
 

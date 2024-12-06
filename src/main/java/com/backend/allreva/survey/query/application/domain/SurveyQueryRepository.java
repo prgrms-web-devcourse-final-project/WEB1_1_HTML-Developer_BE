@@ -17,4 +17,6 @@ public interface SurveyQueryRepository {
                                                final Long lastId, final LocalDate lastEndDate, final int pageSize);
 
     Optional<SurveyDocumentDto> findSurveyWithParticipationCount(final Long surveyId);
+
+    List<SurveySummaryResponse> findSurveyMainList();
 }

@@ -1,12 +1,16 @@
 package com.backend.allreva.concert.infra.repository;
 
 import com.backend.allreva.concert.query.application.dto.ConcertDetailResponse;
+import com.backend.allreva.concert.query.application.dto.ConcertThumbnail;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import static com.backend.allreva.common.model.QImage.image;
 import static com.backend.allreva.concert.command.domain.QConcert.concert;
@@ -36,6 +40,25 @@ public class ConcertDslRepositoryImpl implements ConcertDslRepository {
             return ConcertDetailResponse.EMPTY;
         }
         return response;
+    }
+
+    @Override
+    public List<ConcertThumbnail> getConcertMainThumbnails() {
+        return queryFactory
+                .select(Projections.constructor(ConcertThumbnail.class,
+                        concert.poster.url,
+                        concert.concertInfo.title,
+                        concertHall.name,
+                        concert.concertInfo.dateInfo.startDate,
+                        concert.concertInfo.dateInfo.endDate,
+                        concert.id
+                ))
+                .from(concert)
+                .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
+                .where(concert.concertInfo.dateInfo.endDate.goe(LocalDate.now()))
+                .orderBy(concert.concertInfo.dateInfo.startDate.asc())
+                .limit(5)
+                .fetch();
     }
 
     private ConstructorExpression<ConcertDetailResponse> concertDetailProjection() {

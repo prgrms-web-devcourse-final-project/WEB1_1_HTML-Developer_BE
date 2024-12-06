@@ -85,6 +85,19 @@ public class SurveyQueryRepositoryImpl implements SurveyQueryRepository {
     }
 
     @Override
+    public List<SurveySummaryResponse> findSurveyMainList() {
+        return queryFactory
+                .select(surveySummaryProjections())
+                .from(survey)
+                .leftJoin(surveyJoin).on(survey.id.eq(surveyJoin.surveyId))
+                .where(survey.endDate.goe(LocalDate.now()))
+                .groupBy(survey.id)
+                .orderBy(survey.endDate.asc())
+                .limit(3)
+                .fetch();
+    }
+
+    @Override
     public Optional<SurveyDocumentDto> findSurveyWithParticipationCount(final Long surveyId) {
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SurveyDocumentDto.class,

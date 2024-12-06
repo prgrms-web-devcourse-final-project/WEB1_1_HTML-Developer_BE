@@ -39,4 +39,8 @@ public class SurveyQueryService {
     public Optional<SurveyDocumentDto> findSurveyWithParticipationCount(final Long surveyId) {
         return surveyQueryRepository.findSurveyWithParticipationCount(surveyId);
     }
+
+    public List<SurveySummaryResponse> findSurveyMainList() {
+        return surveyQueryRepository.findSurveyMainList();
+    }
 }
