@@ -1,19 +1,19 @@
 package com.backend.allreva.survey.command.domain;
 
 import com.backend.allreva.common.event.Event;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Getter;
-
-import static com.backend.allreva.common.config.KafkaConfig.TOPIC_SURVEY_DELETE;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveyDeletedEvent extends Event {
-    private final String topic = TOPIC_SURVEY_DELETE;
+    public static final String TOPIC_SURVEY_DELETE = "survey-delete";
 
-    private final Long surveyId;
+    private Long surveyId;
 
     public SurveyDeletedEvent(
-            @JsonProperty("surveyId") final Long surveyId
+            final Long surveyId
     ) {
         this.surveyId = surveyId;
     }

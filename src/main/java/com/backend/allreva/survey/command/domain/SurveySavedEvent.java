@@ -3,18 +3,17 @@ package com.backend.allreva.survey.command.domain;
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.domain.SurveyDocument;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-import static com.backend.allreva.common.config.KafkaConfig.TOPIC_SURVEY_SAVE;
-
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveySavedEvent extends Event {
 
-    private final String topic = TOPIC_SURVEY_SAVE;
+    public static final String TOPIC_SURVEY_SAVE = "survey-save";
 
     private Long surveyId;
     private String title;

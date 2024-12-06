@@ -1,16 +1,15 @@
 package com.backend.allreva.concert.command.domain;
 
 import com.backend.allreva.common.event.Event;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.backend.allreva.common.config.KafkaConfig.TOPIC_CONCERT_VIEW;
-
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ViewAddedEvent extends Event {
 
-    private final String topic = TOPIC_CONCERT_VIEW;
+    public static final String TOPIC_CONCERT_VIEW = "concertView-event";
     private String concertCode;
     private long viewCount;
 

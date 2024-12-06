@@ -1,20 +1,20 @@
 package com.backend.allreva.rent.command.domain;
 
 import com.backend.allreva.common.event.Event;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Getter;
-
-import static com.backend.allreva.common.config.KafkaConfig.TOPIC_RENT_DELETE;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RentDeleteEvent extends Event {
 
-    private final String topic = TOPIC_RENT_DELETE;
+    public static final String TOPIC_RENT_DELETE = "rent-delete";
 
-    private final Long rentId;
+    private Long rentId;
 
     public RentDeleteEvent(
-            @JsonProperty("rentId") final Long rentId
+            final Long rentId
     ) {
         this.rentId = rentId;
     }

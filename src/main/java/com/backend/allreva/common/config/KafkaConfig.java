@@ -1,5 +1,12 @@
 package com.backend.allreva.common.config;
 
+import static com.backend.allreva.concert.command.domain.ViewAddedEvent.TOPIC_CONCERT_VIEW;
+import static com.backend.allreva.rent.command.domain.RentDeleteEvent.TOPIC_RENT_DELETE;
+import static com.backend.allreva.rent.command.domain.RentSaveEvent.TOPIC_RENT_SAVE;
+import static com.backend.allreva.survey.command.domain.SurveyDeletedEvent.TOPIC_SURVEY_DELETE;
+import static com.backend.allreva.survey.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.survey.command.domain.SurveySavedEvent.TOPIC_SURVEY_SAVE;
+
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,18 +19,6 @@ import org.springframework.kafka.config.TopicBuilder;
 @ConfigurationProperties(prefix = "kafka")
 public class KafkaConfig {
 
-    public static final String TOPIC_CONCERT_VIEW = "concertLike-event";
-
-    public static final String TOPIC_SURVEY_SAVE = "survey-save";
-    public static final String TOPIC_SURVEY_DELETE = "survey-delete";
-    public static final String TOPIC_SURVEY_JOIN = "survey-join";
-
-    public static final String TOPIC_RENT_SAVE = "rent-save";
-    public static final String TOPIC_RENT_DELETE = "rent-delete";
-
-    public static final String TOPIC_RENT_JOIN_SAVE = "rent-join-delete";
-    public static final String TOPIC_RENT_JOIN_DELETE = "rent-join-delete";
-
     // 토픽 설정
     @Bean
     public NewTopic concertLikeTopic() {
@@ -34,15 +29,24 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic rentTopic() {
-        return TopicBuilder.name("rent-event")
+    public NewTopic rentSaveTopic() {
+        return TopicBuilder.name(TOPIC_RENT_SAVE)
                 .partitions(1)
                 .replicas(1)
                 .build();
     }
 
     @Bean
-    public NewTopic surveyCreateTopic() {
+    public NewTopic rentDeleteTopic() {
+        return TopicBuilder.name(TOPIC_RENT_DELETE)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+
+    @Bean
+    public NewTopic surveySaveTopic() {
         return TopicBuilder.name(TOPIC_SURVEY_SAVE)
                 .partitions(1)
                 .replicas(1)
