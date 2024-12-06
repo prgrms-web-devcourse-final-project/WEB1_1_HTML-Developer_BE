@@ -67,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/surveys").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/rents/list").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/rents").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         // OAuth2 인증 필터
