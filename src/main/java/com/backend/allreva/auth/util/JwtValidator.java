@@ -1,21 +1,15 @@
 package com.backend.allreva.auth.util;
 
-import javax.crypto.SecretKey;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.backend.allreva.auth.exception.code.ExpiredJwtTokenException;
-import com.backend.allreva.auth.exception.code.InvalidJwtSignatureException;
-import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -27,7 +21,12 @@ public class JwtValidator {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public void validateToken(final String token) {
+    public boolean isTokenInValid(final String token) {
+        // token이 null인 경우
+        if (token == null) {
+            return true;
+        }
+        // 유효하지 않은 토큰
         try {
             Jwts.parser()
                     .verifyWith(secretKey)
@@ -35,15 +34,15 @@ public class JwtValidator {
                     .parse(token);
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
-            throw new InvalidJwtTokenException();
+            return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT token signature: {}", e.getMessage());
-            throw new InvalidJwtSignatureException();
+            return true;
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token: {}", e.getMessage());
-            throw new ExpiredJwtTokenException();
+            return true;
         }
-    }
 
-    // TODO: refresh Token 검증 (redis 활용)
+        return false;
+    }
 }

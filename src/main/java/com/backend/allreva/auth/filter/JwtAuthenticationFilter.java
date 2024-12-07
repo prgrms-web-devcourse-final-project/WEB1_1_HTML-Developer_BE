@@ -1,6 +1,9 @@
 package com.backend.allreva.auth.filter;
 
+import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
+import com.backend.allreva.auth.util.CookieUtil;
 import com.backend.allreva.auth.util.JwtParser;
+import com.backend.allreva.auth.util.JwtProvider;
 import com.backend.allreva.auth.util.JwtValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +31,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtParser jwtParser;
     private final JwtValidator jwtValidator;
+    private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
+
+    @Value("${jwt.refresh.expiration}")
+    private int REFRESH_TIME;
+
+    @Value("${jwt.access.expiration}")
+    private int ACCESS_TIME;
 
     /**
      * JWT 토큰을 검증하는 메서드
@@ -49,26 +60,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // token 검증 수행
-        String memberId = validateAndExtractMemberId(accessToken, refreshToken);
+        // 토큰 검증 결과 boolean 변수로 분리
+        boolean isAccessTokenInvalid = jwtValidator.isTokenInValid(accessToken);
+        boolean isRefreshTokenInvalid = jwtValidator.isTokenInValid(refreshToken);
+
+        String memberId;
+
+        if (isAccessTokenInvalid && isRefreshTokenInvalid) {
+            // Access도 Refresh도 둘 다 유효하지 않으면 예외 발생
+            throw new InvalidJwtTokenException();
+        }
+
+        if (isAccessTokenInvalid) {
+            // Access Token이 유효하지 않으나, Refresh Token은 유효한 경우 => Access Token 재발급
+            memberId = jwtParser.extractMemberId(refreshToken);
+            String generatedAccessToken = jwtProvider.generateAccessToken(memberId);
+            CookieUtil.addCookie(response, "accessToken", generatedAccessToken, ACCESS_TIME);
+        } else {
+            // Access Token이 유효한 경우
+            memberId = jwtParser.extractMemberId(accessToken);
+
+            if (isRefreshTokenInvalid) {
+                // Refresh Token이 유효하지 않다면 => Refresh Token 재발급
+                String generatedRefreshToken = jwtProvider.generateRefreshToken(memberId);
+                CookieUtil.addCookie(response, "refreshToken", generatedRefreshToken, REFRESH_TIME);
+            }
+        }
 
         // Authentication Security Holder에 저장
         setAuthenication(memberId, request);
 
         filterChain.doFilter(request, response);
-    }
-
-    private String validateAndExtractMemberId(String accessToken, String refreshToken) {
-        if (accessToken != null) {
-            jwtValidator.validateToken(accessToken);
-            return jwtParser.extractMemberId(accessToken);
-        }
-        if (refreshToken != null) {
-            // TODO: refreshToken validation 적용
-            jwtValidator.validateToken(refreshToken);
-            return jwtParser.extractMemberId(refreshToken);
-        }
-        return null;
     }
 
     private void setAuthenication(final String memberId, final HttpServletRequest request) {
@@ -79,8 +101,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 userDetails, null, userDetails.getAuthorities());
 
         // add info (default - remote ip address, session id)
-        authenticationToken.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request));
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         // Context Holder 저장
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

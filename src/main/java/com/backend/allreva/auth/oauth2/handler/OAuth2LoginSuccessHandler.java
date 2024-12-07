@@ -54,6 +54,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String refreshToken = jwtProvider.generateRefreshToken(String.valueOf(memberId));
 
         // redis에 RefreshToken 저장
+        refreshTokenRepository.findRefreshTokenByMemberId(memberId)
+                .ifPresent(refreshTokenRepository::delete);
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .token(refreshToken)
                 .memberId(memberId)
