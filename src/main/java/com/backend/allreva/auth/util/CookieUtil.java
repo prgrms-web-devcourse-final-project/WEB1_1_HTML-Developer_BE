@@ -9,7 +9,7 @@ import org.springframework.http.ResponseCookie;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CookieUtil {
 
-    private static final String COOKIE_DOMAIN = "allreva.shop";
+    private static final String COOKIE_DOMAIN = "localhost";
 
     // refreshToken 쿠키 생성
     public static void addCookie(
