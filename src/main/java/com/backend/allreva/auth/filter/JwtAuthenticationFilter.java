@@ -1,15 +1,19 @@
 package com.backend.allreva.auth.filter;
 
+import com.backend.allreva.auth.domain.RefreshToken;
+import com.backend.allreva.auth.domain.RefreshTokenRepository;
 import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
 import com.backend.allreva.auth.util.CookieUtil;
 import com.backend.allreva.auth.util.JwtParser;
 import com.backend.allreva.auth.util.JwtProvider;
 import com.backend.allreva.auth.util.JwtValidator;
+import com.backend.allreva.common.config.SecurityEndpointPaths;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -33,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtValidator jwtValidator;
     private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Value("${jwt.refresh.expiration}")
     private int REFRESH_TIME;
@@ -41,7 +47,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private int ACCESS_TIME;
 
     /**
-     * JWT 토큰을 검증하는 메서드
+     * 화이트 리스트에 포함된 요청은 필터링 하지 않는다.
+     */
+    @Override
+    protected boolean shouldNotFilter(final HttpServletRequest request) {
+        return Arrays.stream(SecurityEndpointPaths.WHITE_LIST)
+                .anyMatch(path -> PatternMatchUtils.simpleMatch(path, request.getRequestURI()));
+    }
+
+    /**
+     * JWT 토큰을 검증하고 권한을 부여한다.
      */
     @Override
     protected void doFilterInternal(
@@ -50,8 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
         // 바디 및 쿠키로부터 토큰 추출
-        String refreshToken = jwtParser.getRefreshToken(request);
         String accessToken = jwtParser.getAccessToken(request);
+        String refreshToken = jwtParser.getRefreshToken(request);
 
         // token이 없다면 ANONYMOUS 로그인
         if (accessToken == null && refreshToken == null) {
@@ -79,11 +94,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else {
             // Access Token이 유효한 경우
             memberId = jwtParser.extractMemberId(accessToken);
-
             if (isRefreshTokenInvalid) {
                 // Refresh Token이 유효하지 않다면 => Refresh Token 재발급
                 String generatedRefreshToken = jwtProvider.generateRefreshToken(memberId);
                 CookieUtil.addCookie(response, "refreshToken", generatedRefreshToken, REFRESH_TIME);
+                refreshTokenRepository.findRefreshTokenByMemberId(Long.valueOf(memberId))
+                        .ifPresent(refreshTokenRepository::delete);
+                refreshTokenRepository.save(RefreshToken.builder()
+                        .token(generatedRefreshToken)
+                        .memberId(Long.valueOf(memberId))
+                        .build());
             }
         }
 
@@ -93,6 +113,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 사용자 인증을 수행하고 SecurityContextHolder에 저장한다.
+     * @param memberId 사용자 ID
+     * @param request HTTP 요청 객체
+     */
     private void setAuthenication(final String memberId, final HttpServletRequest request) {
         // member db 확인
         UserDetails userDetails = userDetailsService.loadUserByUsername(memberId);
