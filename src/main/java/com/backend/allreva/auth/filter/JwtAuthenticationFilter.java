@@ -1,7 +1,7 @@
 package com.backend.allreva.auth.filter;
 
-import static com.backend.allreva.common.config.SecurityEndpointPaths.ANOMYMOUS_LIST;
-import static com.backend.allreva.common.config.SecurityEndpointPaths.ANOMYMOUS_LIST_GET;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST_GET;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.WHITE_LIST;
 
 import com.backend.allreva.auth.application.JwtService;
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
-        return Stream.of(WHITE_LIST, ANOMYMOUS_LIST, ANOMYMOUS_LIST_GET)
+        return Stream.of(WHITE_LIST, ANONYMOUS_LIST, ANONYMOUS_LIST_GET)
                 .flatMap(Arrays::stream)
                 .anyMatch(path -> antPathMatcher.match(path, request.getRequestURI()));
     }
