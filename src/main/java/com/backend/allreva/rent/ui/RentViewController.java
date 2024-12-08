@@ -9,13 +9,15 @@ import com.backend.allreva.rent.query.application.response.*;
 import com.backend.allreva.survey.query.application.response.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
@@ -52,7 +54,6 @@ public class RentViewController implements RentViewControllerSwagger {
         return Response.onSuccess(rentQueryService.getRentDetailById(id));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}/deposit-account")
     public Response<DepositAccountResponse> getDepositAccountById(
             @PathVariable final Long id
@@ -75,4 +76,10 @@ public class RentViewController implements RentViewControllerSwagger {
         return Response.onSuccess(rentQueryService.getRentAdminDetail(member.getId(), LocalDate.now(), rentId));
     }
 
+    @GetMapping("/join/list")
+    public Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
+            @AuthMember Member member
+    ) {
+        return Response.onSuccess(rentQueryService.getRentJoinSummariesByMemberId(member.getId()));
+    }
 }

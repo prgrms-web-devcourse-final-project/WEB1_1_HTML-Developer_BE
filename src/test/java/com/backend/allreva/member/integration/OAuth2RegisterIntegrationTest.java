@@ -69,7 +69,7 @@ class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
         var uploadedImage = new MockMultipartFile("image", "test.jpg", "image/jpeg", "test".getBytes());
 
         // when
-        var resultActions = mockMvc.perform(multipart(HttpMethod.POST, "/api/v1/oauth2/register")
+        var resultActions = mockMvc.perform(multipart(HttpMethod.POST, "/api/v1/members/register")
                 .file(uploadedImage)
                 .part(new MockPart("memberInfoRequest", "application/json", objectMapper.writeValueAsBytes(memberInfoRequest)))
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -78,7 +78,7 @@ class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
         // then
         resultActions
                 .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
         Optional<Member> registeredMember = memberRepository.findById(member.getId());
         registeredMember.ifPresent(registered ->
                 assertSoftly(softly -> {

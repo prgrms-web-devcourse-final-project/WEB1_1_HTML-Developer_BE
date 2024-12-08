@@ -5,6 +5,7 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.application.request.MemberInfoRequest;
 import com.backend.allreva.member.command.application.request.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.member.query.application.dto.MemberDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
@@ -16,6 +17,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "회원 API", description = "회원 정보를 관리하는 API")
 public interface MemberControllerSwagger {
+
+    @Operation(summary = "회원 정보 조회", description = "회원 정보를 조회합니다.")
+    Response<MemberDetail> getMemberDetail(
+            @AuthMember Member member
+    );
+
+    @Operation(summary = "닉네임 중복 확인", description = "닉네임 중복을 확인합니다.")
+    Response<Boolean> isDuplicatedNickname(
+            final String nickname
+    );
 
     @Operation(summary = "oauth2 회원가입", description = "oauth2 회원가입 시 USER 권한으로 승격됩니다.")
     @RequestBody(

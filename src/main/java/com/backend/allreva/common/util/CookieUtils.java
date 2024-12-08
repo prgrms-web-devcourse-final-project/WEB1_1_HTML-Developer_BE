@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.util;
+package com.backend.allreva.common.util;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CookieUtil {
+public final class CookieUtils {
 
-    private static final String COOKIE_DOMAIN = "localhost:3000";
+    private static final String COOKIE_DOMAIN = "localhost";
 
     // refreshToken 쿠키 생성
     public static void addCookie(
@@ -19,10 +19,12 @@ public final class CookieUtil {
             final int maxAge
     ) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
-                //.domain(COOKIE_DOMAIN)
+                .domain(COOKIE_DOMAIN)
                 .path("/")
                 .maxAge(maxAge)
                 .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

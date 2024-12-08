@@ -4,16 +4,10 @@ import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.member.command.application.request.MemberInfoRequest;
 import com.backend.allreva.member.command.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "OAuth2 로그인 API")
+@Tag(name = "회원 OAuth2 로그인 API")
 public interface OAuth2ControllerSwagger {
 
     @Operation(
@@ -32,15 +26,4 @@ public interface OAuth2ControllerSwagger {
             """
     )
     ResponseEntity<Void> login();
-
-    @Operation(summary = "oauth2 회원가입", description = "oauth2 회원가입 시 USER 권한으로 승격됩니다.")
-    @RequestBody(
-            content = @Content(
-                    encoding = @Encoding(
-                            name = "memberInfoRequest", contentType = MediaType.APPLICATION_JSON_VALUE)))
-    ResponseEntity<Void> registerMember(
-            @AuthMember Member member,
-            @RequestPart MemberInfoRequest memberInfoRequest,
-            @RequestPart(value = "image", required = false) MultipartFile image
-    );
 }
