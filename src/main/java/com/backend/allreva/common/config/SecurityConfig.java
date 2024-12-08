@@ -47,6 +47,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .formLogin(FormLoginConfigurer<HttpSecurity>::disable)
                 .httpBasic(HttpBasicConfigurer<HttpSecurity>::disable)
@@ -57,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(WHITE_LIST).permitAll()
                         .requestMatchers(ANONYMOUS_LIST).permitAll()
-                        .requestMatchers(ANONYMOUS_LIST_GET).permitAll()
+                        .requestMatchers(HttpMethod.GET, ANONYMOUS_LIST_GET).permitAll()
                         .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
                         .requestMatchers(GUEST_LIST).hasRole("GUEST")
                         .anyRequest().authenticated())
