@@ -56,11 +56,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers(ANOMYMOUS_LIST).permitAll()
-                        .requestMatchers(ANOMYMOUS_LIST_GET).permitAll()
+                        .requestMatchers(ANONYMOUS_LIST).permitAll()
+                        .requestMatchers(HttpMethod.GET, ANONYMOUS_LIST_GET).permitAll()
                         .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
-                        .requestMatchers(GUSET_LIST).hasRole("GUEST")
-                        .anyRequest().permitAll())
+                        .requestMatchers(GUEST_LIST).hasRole("GUEST")
+                        .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         // OAuth2 인증 필터
