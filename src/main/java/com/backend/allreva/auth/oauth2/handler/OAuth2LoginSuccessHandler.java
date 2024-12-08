@@ -3,7 +3,7 @@ package com.backend.allreva.auth.oauth2.handler;
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.auth.domain.RefreshToken;
 import com.backend.allreva.auth.domain.RefreshTokenRepository;
-import com.backend.allreva.auth.util.CookieUtil;
+import com.backend.allreva.common.util.CookieUtils;
 import com.backend.allreva.auth.util.JwtProvider;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.MemberRole;
@@ -63,8 +63,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         refreshTokenRepository.save(refreshTokenEntity);
 
         // refreshToken 쿠키 등록
-        CookieUtil.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
-        CookieUtil.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
+        CookieUtils.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
+        CookieUtils.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
 
         sendRedirect(response, member, accessToken);
     }

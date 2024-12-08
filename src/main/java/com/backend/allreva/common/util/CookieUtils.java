@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.util;
+package com.backend.allreva.common.util;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CookieUtil {
+public final class CookieUtils {
 
     private static final String COOKIE_DOMAIN = "localhost";
 
