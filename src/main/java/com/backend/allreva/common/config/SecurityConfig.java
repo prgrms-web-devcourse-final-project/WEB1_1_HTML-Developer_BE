@@ -56,10 +56,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, USER_LIST_GET).hasRole("USER")
+                        .requestMatchers(GUEST_LIST).hasRole("GUEST")
                         .requestMatchers(ANONYMOUS_LIST).permitAll()
                         .requestMatchers(HttpMethod.GET, ANONYMOUS_LIST_GET).permitAll()
-                        .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
-                        .requestMatchers(GUEST_LIST).hasRole("GUEST")
                         .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable);
 

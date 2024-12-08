@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = jwtService.extractAccessToken(request);
         String refreshToken = jwtService.extractRefreshToken(request);
 
-        if (accessToken == null || refreshToken == null) {
+        if (accessToken == null && refreshToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
