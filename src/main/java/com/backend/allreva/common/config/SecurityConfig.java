@@ -4,6 +4,7 @@ import static com.backend.allreva.common.config.SecurityEndpointPaths.*;
 
 import com.backend.allreva.auth.exception.CustomAccessDeniedHandler;
 import com.backend.allreva.auth.exception.CustomAuthenticationEntryPoint;
+import com.backend.allreva.auth.exception.JwtExceptionFilter;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
 import com.backend.allreva.auth.oauth2.application.CustomOAuth2UserService;
 import com.backend.allreva.auth.oauth2.handler.OAuth2LoginFailureHandler;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
     // OAuth2
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -73,7 +75,8 @@ public class SecurityConfig {
 
         // jwt 인증 필터
         http
-                .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class);
+                .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
         http
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint))

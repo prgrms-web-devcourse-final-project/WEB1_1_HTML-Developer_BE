@@ -23,10 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     }
 
     /**
-     * 인증 실패 시 호출되는 메서드
-     * 
-     * JWT 토큰 인증 실패 에러가 발생합니다.
-     * handlerExceptionResolver를 통해 예외를 처리합니다. (ControllerAdvice에서 처리)
+     * 인증 실패 시 호출되는 메서드입니다. (401 Unauthorized)
      */
     @Override
     public void commence(

@@ -25,7 +25,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     }
 
     /**
-     * 유효하지 않는 권한일 때 호출되는 메서드
+     * 유효하지 않는 권한일 때 호출됩니다. (403 Forbidden)
      */
     @Override
     public void handle(
