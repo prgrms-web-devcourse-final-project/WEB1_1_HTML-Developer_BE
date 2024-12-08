@@ -22,8 +22,10 @@ public final class SecurityEndpointPaths {
     };
 
     public static final String[] ANOMYMOUS_LIST_GET = {
+            "/api/v1/surveys/main",
             "/api/v1/surveys/list",
             "/api/v1/surveys",
+            "/api/v1/rents/main",
             "/api/v1/rents/list",
             "/api/v1/rents",
     };
