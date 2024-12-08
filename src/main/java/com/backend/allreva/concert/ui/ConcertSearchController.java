@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("/avi/v1/search/concert")
+@RequestMapping("/api/v1/search/concert")
 @RequiredArgsConstructor
 public class ConcertSearchController {
     private final ConcertSearchService concertSearchService;
