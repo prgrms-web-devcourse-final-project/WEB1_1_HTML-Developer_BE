@@ -2,7 +2,7 @@ package com.backend.allreva.rent.query.application.response;
 
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
-import com.backend.allreva.rentJoin.command.domain.value.RefundType;
+import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
 import java.time.LocalDate;
 import java.util.List;

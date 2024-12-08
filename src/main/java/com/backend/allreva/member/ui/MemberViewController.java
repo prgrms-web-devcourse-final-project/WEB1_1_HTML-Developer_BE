@@ -4,7 +4,7 @@ import com.backend.allreva.auth.application.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.query.application.MemberQueryService;
-import com.backend.allreva.member.query.application.response.MemberDetail;
+import com.backend.allreva.member.query.application.response.MemberDetailResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class MemberViewController implements MemberViewControllerSwagger {
 
     @Operation(summary = "회원 프로필 조회", description = "회원 프로필 조회 API")
     @GetMapping
-    public Response<MemberDetail> getMemberDetail(
+    public Response<MemberDetailResponse> getMemberDetail(
             final @AuthMember Member member
     ) {
         return Response.onSuccess(memberQueryService.getById(member.getId()));

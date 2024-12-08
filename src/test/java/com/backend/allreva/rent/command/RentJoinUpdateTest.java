@@ -10,9 +10,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rentJoin.command.domain.RentJoinRepository;
-import com.backend.allreva.rentJoin.exception.RentJoinAccessDeniedException;
-import com.backend.allreva.rentJoin.exception.RentJoinNotFoundException;
+import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
+import com.backend.allreva.rent_join.exception.RentJoinAccessDeniedException;
+import com.backend.allreva.rent_join.exception.RentJoinNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

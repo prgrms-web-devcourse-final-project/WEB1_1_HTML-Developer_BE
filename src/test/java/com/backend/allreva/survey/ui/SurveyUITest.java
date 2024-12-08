@@ -5,14 +5,14 @@ import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.support.ApiTestSupport;
 import com.backend.allreva.support.WithCustomMockUser;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.surveyJoin.query.JoinSurveyResponse;
-import com.backend.allreva.surveyJoin.command.application.request.JoinSurveyRequest;
+import com.backend.allreva.survey_join.query.application.response.JoinSurveyResponse;
+import com.backend.allreva.survey_join.command.application.request.JoinSurveyRequest;
 import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
 import com.backend.allreva.survey.command.application.request.SurveyIdRequest;
 import com.backend.allreva.survey.command.application.request.UpdateSurveyRequest;
-import com.backend.allreva.surveyJoin.command.domain.value.BoardingType;
+import com.backend.allreva.survey_join.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.MemberSurveyQueryService;
+import com.backend.allreva.survey_join.query.application.SurveyJoinQueryService;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
 import com.backend.allreva.survey.query.application.response.*;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +53,7 @@ class SurveyUITest extends ApiTestSupport {
     @MockBean
     private SurveyQueryService surveyQueryService;
     @MockBean
-    private MemberSurveyQueryService memberSurveyQueryService;
+    private SurveyJoinQueryService surveyJoinQueryService;
 
     private static final String BASE_URI = "/api/v1/surveys";
 
@@ -240,7 +240,7 @@ class SurveyUITest extends ApiTestSupport {
         int pageSize = 10;
 
         // Mocking
-        doReturn(responseList).when(memberSurveyQueryService).getCreatedSurveyList(any(), any(), any(), anyInt());
+        doReturn(responseList).when(surveyJoinQueryService).getCreatedSurveyList(any(), any(), any(), anyInt());
 
         // When & Then
         mockMvc.perform(get(BASE_URI + "/member/list")
@@ -278,7 +278,7 @@ class SurveyUITest extends ApiTestSupport {
         int pageSize = 10;
 
         // Mocking
-        doReturn(responseList).when(memberSurveyQueryService).getJoinSurveyList(any(), any(), anyInt());
+        doReturn(responseList).when(surveyJoinQueryService).getJoinSurveyList(any(), any(), anyInt());
 
         // When & Then
         mockMvc.perform(get(BASE_URI + "/member/apply/list")

@@ -1,6 +1,6 @@
 package com.backend.allreva.artist.query.application;
 
-import com.backend.allreva.artist.command.ArtistRepository;
+import com.backend.allreva.artist.command.domain.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.exception.ArtistNotFoundException;
 import com.backend.allreva.artist.exception.ArtistSearchNoContentException;

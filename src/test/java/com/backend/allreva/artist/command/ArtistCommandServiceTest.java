@@ -2,6 +2,7 @@ package com.backend.allreva.artist.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.backend.allreva.artist.command.application.ArtistCommandService;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.query.application.ArtistQueryService;
 import com.backend.allreva.artist.query.application.response.SpotifySearchResponse;

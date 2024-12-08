@@ -1,5 +1,6 @@
 package com.backend.allreva.rent.query.application;
 
+import com.backend.allreva.rent.command.domain.RentRepository;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.exception.RentNotFoundException;
 import com.backend.allreva.rent.query.application.response.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RentQueryService {
 
-    private final RentQueryRepository rentQueryRepository;
+    private final RentRepository rentRepository;
 
     public List<RentSummaryResponse> getRentSummaries(
             final Region region,
@@ -23,25 +24,25 @@ public class RentQueryService {
             final Long lastId,
             final int pageSize
     ) {
-        return rentQueryRepository.findRentSummaries(region, sortType, lastEndDate, lastId, pageSize);
+        return rentRepository.findRentSummaries(region, sortType, lastEndDate, lastId, pageSize);
     }
 
     public List<RentSummaryResponse> getRentMainSummaries(){
-        return rentQueryRepository.findRentMainSummaries();
+        return rentRepository.findRentMainSummaries();
     }
 
     public RentDetailResponse getRentDetailById(final Long id) {
-        return rentQueryRepository.findRentDetailById(id)
+        return rentRepository.findRentDetailById(id)
                 .orElseThrow(RentNotFoundException::new);
     }
 
     public DepositAccountResponse getDepositAccountById(final Long id) {
-        return rentQueryRepository.findDepositAccountById(id)
+        return rentRepository.findDepositAccountById(id)
                 .orElseThrow(RentNotFoundException::new);
     }
 
     public List<RentAdminSummaryResponse> getRentAdminSummariesByMemberId(final Long memberId) {
-        return rentQueryRepository.findRentAdminSummariesByMemberId(memberId);
+        return rentRepository.findRentAdminSummariesByMemberId(memberId);
     }
 
     public RentAdminDetailResponse getRentAdminDetail(
@@ -49,10 +50,10 @@ public class RentQueryService {
             final LocalDate boardingDate,
             final Long rentId
     ) {
-        RentAdminDetailResponse rentAdminDetailResponse = rentQueryRepository.findRentAdminDetail(memberId,
+        RentAdminDetailResponse rentAdminDetailResponse = rentRepository.findRentAdminDetail(memberId,
                         boardingDate, rentId)
                 .orElseThrow(RentNotFoundException::new);
-        List<RentAdminJoinDetailResponse> rentAdminJoinDetails = rentQueryRepository.findRentAdminJoinDetails(memberId,
+        List<RentAdminJoinDetailResponse> rentAdminJoinDetails = rentRepository.findRentAdminJoinDetails(memberId,
                 rentId, boardingDate);
         rentAdminDetailResponse.setRentJoinDetailResponses(rentAdminJoinDetails);
         return rentAdminDetailResponse;

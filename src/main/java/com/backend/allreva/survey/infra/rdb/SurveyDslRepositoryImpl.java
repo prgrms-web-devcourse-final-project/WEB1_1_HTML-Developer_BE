@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static com.backend.allreva.survey.command.domain.QSurvey.survey;
 import static com.backend.allreva.survey.command.domain.QSurveyBoardingDate.surveyBoardingDate;
-import static com.backend.allreva.survey.command.domain.QSurveyJoin.surveyJoin;
+import static com.backend.allreva.survey_join.command.domain.QSurveyJoin.surveyJoin;
 
 @Repository
 @RequiredArgsConstructor

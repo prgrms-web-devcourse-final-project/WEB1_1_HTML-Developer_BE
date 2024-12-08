@@ -5,7 +5,7 @@ import static com.backend.allreva.rent.fixture.RentJoinFixture.createRentJoinFix
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.backend.allreva.rentJoin.command.domain.RentJoinRepository;
+import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
 import com.backend.allreva.rent.infra.rdb.RentJpaRepository;
 import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.support.IntegrationTestSupport;

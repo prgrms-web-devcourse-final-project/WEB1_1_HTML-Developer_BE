@@ -3,16 +3,12 @@ package com.backend.allreva.rent.ui;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
-import com.backend.allreva.rent.query.application.response.RentAdminDetailResponse;
-import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
-import com.backend.allreva.rent.query.application.response.RentDetailResponse;
-import com.backend.allreva.rentJoin.query.response.RentJoinSummaryResponse;
-import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
+import com.backend.allreva.rent.query.application.response.*;
 import com.backend.allreva.survey.query.application.response.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -72,12 +68,4 @@ public interface RentViewControllerSwagger {
             Member member
     );
 
-    @Operation(
-            summary = "내가 참여한 차 대절 리스트 조회 API",
-            description = """
-                    사용자가 참여한 차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
-                    """)
-    Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
-            Member member
-    );
 }

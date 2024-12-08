@@ -6,11 +6,12 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.surveyJoin.command.application.request.JoinSurveyRequest;
-import com.backend.allreva.surveyJoin.command.domain.value.BoardingType;
+import com.backend.allreva.survey_join.command.application.request.JoinSurveyRequest;
+import com.backend.allreva.survey_join.command.domain.value.BoardingType;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.response.CreatedSurveyResponse;
-import com.backend.allreva.surveyJoin.query.JoinSurveyResponse;
+import com.backend.allreva.survey_join.query.application.response.JoinSurveyResponse;
+import com.backend.allreva.survey_join.query.application.SurveyJoinQueryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
     @Autowired
     private SurveyCommandService surveyCommandService;
     @Autowired
-    private MemberSurveyQueryService memberSurveyQueryService;
+    private SurveyJoinQueryService surveyJoinQueryService;
     @Autowired
     private ConcertRepository concertRepository;
     private Member testMember;
@@ -68,7 +69,7 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
         surveyCommandService.createSurveyResponse(testMember.getId(), joinRequest2);
 
         // When
-        List<CreatedSurveyResponse> responseList = memberSurveyQueryService.getCreatedSurveyList(testMember.getId(), null,null,10);
+        List<CreatedSurveyResponse> responseList = surveyJoinQueryService.getCreatedSurveyList(testMember.getId(), null,null,10);
 
         // Then
         assertNotNull(responseList);
@@ -100,7 +101,7 @@ public class MemberSurveyIntegrationTest extends IntegrationTestSupport {
 
 
         // When
-        List<JoinSurveyResponse> responseList = memberSurveyQueryService.getJoinSurveyList(testMember.getId(), null, 10);
+        List<JoinSurveyResponse> responseList = surveyJoinQueryService.getJoinSurveyList(testMember.getId(), null, 10);
 
         // Then
         assertNotNull(responseList);

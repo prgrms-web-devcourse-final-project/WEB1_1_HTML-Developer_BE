@@ -1,7 +1,6 @@
 package com.backend.allreva.survey.query.application;
 
 import com.backend.allreva.survey.command.domain.SurveyRepository;
-import com.backend.allreva.survey.query.application.response.SurveyDocumentDto;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.response.SortType;
 import com.backend.allreva.survey.query.application.response.SurveyDetailResponse;
@@ -42,6 +41,6 @@ public class SurveyQueryService {
     }
 
     public List<SurveySummaryResponse> findSurveyMainList() {
-        return surveyQueryRepository.findSurveyMainList();
+        return surveyRepository.findSurveyMainList();
     }
 }

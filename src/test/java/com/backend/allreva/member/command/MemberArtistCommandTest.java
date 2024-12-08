@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.backend.allreva.artist.command.ArtistCommandService;
+import com.backend.allreva.artist.command.application.ArtistCommandService;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.query.application.ArtistQueryService;
 import com.backend.allreva.member.command.application.MemberArtistCommandService;

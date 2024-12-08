@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.backend.allreva.artist.command.ArtistRepository;
+import com.backend.allreva.artist.command.domain.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.member.command.application.request.MemberArtistRequest;
 import com.backend.allreva.member.command.application.request.MemberInfoRequest;

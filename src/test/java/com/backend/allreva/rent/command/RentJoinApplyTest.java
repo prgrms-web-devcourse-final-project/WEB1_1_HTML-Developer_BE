@@ -7,8 +7,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.backend.allreva.rent.command.application.RentCommandService;
-import com.backend.allreva.rentJoin.command.domain.RentJoin;
-import com.backend.allreva.rentJoin.command.domain.RentJoinRepository;
+import com.backend.allreva.rent_join.command.domain.RentJoin;
+import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
