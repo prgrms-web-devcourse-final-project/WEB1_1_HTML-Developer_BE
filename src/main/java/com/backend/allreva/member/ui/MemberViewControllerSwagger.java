@@ -17,4 +17,12 @@ public interface MemberViewControllerSwagger {
     Response<MemberDetail> getMemberDetail(
             @AuthMember Member member
     );
+
+    @Operation(
+            summary = "닉네임 중복 확인",
+            description = "닉네임 중복을 확인합니다."
+    )
+    Response<Boolean> isDuplicatedNickname(
+            final String nickname
+    );
 }
