@@ -17,8 +17,7 @@ public record RentDetailResponse(
         String dropOffArea, // 하행 지역 -> concerthall code 조인
         String upTime,
         String downTime,
-        List<LocalDate> rentBoardingDates,
-        List<Integer> currentRecruitmentCounts,
+        List<RentBoardingDetailResponse> rentBoardingDetails,
         BusSize busSize,
         BusType busType,
         int maxPassenger,
