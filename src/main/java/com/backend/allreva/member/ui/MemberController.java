@@ -6,13 +6,17 @@ import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.application.dto.MemberInfoRequest;
 import com.backend.allreva.member.command.application.dto.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
+import com.backend.allreva.member.query.application.MemberQueryService;
+import com.backend.allreva.member.query.application.dto.MemberDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +27,22 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController implements MemberControllerSwagger {
 
     private final MemberCommandFacade memberCommandFacade;
+    private final MemberQueryService memberQueryService;
 
-    /**
-     * oauth2 회원가입
-     *
-     * OAuth2 기본 이미지
-     */
+    @GetMapping
+    public Response<MemberDetail> getMemberDetail(
+            final @AuthMember Member member
+    ) {
+        return Response.onSuccess(memberQueryService.getById(member.getId()));
+    }
+
+    @GetMapping("/check-nickname")
+    public Response<Boolean> isDuplicatedNickname(
+            @RequestParam final String nickname
+    ) {
+        return Response.onSuccess(memberQueryService.isDuplicatedNickname(nickname).isDuplicated());
+    }
+
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<Void> registerMember(
             @AuthMember final Member member,
