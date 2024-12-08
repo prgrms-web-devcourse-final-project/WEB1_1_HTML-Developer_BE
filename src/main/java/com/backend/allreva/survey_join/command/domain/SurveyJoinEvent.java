@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveyJoinEvent extends Event {
 
-    public static final String TOPIC_SURVEY_JOIN = "survey-join";
-
     private Long surveyId;
     private int participationCount;
 

@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/surveys")
 @RestController
 public class SurveyJoinController {
 

@@ -13,8 +13,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.allreva.rent.command.domain.RentDeleteEvent.TOPIC_RENT_DELETE;
-import static com.backend.allreva.rent.command.domain.RentSaveEvent.TOPIC_RENT_SAVE;
+import static com.backend.allreva.common.event.Topic.TOPIC_RENT_DELETE;
+import static com.backend.allreva.common.event.Topic.TOPIC_RENT_SAVE;
 
 @Slf4j
 @RequiredArgsConstructor

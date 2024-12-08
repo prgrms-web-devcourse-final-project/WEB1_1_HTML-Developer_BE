@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/rents")
 @RestController
 public class RentJoinController implements RentJoinControllerSwagger{
 

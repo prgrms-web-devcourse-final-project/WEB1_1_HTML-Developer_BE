@@ -13,8 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RentSaveEvent extends Event {
 
-    public static final String TOPIC_RENT_SAVE = "rent-save";
-
     private Long rentId;
     private String title;
     private String boardingArea;

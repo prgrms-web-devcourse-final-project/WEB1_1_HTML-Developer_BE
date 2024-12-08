@@ -13,7 +13,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.allreva.survey_join.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.common.event.Topic.TOPIC_SURVEY_JOIN;
 
 @Slf4j
 @RequiredArgsConstructor

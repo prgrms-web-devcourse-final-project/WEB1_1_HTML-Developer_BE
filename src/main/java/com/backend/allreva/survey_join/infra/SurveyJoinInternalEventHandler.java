@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import static com.backend.allreva.survey_join.command.domain.SurveyJoinEvent.TOPIC_SURVEY_JOIN;
+import static com.backend.allreva.common.event.Topic.TOPIC_SURVEY_JOIN;
 
 @Slf4j
 @RequiredArgsConstructor

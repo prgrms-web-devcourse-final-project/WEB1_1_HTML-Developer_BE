@@ -1,7 +1,5 @@
 package com.backend.allreva.concert.infra;
 
-import static com.backend.allreva.concert.command.domain.ViewAddedEvent.TOPIC_CONCERT_VIEW;
-
 import com.backend.allreva.common.event.EventEntry;
 import com.backend.allreva.common.event.EventRepository;
 import com.backend.allreva.common.event.JsonParsingError;
@@ -13,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
+import static com.backend.allreva.common.event.Topic.TOPIC_CONCERT_VIEW;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import static com.backend.allreva.survey.command.domain.SurveyDeletedEvent.TOPIC_SURVEY_DELETE;
-import static com.backend.allreva.survey.command.domain.SurveySavedEvent.TOPIC_SURVEY_SAVE;
+import static com.backend.allreva.common.event.Topic.TOPIC_SURVEY_DELETE;
+import static com.backend.allreva.common.event.Topic.TOPIC_SURVEY_SAVE;
 
 @Slf4j
 @RequiredArgsConstructor

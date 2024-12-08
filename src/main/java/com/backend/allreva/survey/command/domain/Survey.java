@@ -30,7 +30,7 @@ public class Survey extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "survey")
+    @OneToMany(mappedBy = "survey", fetch = FetchType.EAGER)
     private List<SurveyBoardingDate> boardingDates = new ArrayList<>();
 
     @Column(nullable = false)

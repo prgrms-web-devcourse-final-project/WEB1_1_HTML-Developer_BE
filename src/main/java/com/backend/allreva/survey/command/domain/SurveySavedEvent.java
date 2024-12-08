@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveySavedEvent extends Event {
 
-    public static final String TOPIC_SURVEY_SAVE = "survey-save";
 
     private Long surveyId;
     private String title;
