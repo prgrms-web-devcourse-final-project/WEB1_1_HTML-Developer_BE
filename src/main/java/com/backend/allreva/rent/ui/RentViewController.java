@@ -9,15 +9,12 @@ import com.backend.allreva.rent.query.application.response.*;
 import com.backend.allreva.survey.query.application.response.SortType;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Validated
 @RestController
@@ -74,12 +71,5 @@ public class RentViewController implements RentViewControllerSwagger {
             @AuthMember Member member
     ) {
         return Response.onSuccess(rentQueryService.getRentAdminDetail(member.getId(), LocalDate.now(), rentId));
-    }
-
-    @GetMapping("/join/list")
-    public Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
-            @AuthMember Member member
-    ) {
-        return Response.onSuccess(rentQueryService.getRentJoinSummariesByMemberId(member.getId()));
     }
 }

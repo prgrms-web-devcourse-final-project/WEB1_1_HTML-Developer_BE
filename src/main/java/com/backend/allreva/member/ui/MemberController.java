@@ -7,18 +7,11 @@ import com.backend.allreva.member.command.application.request.MemberInfoRequest;
 import com.backend.allreva.member.command.application.request.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.query.application.MemberQueryService;
-import com.backend.allreva.member.query.application.dto.MemberDetail;
+import com.backend.allreva.member.query.application.response.MemberDetailResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -30,7 +23,7 @@ public class MemberController implements MemberControllerSwagger {
     private final MemberQueryService memberQueryService;
 
     @GetMapping
-    public Response<MemberDetail> getMemberDetail(
+    public Response<MemberDetailResponse> getMemberDetail(
             final @AuthMember Member member
     ) {
         return Response.onSuccess(memberQueryService.getById(member.getId()));
