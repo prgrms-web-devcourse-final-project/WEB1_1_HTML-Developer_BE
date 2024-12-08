@@ -20,7 +20,9 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver resolver;
 
-    public JwtExceptionFilter(@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
+    public JwtExceptionFilter(
+            @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
+    ) {
         this.resolver = resolver;
     }
 

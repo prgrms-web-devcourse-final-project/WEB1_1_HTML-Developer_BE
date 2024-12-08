@@ -20,7 +20,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private final HandlerExceptionResolver resolver;
 
-    public CustomAccessDeniedHandler(@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
+    public CustomAccessDeniedHandler(
+            @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
+    ) {
         this.resolver = resolver;
     }
 
