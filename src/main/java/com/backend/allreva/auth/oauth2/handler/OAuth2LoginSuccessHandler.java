@@ -1,10 +1,10 @@
 package com.backend.allreva.auth.oauth2.handler;
 
+import com.backend.allreva.auth.application.JwtService;
 import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.auth.domain.RefreshToken;
 import com.backend.allreva.auth.domain.RefreshTokenRepository;
-import com.backend.allreva.auth.util.CookieUtil;
-import com.backend.allreva.auth.util.JwtProvider;
+import com.backend.allreva.common.util.CookieUtils;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.MemberRole;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private static final String FRONT_BASE_URL = "http://localhost:3000";
     private static final String FRONT_SIGNUP_URL = "/signup";
 
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
     @Value("${jwt.refresh.expiration}")
     private int REFRESH_TIME;
@@ -50,10 +50,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // token 생성
         Long memberId = member.getId();
-        String accessToken = jwtProvider.generateAccessToken(String.valueOf(memberId));
-        String refreshToken = jwtProvider.generateRefreshToken(String.valueOf(memberId));
+        String accessToken = jwtService.generateAccessToken(String.valueOf(memberId));
+        String refreshToken = jwtService.generateRefreshToken(String.valueOf(memberId));
 
         // redis에 RefreshToken 저장
+        refreshTokenRepository.findRefreshTokenByMemberId(memberId)
+                .ifPresent(refreshTokenRepository::delete);
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .token(refreshToken)
                 .memberId(memberId)
@@ -61,8 +63,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         refreshTokenRepository.save(refreshTokenEntity);
 
         // refreshToken 쿠키 등록
-        CookieUtil.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
-        CookieUtil.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
+        CookieUtils.addCookie(response, "accessToken", accessToken, ACCESS_TIME);
+        CookieUtils.addCookie(response, "refreshToken", refreshToken, REFRESH_TIME);
 
         sendRedirect(response, member, accessToken);
     }

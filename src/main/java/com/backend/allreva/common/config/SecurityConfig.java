@@ -1,7 +1,10 @@
 package com.backend.allreva.common.config;
 
+import static com.backend.allreva.common.config.SecurityEndpointPaths.*;
+
 import com.backend.allreva.auth.exception.CustomAccessDeniedHandler;
 import com.backend.allreva.auth.exception.CustomAuthenticationEntryPoint;
+import com.backend.allreva.auth.exception.JwtExceptionFilter;
 import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
 import com.backend.allreva.auth.oauth2.application.CustomOAuth2UserService;
 import com.backend.allreva.auth.oauth2.handler.OAuth2LoginFailureHandler;
@@ -31,15 +34,11 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @Profile("!local")
 public class SecurityConfig {
 
-    // 인가 과정에서 허용할 URL 등록
-    private static final String[] ALLOW_URLS = {"/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**",
-            "/swagger-resources/**", "/api/v1/concerts/list"};
-    private static final String[] AUTH_URLS = {"/api/v1/oauth2/login/**", "/login/oauth2/**"};
-
     // JWT
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
     // OAuth2
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -57,16 +56,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(AUTH_URLS).permitAll()
-                        .requestMatchers(ALLOW_URLS).permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/oauth2/**").hasRole("GUEST")
-                        .requestMatchers("/api/v1/search/**").permitAll()
-                        .requestMatchers("/api/v1/concerts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/surveys/list").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/surveys").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/rents/list").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/rents").permitAll()
+                        .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers(ANOMYMOUS_LIST).permitAll()
+                        .requestMatchers(ANOMYMOUS_LIST_GET).permitAll()
+                        .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
+                        .requestMatchers(GUSET_LIST).hasRole("GUEST")
                         .anyRequest().permitAll())
                 .httpBasic(AbstractHttpConfigurer::disable);
 
@@ -81,7 +75,8 @@ public class SecurityConfig {
 
         // jwt 인증 필터
         http
-                .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class);
+                .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
         http
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint))

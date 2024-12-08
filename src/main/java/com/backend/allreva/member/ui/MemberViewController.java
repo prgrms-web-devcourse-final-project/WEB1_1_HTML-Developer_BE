@@ -5,10 +5,10 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.query.application.MemberQueryService;
 import com.backend.allreva.member.query.application.dto.MemberDetail;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,11 +18,17 @@ public class MemberViewController implements MemberViewControllerSwagger {
 
     private final MemberQueryService memberQueryService;
 
-    @Operation(summary = "회원 프로필 조회", description = "회원 프로필 조회 API")
     @GetMapping
     public Response<MemberDetail> getMemberDetail(
             final @AuthMember Member member
     ) {
         return Response.onSuccess(memberQueryService.getById(member.getId()));
+    }
+
+    @GetMapping("/check-nickname")
+    public Response<Boolean> isDuplicatedNickname(
+            @RequestParam final String nickname
+    ) {
+        return Response.onSuccess(memberQueryService.isDuplicatedNickname(nickname).isDuplicated());
     }
 }

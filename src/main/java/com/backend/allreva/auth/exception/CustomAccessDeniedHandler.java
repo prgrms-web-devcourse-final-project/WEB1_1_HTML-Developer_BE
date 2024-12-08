@@ -20,12 +20,14 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private final HandlerExceptionResolver resolver;
 
-    public CustomAccessDeniedHandler(@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
+    public CustomAccessDeniedHandler(
+            @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver
+    ) {
         this.resolver = resolver;
     }
 
     /**
-     * 유효하지 않는 권한일 때 호출되는 메서드
+     * 유효하지 않는 권한일 때 호출됩니다. (403 Forbidden)
      */
     @Override
     public void handle(
