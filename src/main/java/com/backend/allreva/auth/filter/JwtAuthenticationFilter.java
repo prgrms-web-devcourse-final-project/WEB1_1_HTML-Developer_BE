@@ -1,9 +1,5 @@
 package com.backend.allreva.auth.filter;
 
-import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST;
-import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST_GET;
-import static com.backend.allreva.common.config.SecurityEndpointPaths.WHITE_LIST;
-
 import com.backend.allreva.auth.application.JwtService;
 import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
 import com.backend.allreva.common.util.CookieUtils;
@@ -12,8 +8,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -24,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -34,7 +27,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final int ACCESS_TIME;
     private final int REFRESH_TIME;
-    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
@@ -49,16 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.REFRESH_TIME = REFRESH_TIME;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-    }
-
-    /**
-     * 화이트 리스트에 포함된 요청은 필터링 하지 않습니다.
-     */
-    @Override
-    protected boolean shouldNotFilter(final HttpServletRequest request) {
-        return Stream.of(WHITE_LIST, ANONYMOUS_LIST, ANONYMOUS_LIST_GET)
-                .flatMap(Arrays::stream)
-                .anyMatch(path -> antPathMatcher.match(path, request.getRequestURI()));
     }
 
     /**
