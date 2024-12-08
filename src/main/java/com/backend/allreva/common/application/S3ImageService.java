@@ -42,6 +42,9 @@ public class S3ImageService {
     }
 
     public Image upload(MultipartFile imageFile) {
+        if (imageFile == null || imageFile.isEmpty()) {
+            return new Image("");
+        }
         ObjectMetadata objectMetadata = new ObjectMetadata.Builder()
                 .contentType(imageFile.getContentType())
                 .build();
