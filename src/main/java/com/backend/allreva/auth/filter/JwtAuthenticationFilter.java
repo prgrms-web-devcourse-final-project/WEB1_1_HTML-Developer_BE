@@ -74,6 +74,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = jwtService.extractAccessToken(request);
         String refreshToken = jwtService.extractRefreshToken(request);
 
+        if (accessToken == null || refreshToken == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 토큰 검증 결과 boolean 변수로 분리
         boolean isAccessTokenValid = jwtService.validateToken(accessToken);
         boolean isRefreshTokenValid = jwtService.validateToken(refreshToken);
