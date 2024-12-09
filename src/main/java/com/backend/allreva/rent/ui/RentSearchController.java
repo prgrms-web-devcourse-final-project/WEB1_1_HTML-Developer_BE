@@ -1,9 +1,9 @@
 package com.backend.allreva.rent.ui;
 
 import com.backend.allreva.common.dto.Response;
-import com.backend.allreva.rent.query.application.RentDocumentService;
-import com.backend.allreva.rent.query.application.dto.RentSearchListResponse;
-import com.backend.allreva.rent.query.application.dto.RentThumbnail;
+import com.backend.allreva.rent.query.application.RentSearchService;
+import com.backend.allreva.rent.query.application.response.RentSearchListResponse;
+import com.backend.allreva.rent.query.application.response.RentThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @RequestMapping("/api/v1/search/rents")
 @RequiredArgsConstructor
 public class RentSearchController {
-    private final RentDocumentService rentDocumentService;
+    private final RentSearchService rentSearchService;
 
     @GetMapping("/")
     @Operation(
@@ -30,7 +30,7 @@ public class RentSearchController {
     )
     public Response<List<RentThumbnail>> searchRentThumbnail(@RequestParam final String query) {
         return Response.onSuccess(
-                rentDocumentService.searchRentThumbnails(query)
+                rentSearchService.searchRentThumbnails(query)
         );
     }
 
@@ -55,7 +55,7 @@ public class RentSearchController {
                 .collect(Collectors.toList());
 
         return Response.onSuccess(
-                rentDocumentService.searchRentSearchList(query, searchAfter, pageSize)
+                rentSearchService.searchRentSearchList(query, searchAfter, pageSize)
         );
     }
 }

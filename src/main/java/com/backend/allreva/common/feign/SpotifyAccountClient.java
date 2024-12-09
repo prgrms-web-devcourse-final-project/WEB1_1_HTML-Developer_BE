@@ -1,6 +1,6 @@
 package com.backend.allreva.common.feign;
 
-import com.backend.allreva.artist.query.application.dto.SpotifyTokenResponse;
+import com.backend.allreva.artist.query.application.response.SpotifyTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.backend.allreva.member.command.domain;
 
-import com.backend.allreva.member.command.application.dto.MemberArtistRequest;
+import com.backend.allreva.member.command.application.request.MemberArtistRequest;
 import java.util.List;
 import org.springframework.stereotype.Component;
 

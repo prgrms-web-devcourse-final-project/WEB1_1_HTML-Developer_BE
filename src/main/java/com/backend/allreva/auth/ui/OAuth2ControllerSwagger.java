@@ -1,5 +1,8 @@
 package com.backend.allreva.auth.ui;
 
+import com.backend.allreva.auth.application.AuthMember;
+import com.backend.allreva.member.command.application.request.MemberInfoRequest;
+import com.backend.allreva.member.command.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

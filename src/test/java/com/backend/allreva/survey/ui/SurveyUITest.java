@@ -5,15 +5,18 @@ import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.support.ApiTestSupport;
 import com.backend.allreva.support.WithCustomMockUser;
 import com.backend.allreva.survey.command.application.SurveyCommandService;
-import com.backend.allreva.survey.command.application.dto.JoinSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
-import com.backend.allreva.survey.command.application.dto.SurveyIdRequest;
-import com.backend.allreva.survey.command.application.dto.UpdateSurveyRequest;
-import com.backend.allreva.survey.command.domain.value.BoardingType;
+import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.request.SurveyIdRequest;
+import com.backend.allreva.survey.command.application.request.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.MemberSurveyQueryService;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
-import com.backend.allreva.survey.query.application.dto.*;
+import com.backend.allreva.survey.query.application.response.*;
+import com.backend.allreva.survey_join.command.application.SurveyJoinCommandService;
+import com.backend.allreva.survey_join.command.application.request.JoinSurveyRequest;
+import com.backend.allreva.survey_join.command.domain.value.BoardingType;
+import com.backend.allreva.survey_join.query.application.SurveyJoinQueryService;
+import com.backend.allreva.survey_join.query.application.response.JoinSurveyResponse;
+import com.backend.allreva.survey_join.ui.SurveyJoinController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(
-        controllers = {SurveyController.class},
+        controllers = {SurveyController.class, SurveyJoinController.class},
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {JwtAuthenticationFilter.class, SecurityConfig.class}
@@ -50,9 +53,11 @@ class SurveyUITest extends ApiTestSupport {
     @MockBean
     private SurveyCommandService surveyCommandService;
     @MockBean
+    private SurveyJoinCommandService surveyJoinCommandService;
+    @MockBean
     private SurveyQueryService surveyQueryService;
     @MockBean
-    private MemberSurveyQueryService memberSurveyQueryService;
+    private SurveyJoinQueryService surveyJoinQueryService;
 
     private static final String BASE_URI = "/api/v1/surveys";
 
@@ -165,7 +170,7 @@ class SurveyUITest extends ApiTestSupport {
                 true
         );
         // Mocking
-        doReturn(1L).when(surveyCommandService).createSurveyResponse(any(), any());
+        doReturn(1L).when(surveyJoinCommandService).createSurveyResponse(any(), any());
 
         // When & Then
         mockMvc.perform(post(BASE_URI + "/apply")
@@ -239,7 +244,7 @@ class SurveyUITest extends ApiTestSupport {
         int pageSize = 10;
 
         // Mocking
-        doReturn(responseList).when(memberSurveyQueryService).getCreatedSurveyList(any(), any(), any(), anyInt());
+        doReturn(responseList).when(surveyJoinQueryService).getCreatedSurveyList(any(), any(), any(), anyInt());
 
         // When & Then
         mockMvc.perform(get(BASE_URI + "/member/list")
@@ -277,7 +282,7 @@ class SurveyUITest extends ApiTestSupport {
         int pageSize = 10;
 
         // Mocking
-        doReturn(responseList).when(memberSurveyQueryService).getJoinSurveyList(any(), any(), anyInt());
+        doReturn(responseList).when(surveyJoinQueryService).getJoinSurveyList(any(), any(), anyInt());
 
         // When & Then
         mockMvc.perform(get(BASE_URI + "/member/apply/list")

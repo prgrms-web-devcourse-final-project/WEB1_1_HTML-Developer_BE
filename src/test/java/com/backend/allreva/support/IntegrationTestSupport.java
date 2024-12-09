@@ -15,7 +15,7 @@ import com.backend.allreva.concert.command.domain.value.Seller;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
-import com.backend.allreva.survey.command.application.dto.OpenSurveyRequest;
+import com.backend.allreva.survey.command.application.request.OpenSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;

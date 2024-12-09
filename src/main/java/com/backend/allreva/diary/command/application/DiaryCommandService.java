@@ -2,8 +2,8 @@ package com.backend.allreva.diary.command.application;
 
 import com.backend.allreva.common.application.S3ImageService;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.diary.command.application.dto.AddDiaryRequest;
-import com.backend.allreva.diary.command.application.dto.UpdateDiaryRequest;
+import com.backend.allreva.diary.command.application.request.AddDiaryRequest;
+import com.backend.allreva.diary.command.application.request.UpdateDiaryRequest;
 import com.backend.allreva.diary.command.domain.ConcertDiary;
 import com.backend.allreva.diary.command.domain.DiaryRepository;
 import com.backend.allreva.diary.exception.DiaryNotFoundException;

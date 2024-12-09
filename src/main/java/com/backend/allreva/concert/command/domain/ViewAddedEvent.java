@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ViewAddedEvent extends Event {
 
-    public static final String TOPIC_CONCERT_VIEW = "concertView-event";
     private String concertCode;
     private long viewCount;
 

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RentDeleteEvent extends Event {
 
-    public static final String TOPIC_RENT_DELETE = "rent-delete";
-
     private Long rentId;
 
     public RentDeleteEvent(

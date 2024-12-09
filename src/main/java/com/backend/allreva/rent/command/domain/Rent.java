@@ -3,7 +3,7 @@ package com.backend.allreva.rent.command.domain;
 import com.backend.allreva.common.event.Events;
 import com.backend.allreva.common.model.BaseEntity;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.rent.command.application.dto.RentUpdateRequest;
+import com.backend.allreva.rent.command.application.request.RentUpdateRequest;
 import com.backend.allreva.rent.command.domain.value.*;
 import com.backend.allreva.rent.exception.RentAccessDeniedException;
 import jakarta.persistence.*;

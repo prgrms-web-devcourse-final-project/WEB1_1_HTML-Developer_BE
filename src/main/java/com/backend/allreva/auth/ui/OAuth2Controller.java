@@ -1,5 +1,9 @@
 package com.backend.allreva.auth.ui;
 
+import com.backend.allreva.auth.application.AuthMember;
+import com.backend.allreva.member.command.application.MemberCommandFacade;
+import com.backend.allreva.member.command.application.request.MemberInfoRequest;
+import com.backend.allreva.member.command.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

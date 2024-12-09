@@ -1,9 +1,6 @@
 package com.backend.allreva.rent.infra;
 
 
-import static com.backend.allreva.rent.command.domain.RentDeleteEvent.TOPIC_RENT_DELETE;
-import static com.backend.allreva.rent.command.domain.RentSaveEvent.TOPIC_RENT_SAVE;
-
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.common.event.EventEntry;
 import com.backend.allreva.common.event.EventRepository;
@@ -17,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
+import static com.backend.allreva.common.event.Topic.TOPIC_RENT_DELETE;
+import static com.backend.allreva.common.event.Topic.TOPIC_RENT_SAVE;
 
 @Slf4j
 @RequiredArgsConstructor

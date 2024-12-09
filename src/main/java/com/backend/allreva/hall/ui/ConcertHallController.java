@@ -2,7 +2,7 @@ package com.backend.allreva.hall.ui;
 
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.hall.query.application.ConcertHallQueryService;
-import com.backend.allreva.hall.query.application.dto.ConcertHallDetail;
+import com.backend.allreva.hall.query.application.response.ConcertHallDetailResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +19,10 @@ public class ConcertHallController {
 
     @Operation(summary = "공연장 상세 조회", description = "공연장 상세 조회 API")
     @GetMapping("/{hallCode}")
-    public Response<ConcertHallDetail> findHallDetailByHallCode(
+    public Response<ConcertHallDetailResponse> findHallDetailByHallCode(
             @PathVariable("hallCode") final String hallCode
     ) {
-        ConcertHallDetail details = concertHallQueryService.findDetailByHallCode(hallCode);
+        ConcertHallDetailResponse details = concertHallQueryService.findDetailByHallCode(hallCode);
         return Response.onSuccess(details);
     }
 }

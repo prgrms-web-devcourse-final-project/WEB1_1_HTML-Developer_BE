@@ -3,8 +3,8 @@ package com.backend.allreva.rent.infra;
 import com.backend.allreva.common.event.JsonParsingError;
 import com.backend.allreva.rent.command.domain.RentDeleteEvent;
 import com.backend.allreva.rent.command.domain.RentSaveEvent;
-import com.backend.allreva.rent.query.application.domain.RentDocument;
-import com.backend.allreva.rent.query.application.domain.RentDocumentRepository;
+import com.backend.allreva.rent.infra.elasticsearch.RentDocument;
+import com.backend.allreva.rent.infra.elasticsearch.RentDocumentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.allreva.rent.command.domain.RentDeleteEvent.TOPIC_RENT_DELETE;
-import static com.backend.allreva.rent.command.domain.RentSaveEvent.TOPIC_RENT_SAVE;
+import static com.backend.allreva.common.event.Topic.TOPIC_RENT_DELETE;
+import static com.backend.allreva.common.event.Topic.TOPIC_RENT_SAVE;
 
 @Slf4j
 @RequiredArgsConstructor

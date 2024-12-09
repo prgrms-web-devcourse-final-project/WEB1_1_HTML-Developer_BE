@@ -2,10 +2,10 @@ package com.backend.allreva.survey.query.application;
 
 import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.survey.exception.SearchResultNotFoundException;
-import com.backend.allreva.survey.query.application.domain.SurveyDocument;
-import com.backend.allreva.survey.query.application.domain.SurveyDocumentRepository;
-import com.backend.allreva.survey.query.application.dto.SurveySearchListResponse;
-import com.backend.allreva.survey.query.application.dto.SurveyThumbnail;
+import com.backend.allreva.survey.infra.elasticsearch.SurveyDocument;
+import com.backend.allreva.survey.infra.elasticsearch.SurveyDocumentRepository;
+import com.backend.allreva.survey.query.application.response.SurveySearchListResponse;
+import com.backend.allreva.survey.query.application.response.SurveyThumbnail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.SearchHit;

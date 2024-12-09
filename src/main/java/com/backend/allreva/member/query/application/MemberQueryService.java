@@ -1,7 +1,7 @@
 package com.backend.allreva.member.query.application;
 
+import com.backend.allreva.member.query.application.response.MemberDetailResponse;
 import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.member.query.application.dto.MemberDetail;
 import com.backend.allreva.member.query.application.dto.NicknameDuplication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class MemberQueryService {
     private final MemberDetailRepository memberDetailRepository;
     private final MemberRepository memberRepository;
 
-    public MemberDetail getById(final Long id) {
+    public MemberDetailResponse getById(final Long id) {
         return memberDetailRepository.findById(id);
     }
 

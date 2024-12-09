@@ -1,6 +1,6 @@
 package com.backend.allreva.common.feign;
 
-import com.backend.allreva.artist.query.application.dto.SpotifyArtistWrapper;
+import com.backend.allreva.artist.query.application.response.SpotifyArtistWrapper;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

@@ -1,11 +1,11 @@
 package com.backend.allreva.survey.query.application;
 
-import com.backend.allreva.survey.query.application.dto.SurveyDocumentDto;
+import com.backend.allreva.survey.command.domain.SurveyRepository;
 import com.backend.allreva.survey.command.domain.value.Region;
-import com.backend.allreva.survey.query.application.domain.SurveyQueryRepository;
-import com.backend.allreva.survey.query.application.dto.SortType;
-import com.backend.allreva.survey.query.application.dto.SurveyDetailResponse;
-import com.backend.allreva.survey.query.application.dto.SurveySummaryResponse;
+import com.backend.allreva.survey.query.application.response.SortType;
+import com.backend.allreva.survey.query.application.response.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.response.SurveyMainResponse;
+import com.backend.allreva.survey.query.application.response.SurveySummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +16,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class SurveyQueryService {
-    private final SurveyQueryRepository surveyQueryRepository;
+    private final SurveyRepository surveyRepository;
 
     /**
      * 수요조사 상세 조회
      */
     public SurveyDetailResponse findSurveyDetail(final Long surveyId) {
-        return surveyQueryRepository.findSurveyDetail(surveyId);
+        return surveyRepository.findSurveyDetail(surveyId);
     }
 
     /**
@@ -33,14 +33,14 @@ public class SurveyQueryService {
                                                       final Long lastId,
                                                       final LocalDate lastEndDate,
                                                       final int pageSize) {
-        return surveyQueryRepository.findSurveyList(region, sortType, lastId, lastEndDate, pageSize);
+        return surveyRepository.findSurveyList(region, sortType, lastId, lastEndDate, pageSize);
     }
 
-    public Optional<SurveyDocumentDto> findSurveyWithParticipationCount(final Long surveyId) {
-        return surveyQueryRepository.findSurveyWithParticipationCount(surveyId);
+    public Optional<SurveyMainResponse> findSurveyWithParticipationCount(final Long surveyId) {
+        return surveyRepository.findSurveyWithParticipationCount(surveyId);
     }
 
     public List<SurveySummaryResponse> findSurveyMainList() {
-        return surveyQueryRepository.findSurveyMainList();
+        return surveyRepository.findSurveyMainList();
     }
 }

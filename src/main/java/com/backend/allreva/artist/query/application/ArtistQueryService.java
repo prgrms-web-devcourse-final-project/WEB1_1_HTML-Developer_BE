@@ -1,11 +1,11 @@
 package com.backend.allreva.artist.query.application;
 
-import com.backend.allreva.artist.command.ArtistRepository;
+import com.backend.allreva.artist.command.domain.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
 import com.backend.allreva.artist.exception.ArtistNotFoundException;
 import com.backend.allreva.artist.exception.ArtistSearchNoContentException;
-import com.backend.allreva.artist.query.application.dto.SpotifyArtistWrapper;
-import com.backend.allreva.artist.query.application.dto.SpotifySearchResponse;
+import com.backend.allreva.artist.query.application.response.SpotifyArtistWrapper;
+import com.backend.allreva.artist.query.application.response.SpotifySearchResponse;
 import com.backend.allreva.common.feign.SpotifyAccountClient;
 import com.backend.allreva.common.feign.SpotifyClient;
 import lombok.RequiredArgsConstructor;
