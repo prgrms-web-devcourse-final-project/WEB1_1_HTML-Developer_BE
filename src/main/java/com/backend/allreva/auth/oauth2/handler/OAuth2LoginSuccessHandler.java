@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private static final String FRONT_BASE_URL = "http://localhost:3000";
+    private static final String FRONT_BASE_URL = "https://allreva.shop"; //http://localhost:3000
     private static final String FRONT_SIGNUP_URL = "/signup";
 
     private final JwtService jwtService;
