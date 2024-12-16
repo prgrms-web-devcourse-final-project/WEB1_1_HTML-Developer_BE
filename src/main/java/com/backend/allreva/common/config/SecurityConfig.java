@@ -3,14 +3,13 @@ package com.backend.allreva.common.config;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.ADMIN_LIST;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST_GET;
-import static com.backend.allreva.common.config.SecurityEndpointPaths.GUEST_LIST;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.USER_LIST_GET;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.WHITE_LIST;
 
 import com.backend.allreva.auth.security.CustomAccessDeniedHandler;
 import com.backend.allreva.auth.security.CustomAuthenticationEntryPoint;
-import com.backend.allreva.auth.security.JwtExceptionFilter;
 import com.backend.allreva.auth.security.JwtAuthenticationFilter;
+import com.backend.allreva.auth.security.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +20,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -56,11 +54,9 @@ public class SecurityConfig {
                         .requestMatchers(WHITE_LIST).permitAll()
                         .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, USER_LIST_GET).hasRole("USER")
-                        .requestMatchers(GUEST_LIST).hasRole("GUEST")
                         .requestMatchers(ANONYMOUS_LIST).permitAll()
                         .requestMatchers(HttpMethod.GET, ANONYMOUS_LIST_GET).permitAll()
-                        .anyRequest().authenticated())
-                .httpBasic(AbstractHttpConfigurer::disable);
+                        .anyRequest().authenticated());
 
         // jwt 인증 필터
         http
