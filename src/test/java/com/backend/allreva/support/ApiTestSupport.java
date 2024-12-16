@@ -1,6 +1,7 @@
 package com.backend.allreva.support;
 
 import com.backend.allreva.auth.security.JwtAuthenticationFilter;
+import com.backend.allreva.auth.ui.AuthController;
 import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.domain.Member;
@@ -20,7 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(
-        controllers = {OAuth2Controller.class},
+        controllers = {AuthController.class},
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {JwtAuthenticationFilter.class, SecurityConfig.class}
