@@ -5,7 +5,8 @@ import com.backend.allreva.auth.ui.AuthController;
 import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.command.domain.value.LoginProvider;
+import com.backend.allreva.member.command.domain.value.MemberRole;
+import com.backend.allreva.member.fixture.MemberFixture;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(
@@ -44,12 +44,7 @@ public abstract class ApiTestSupport {
 
     @BeforeEach
     void setUp() {
-        member = Member.createTemporary(
-                "my@email",
-                "nickname",
-                LoginProvider.GOOGLE,
-                "https://my_picture");
-        ReflectionTestUtils.setField(member, "id", 1L);
+        member = MemberFixture.createMemberFixture(1L, MemberRole.USER);
     }
 
     @AfterEach

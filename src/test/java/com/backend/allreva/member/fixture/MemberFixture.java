@@ -4,8 +4,10 @@ import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
 import com.backend.allreva.member.command.domain.value.MemberRole;
+import lombok.NoArgsConstructor;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class MemberFixture {
 
     public static Member createMemberFixture(

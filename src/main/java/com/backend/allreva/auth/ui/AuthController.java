@@ -20,18 +20,18 @@ public class AuthController implements AuthControllerSwagger {
     private final AuthService authService;
     private final CookieService cookieService;
 
-    @GetMapping("/login/kakao-url")
-    public RedirectView getKakaoLoginUrl() {
+    @GetMapping("/login/kakao")
+    public RedirectView redirectKakaoLogin() {
         return new RedirectView(authService.getLoginURL());
     }
 
-    @GetMapping("/login/kakao")
-    public Response<LoginResponse> loginKakao(
+    @GetMapping("/token/kakao")
+    public Response<LoginResponse> authKakaoLogin(
             @RequestParam("code") String authorizationCode,
             HttpServletResponse response
     ) {
         LoginResponse loginResponse = authService.kakaoLogin(authorizationCode);
         cookieService.addRefreshTokenCookie(response, loginResponse.refreshToken());
-        return Response.onSuccess(authService.kakaoLogin(authorizationCode));
+        return Response.onSuccess(loginResponse);
     }
 }

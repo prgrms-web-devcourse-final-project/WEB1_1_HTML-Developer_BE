@@ -5,21 +5,21 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.backend.allreva.member.command.application.MemberInfoCommandService;
-import com.backend.allreva.member.command.domain.MemberRepository;
-import com.backend.allreva.member.command.application.request.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.member.command.domain.value.LoginProvider;
+import com.backend.allreva.member.command.domain.MemberRepository;
+import com.backend.allreva.member.command.domain.value.MemberRole;
+import com.backend.allreva.member.fixture.MemberFixture;
+import com.backend.allreva.member.fixture.MemberRequestFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class RefundAccountCommandTest {
+class RefundAccountCommandTest {
 
     @InjectMocks
     private MemberInfoCommandService memberInfoCommandService;
@@ -31,19 +31,13 @@ public class RefundAccountCommandTest {
 
     @BeforeEach
     void setUp() {
-        member = Member.createTemporary(
-                "my@email",
-                "nickname",
-                LoginProvider.GOOGLE,
-                "https://my_picture");
-        ReflectionTestUtils.setField(member, "id", 1L);
-        member.upgradeToUser();
+        member = MemberFixture.createMemberFixture(1L, MemberRole.USER);
     }
 
     @Test
     void 환불_계좌_정보를_성공적으로_등록한다() {
         // given
-        var refundAccountRequest = new RefundAccountRequest("땡땡은행", "123456789");
+        var refundAccountRequest = MemberRequestFixture.createRefundAccountRequest();
         given(memberRepository.save(any(Member.class))).willReturn(member);
 
         // when
@@ -62,6 +56,6 @@ public class RefundAccountCommandTest {
         var deletedMember = memberInfoCommandService.deleteRefundAccount(member);
 
         // then
-        assertThat(deletedMember.getRefundAccount().getBank()).isEqualTo("");
+        assertThat(deletedMember.getRefundAccount().getBank()).isEmpty();
     }
 }

@@ -5,17 +5,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.backend.allreva.artist.command.domain.ArtistRepository;
 import com.backend.allreva.artist.command.domain.Artist;
-import com.backend.allreva.member.command.application.request.MemberArtistRequest;
-import com.backend.allreva.member.command.application.request.MemberInfoRequest;
+import com.backend.allreva.artist.command.domain.ArtistRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.backend.allreva.member.fixture.MemberFixture;
+import com.backend.allreva.member.fixture.MemberRequestFixture;
 import com.backend.allreva.support.ContextHolderTestUtil;
 import com.backend.allreva.support.IntegrationTestSupport;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +41,7 @@ class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
 
     @BeforeEach
     void setUp() {
-        member = MemberFixture.createMemberFixture(1L, MemberRole.GUEST);
+        member = MemberFixture.createMemberFixture(1L, MemberRole.USER);
         ContextHolderTestUtil.setContextHolder(member);
     }
 
@@ -61,17 +59,13 @@ class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
                 .name("Spotify").build();
         artistRepository.save(artist);
 
-        var memberInfoRequest = new MemberInfoRequest(
-                "updated nickname",
-                "test introduce",
-                List.of(new MemberArtistRequest("spotify_1L","name1"))
-        );
+        var memberRegisterRequest = MemberRequestFixture.createMemberRegisterRequest();
         var uploadedImage = new MockMultipartFile("image", "test.jpg", "image/jpeg", "test".getBytes());
 
         // when
         var resultActions = mockMvc.perform(multipart(HttpMethod.POST, "/api/v1/members/register")
                 .file(uploadedImage)
-                .part(new MockPart("memberInfoRequest", "application/json", objectMapper.writeValueAsBytes(memberInfoRequest)))
+                .part(new MockPart("memberRegisterRequest", "application/json", objectMapper.writeValueAsBytes(memberRegisterRequest)))
                 .contentType(MediaType.MULTIPART_FORM_DATA)
         );
 
@@ -83,7 +77,7 @@ class OAuth2RegisterIntegrationTest extends IntegrationTestSupport {
         registeredMember.ifPresent(registered ->
                 assertSoftly(softly -> {
                     softly.assertThat(registered.getMemberRole()).isEqualTo(MemberRole.USER);
-                    softly.assertThat(registered.getMemberInfo().getIntroduce()).isEqualTo("test introduce");
+                    softly.assertThat(registered.getMemberInfo().getIntroduce()).isEqualTo(memberRegisterRequest.introduce());
                 }));
     }
 }

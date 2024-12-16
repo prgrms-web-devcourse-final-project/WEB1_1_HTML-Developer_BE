@@ -4,11 +4,12 @@ import lombok.Builder;
 
 @Builder
 public record LoginResponse(
-        String accessToken,
-        String refreshToken,
+        boolean isUser,
         String email,
-        String profileImageUrl
+        String nickname,
+        String profileImageUrl,
+        String accessToken,
+        String refreshToken
 ) {
 
 }
-

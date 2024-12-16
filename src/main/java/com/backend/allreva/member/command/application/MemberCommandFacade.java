@@ -2,7 +2,7 @@ package com.backend.allreva.member.command.application;
 
 import com.backend.allreva.common.application.S3ImageService;
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.member.command.application.request.MemberInfoRequest;
+import com.backend.allreva.member.command.application.request.MemberRegisterRequest;
 import com.backend.allreva.member.command.application.request.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -21,24 +21,23 @@ public class MemberCommandFacade {
 
     @Transactional
     public void registerMember(
-            final MemberInfoRequest memberInfoRequest,
-            final Member member,
+            final MemberRegisterRequest memberRegisterRequest,
             final MultipartFile image
     ) {
         Image uploadedImage = s3ImageService.upload(image);
-        memberInfoCommandService.registerMember(memberInfoRequest, member, uploadedImage);
-        memberArtistCommandService.updateMemberArtist(memberInfoRequest.memberArtistRequests(), member);
+        Member registeredMember = memberInfoCommandService.registerMember(memberRegisterRequest, uploadedImage);
+        memberArtistCommandService.updateMemberArtist(memberRegisterRequest.memberArtistRequests(), registeredMember);
     }
 
     @Transactional
     public void updateMemberInfo(
-            final MemberInfoRequest memberInfoRequest,
+            final MemberRegisterRequest memberRegisterRequest,
             final Member member,
             final MultipartFile image
     ) {
         Image uploadedImage = s3ImageService.upload(image);
-        memberInfoCommandService.updateMemberInfo(memberInfoRequest, member, uploadedImage);
-        memberArtistCommandService.updateMemberArtist(memberInfoRequest.memberArtistRequests(), member);
+        memberInfoCommandService.updateMemberInfo(memberRegisterRequest, member, uploadedImage);
+        memberArtistCommandService.updateMemberArtist(memberRegisterRequest.memberArtistRequests(), member);
     }
 
     @Transactional
