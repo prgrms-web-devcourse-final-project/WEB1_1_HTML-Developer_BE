@@ -31,7 +31,9 @@ public final class SecurityEndpointPaths {
     };
 
     public static final String[] ANONYMOUS_LIST_GET = {
-            "/api/v1/surveys/**", "/api/v1/rents/**"
+            "/api/v1/surveys/**",
+            "/api/v1/rents/**",
+            "/api/v1/auth/**"
     };
 
     public static final String[] ADMIN_LIST = {

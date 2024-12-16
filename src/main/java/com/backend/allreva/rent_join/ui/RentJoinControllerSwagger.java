@@ -1,6 +1,6 @@
 package com.backend.allreva.rent_join.ui;
 
-import com.backend.allreva.auth.application.AuthMember;
+import com.backend.allreva.auth.security.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent_join.command.application.request.RentJoinApplyRequest;

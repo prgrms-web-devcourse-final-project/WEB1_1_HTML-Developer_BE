@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.exception;
+package com.backend.allreva.auth.security;
 
 import com.backend.allreva.auth.exception.code.UnauthorizedException;
 import jakarta.servlet.ServletException;

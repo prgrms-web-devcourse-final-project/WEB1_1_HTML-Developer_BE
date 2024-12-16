@@ -2,9 +2,9 @@ package com.backend.allreva.common.config;
 
 import static org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl.fromHierarchy;
 
-import com.backend.allreva.auth.exception.CustomAccessDeniedHandler;
-import com.backend.allreva.auth.exception.CustomAuthenticationEntryPoint;
-import com.backend.allreva.auth.filter.TestAuthenticationFilter;
+import com.backend.allreva.auth.security.CustomAccessDeniedHandler;
+import com.backend.allreva.auth.security.CustomAuthenticationEntryPoint;
+import com.backend.allreva.auth.security.TestAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

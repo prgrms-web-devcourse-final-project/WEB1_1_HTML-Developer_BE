@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.filter;
+package com.backend.allreva.auth.security;
 
 import com.backend.allreva.auth.application.JwtService;
 import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
@@ -25,20 +25,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Profile("!local")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final int ACCESS_TIME;
-    private final int REFRESH_TIME;
+    private final int accessTime;
+    private final int refreshTime;
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
-            @Value("${jwt.access.expiration}") final int ACCESS_TIME,
-            @Value("${jwt.refresh.expiration}") final int REFRESH_TIME,
+            @Value("${jwt.access.expiration}") final int accessTime,
+            @Value("${jwt.refresh.expiration}") final int refreshTime,
             final JwtService jwtService,
             final UserDetailsService userDetailsService
     ) {
-        this.ACCESS_TIME = ACCESS_TIME;
-        this.REFRESH_TIME = REFRESH_TIME;
+        this.accessTime = accessTime;
+        this.refreshTime = refreshTime;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
@@ -105,8 +105,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response
     ) {
         String generatedRefreshToken = jwtService.generateRefreshToken(memberId);
-        CookieUtils.addCookie(response, "refreshToken", generatedRefreshToken, REFRESH_TIME);
-        jwtService.updateRefreshToken(generatedRefreshToken, memberId);
+        CookieUtils.addCookie(response, "refreshToken", generatedRefreshToken, refreshTime);
+        jwtService.updateRefreshToken(generatedRefreshToken, Long.valueOf(memberId));
     }
 
     /**
@@ -119,7 +119,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response
     ) {
         String generatedAccessToken = jwtService.generateAccessToken(memberId);
-        CookieUtils.addCookie(response, "accessToken", generatedAccessToken, ACCESS_TIME);
+        CookieUtils.addCookie(response, "accessToken", generatedAccessToken, accessTime);
     }
 
     /**

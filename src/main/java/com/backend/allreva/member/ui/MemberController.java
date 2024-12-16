@@ -1,6 +1,6 @@
 package com.backend.allreva.member.ui;
 
-import com.backend.allreva.auth.application.AuthMember;
+import com.backend.allreva.auth.security.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.application.MemberCommandFacade;
 import com.backend.allreva.member.command.application.request.MemberInfoRequest;
@@ -8,7 +8,6 @@ import com.backend.allreva.member.command.application.request.RefundAccountReque
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.query.application.MemberQueryService;
 import com.backend.allreva.member.query.application.response.MemberDetailResponse;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

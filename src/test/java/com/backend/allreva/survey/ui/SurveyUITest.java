@@ -1,6 +1,18 @@
 package com.backend.allreva.survey.ui;
 
-import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.backend.allreva.auth.security.JwtAuthenticationFilter;
 import com.backend.allreva.common.config.SecurityConfig;
 import com.backend.allreva.support.ApiTestSupport;
 import com.backend.allreva.support.WithCustomMockUser;
@@ -10,13 +22,22 @@ import com.backend.allreva.survey.command.application.request.SurveyIdRequest;
 import com.backend.allreva.survey.command.application.request.UpdateSurveyRequest;
 import com.backend.allreva.survey.command.domain.value.Region;
 import com.backend.allreva.survey.query.application.SurveyQueryService;
-import com.backend.allreva.survey.query.application.response.*;
+import com.backend.allreva.survey.query.application.response.CreatedSurveyResponse;
+import com.backend.allreva.survey.query.application.response.SortType;
+import com.backend.allreva.survey.query.application.response.SurveyBoardingDateResponse;
+import com.backend.allreva.survey.query.application.response.SurveyDetailResponse;
+import com.backend.allreva.survey.query.application.response.SurveyResponse;
+import com.backend.allreva.survey.query.application.response.SurveySummaryResponse;
 import com.backend.allreva.survey_join.command.application.SurveyJoinCommandService;
 import com.backend.allreva.survey_join.command.application.request.JoinSurveyRequest;
 import com.backend.allreva.survey_join.command.domain.value.BoardingType;
 import com.backend.allreva.survey_join.query.application.SurveyJoinQueryService;
 import com.backend.allreva.survey_join.query.application.response.JoinSurveyResponse;
 import com.backend.allreva.survey_join.ui.SurveyJoinController;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,20 +46,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(
         controllers = {SurveyController.class, SurveyJoinController.class},
@@ -222,7 +229,7 @@ class SurveyUITest extends ApiTestSupport {
     @Test
     @WithCustomMockUser
     @DisplayName("내가 개설한 수요조사 목록 조회에 성공한다.")
-    public void getCreatedSurveyList() throws Exception {
+    void getCreatedSurveyList() throws Exception {
         // Given
         List<CreatedSurveyResponse> responseList = new ArrayList<>();
         SurveyResponse surveyResponse = new SurveyResponse(1L,
@@ -259,7 +266,7 @@ class SurveyUITest extends ApiTestSupport {
     @Test
     @WithCustomMockUser
     @DisplayName("내가 참여한 수요조사 목록 조회에 성공한다.")
-    public void getJoinSurveyList() throws Exception {
+    void getJoinSurveyList() throws Exception {
         // Given
         List<JoinSurveyResponse> responseList = new ArrayList<>();
         SurveyResponse surveyResponse = new SurveyResponse(1L,

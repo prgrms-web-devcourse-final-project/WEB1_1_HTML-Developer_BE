@@ -1,6 +1,5 @@
-package com.backend.allreva.auth.filter;
+package com.backend.allreva.auth.security;
 
-import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.MemberRole;
@@ -41,7 +40,7 @@ public class TestAuthenticationFilter extends OncePerRequestFilter {
     }
 
     public void setAuthentication(final Member member) {
-        PrincipalDetails principalDetails = new PrincipalDetails(member, null);
+        PrincipalDetails principalDetails = new PrincipalDetails(member);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 principalDetails, null, List.of(new SimpleGrantedAuthority("ROLE_DEVELOPER"))
         );

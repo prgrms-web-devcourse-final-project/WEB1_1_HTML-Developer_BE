@@ -24,20 +24,20 @@ import org.springframework.util.StringUtils;
 public class JwtService {
 
     private final SecretKey secretKey;
-    private final int ACCESS_TIME;
-    private final int REFRESH_TIME;
+    private final int accessTime;
+    private final int refreshTime;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtService(
             @Value("${jwt.secret-key}") final String secretKey,
-            @Value("${jwt.access.expiration}") final int ACCESS_TIME,
-            @Value("${jwt.refresh.expiration}") final int REFRESH_TIME,
+            @Value("${jwt.access.expiration}") final int accessTime,
+            @Value("${jwt.refresh.expiration}") final int refreshTime,
             final RefreshTokenRepository refreshTokenRepository
     ) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-        this.ACCESS_TIME = ACCESS_TIME;
-        this.REFRESH_TIME = REFRESH_TIME;
+        this.accessTime = accessTime;
+        this.refreshTime = refreshTime;
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
@@ -130,7 +130,7 @@ public class JwtService {
      */
     public String generateAccessToken(final String subject) {
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + ACCESS_TIME);
+        Date expireDate = new Date(currentDate.getTime() + accessTime);
 
         return Jwts.builder()
                 .subject(subject)
@@ -147,7 +147,7 @@ public class JwtService {
      */
     public String generateRefreshToken(final String subject) {
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + REFRESH_TIME);
+        Date expireDate = new Date(currentDate.getTime() + refreshTime);
 
         return Jwts.builder()
                 .subject(subject)
@@ -164,14 +164,14 @@ public class JwtService {
      */
     public void updateRefreshToken(
             final String generatedRefreshToken,
-            final String memberId
+            final Long memberId
     ) {
-        refreshTokenRepository.findRefreshTokenByMemberId(Long.valueOf(memberId))
+        refreshTokenRepository.findRefreshTokenByMemberId(memberId)
                 .ifPresent(refreshTokenRepository::delete);
 
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .token(generatedRefreshToken)
-                .memberId(Long.valueOf(memberId))
+                .memberId(memberId)
                 .build();
         refreshTokenRepository.save(refreshTokenEntity);
     }

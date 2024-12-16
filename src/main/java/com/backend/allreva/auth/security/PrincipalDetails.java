@@ -1,30 +1,19 @@
-package com.backend.allreva.auth.application.dto;
+package com.backend.allreva.auth.security;
 
+import com.backend.allreva.member.command.domain.Member;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.backend.allreva.member.command.domain.Member;
+@Getter
+@RequiredArgsConstructor
+public class PrincipalDetails implements UserDetails {
 
-public record PrincipalDetails(
-        Member member,
-        Map<String, Object> attributes
-) implements OAuth2User, UserDetails {
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes != null ? attributes : Collections.emptyMap();
-    }
-
-    @Override
-    public String getName() {
-        return member.getMemberInfo().getNickname();
-    }
+    private final Member member;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

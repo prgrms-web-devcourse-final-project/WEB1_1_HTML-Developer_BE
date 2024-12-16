@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.oauth2.exception;
+package com.backend.allreva.auth.exception.code;
 
 import com.backend.allreva.common.exception.CustomException;
 

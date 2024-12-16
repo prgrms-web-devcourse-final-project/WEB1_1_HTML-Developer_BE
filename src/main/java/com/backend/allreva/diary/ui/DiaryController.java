@@ -1,6 +1,6 @@
 package com.backend.allreva.diary.ui;
 
-import com.backend.allreva.auth.application.AuthMember;
+import com.backend.allreva.auth.security.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.diary.command.application.DiaryCommandService;
 import com.backend.allreva.diary.command.application.request.AddDiaryRequest;

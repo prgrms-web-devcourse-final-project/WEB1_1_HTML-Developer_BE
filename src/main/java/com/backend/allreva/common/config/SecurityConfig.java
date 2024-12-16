@@ -1,14 +1,16 @@
 package com.backend.allreva.common.config;
 
-import static com.backend.allreva.common.config.SecurityEndpointPaths.*;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.ADMIN_LIST;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST_GET;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.GUEST_LIST;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.USER_LIST_GET;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.WHITE_LIST;
 
-import com.backend.allreva.auth.exception.CustomAccessDeniedHandler;
-import com.backend.allreva.auth.exception.CustomAuthenticationEntryPoint;
-import com.backend.allreva.auth.exception.JwtExceptionFilter;
-import com.backend.allreva.auth.filter.JwtAuthenticationFilter;
-import com.backend.allreva.auth.oauth2.application.CustomOAuth2UserService;
-import com.backend.allreva.auth.oauth2.handler.OAuth2LoginFailureHandler;
-import com.backend.allreva.auth.oauth2.handler.OAuth2LoginSuccessHandler;
+import com.backend.allreva.auth.security.CustomAccessDeniedHandler;
+import com.backend.allreva.auth.security.CustomAuthenticationEntryPoint;
+import com.backend.allreva.auth.security.JwtExceptionFilter;
+import com.backend.allreva.auth.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -39,10 +41,6 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
-    // OAuth2
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
@@ -63,15 +61,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, ANONYMOUS_LIST_GET).permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable);
-
-        // OAuth2 인증 필터
-        http
-                .oauth2Login(customConfigurer -> customConfigurer
-                        .authorizationEndpoint(end -> end.baseUri("/api/v1/oauth2/login"))
-                        .userInfoEndpoint(endPointConfig -> endPointConfig
-                                .userService(customOAuth2UserService))
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler));
 
         // jwt 인증 필터
         http
