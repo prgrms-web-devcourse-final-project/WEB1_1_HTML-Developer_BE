@@ -182,6 +182,6 @@ public class JwtService {
      * @return Refresh Token이 존재하면 true, 그렇지 않으면 false
      */
     public boolean isRefreshTokenExist(final String refreshToken) {
-        return refreshTokenRepository.existsRefreshTokenByRefreshToken(refreshToken);
+        return refreshTokenRepository.existsRefreshTokenByToken(refreshToken);
     }
 }

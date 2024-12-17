@@ -25,14 +25,6 @@ public class AuthService {
     private final MemberRepository memberRepository;
 
     /**
-     * 카카오 로그인 URL을 반환합니다.
-     * @return 카카오 로그인 URL
-     */
-    public String getLoginURL() {
-        return oAuth2LoginService.getRequestURL();
-    }
-
-    /**
      * 카카오 로그인을 검증합니다.
      * @param authorizationCode 인가 코드
      * @return 로그인 응답

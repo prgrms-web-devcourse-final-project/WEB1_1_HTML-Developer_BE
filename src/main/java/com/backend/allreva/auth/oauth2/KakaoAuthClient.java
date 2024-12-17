@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "kakaoAuthClient", url = "${kakao.auth-url}")
+@FeignClient(name = "kakaoAuthClient", url = "${oauth2.kakao.auth-url}")
 public interface KakaoAuthClient {
 
     @PostMapping(value = "/oauth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)

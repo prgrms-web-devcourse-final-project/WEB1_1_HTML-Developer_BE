@@ -14,26 +14,12 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
     private final KakaoAuthClient kakaoAuthClient;
     private final KakaoUserInfoClient kakaoUserInfoClient;
 
-    @Value("${kakao.authorization-uri}")
-    private String kakaoAuthorizationUri;
-    @Value("${kakao.redirect-uri}")
+    @Value("${oauth2.kakao.redirect-uri}")
     private String kakaoRedirectUri;
-    @Value("${kakao.client-id}")
+    @Value("${oauth2.kakao.client-id}")
     private String kakaoClientId;
-    @Value("${kakao.client-secret}")
+    @Value("${oauth2.kakao.client-secret}")
     private String kakaoClientSecret;
-
-    /**
-     * 카카오 로그인 URL을 가져옵니다.
-     * @return 카카오 로그인 URL
-     */
-    @Override
-    public String getRequestURL() {
-        return kakaoAuthorizationUri
-                + "?response_type=code"
-                + "&client_id=" + kakaoClientId
-                + "&redirect_uri=" + kakaoRedirectUri;
-    }
 
     /**
      * 카카오 로그인 시 사용자 정보를 가져옵니다.

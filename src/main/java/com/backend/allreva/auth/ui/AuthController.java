@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,11 +22,6 @@ public class AuthController implements AuthControllerSwagger {
 
     private final AuthService authService;
     private final CookieService cookieService;
-
-    @GetMapping("/login/kakao")
-    public RedirectView redirectKakaoLogin() {
-        return new RedirectView(authService.getLoginURL());
-    }
 
     @GetMapping("/token/kakao")
     public Response<LoginResponse> authKakaoLogin(
