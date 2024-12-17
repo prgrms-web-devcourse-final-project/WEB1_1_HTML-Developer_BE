@@ -175,4 +175,13 @@ public class JwtService {
                 .build();
         refreshTokenRepository.save(refreshTokenEntity);
     }
+
+    /**
+     * Refresh Token이 Redis에 존재하는지 확인합니다.
+     * @param refreshToken Cookie에 저장되있던 Refresh Token
+     * @return Refresh Token이 존재하면 true, 그렇지 않으면 false
+     */
+    public boolean isRefreshTokenExist(final String refreshToken) {
+        return refreshTokenRepository.existsRefreshTokenByRefreshToken(refreshToken);
+    }
 }
