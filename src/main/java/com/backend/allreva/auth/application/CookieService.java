@@ -10,11 +10,19 @@ public class CookieService {
 
     @Value("${jwt.refresh.expiration}")
     private int refreshTime;
+    @Value("${url.name}")
+    private String domainName;
 
     public void addRefreshTokenCookie(
             final HttpServletResponse response,
             final String refreshToken
     ) {
-        CookieUtils.addCookie(response, "refreshToken", refreshToken, refreshTime);
+        CookieUtils.addCookie(
+                response,
+                domainName,
+                "refreshToken",
+                refreshToken,
+                refreshTime
+        );
     }
 }

@@ -26,16 +26,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final int refreshTime;
+    private final String domainName;
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
             @Value("${jwt.refresh.expiration}") final int refreshTime,
+            @Value("${url.name}") final String domainName,
             final JwtService jwtService,
             final UserDetailsService userDetailsService
     ) {
         this.refreshTime = refreshTime;
+        this.domainName = domainName;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
@@ -94,7 +97,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response
     ) {
         String generatedRefreshToken = jwtService.generateRefreshToken(memberId);
-        CookieUtils.addCookie(response, "refreshToken", generatedRefreshToken, refreshTime);
+        CookieUtils.addCookie(response, "refreshToken", domainName, generatedRefreshToken, refreshTime);
         jwtService.updateRefreshToken(generatedRefreshToken, Long.valueOf(memberId));
     }
 

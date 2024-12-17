@@ -75,7 +75,7 @@ public class AuthService {
     }
 
     /**
-     * Refresh Token을 재발급합니다.
+     * Access Token을 재발급합니다.
      * @param reissueRequest Refresh Token
      * @Return 재발급된 Access Token 및 Refresh Token
      */
