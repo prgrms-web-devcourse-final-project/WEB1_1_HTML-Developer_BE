@@ -25,19 +25,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Profile("!local")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final int accessTime;
     private final int refreshTime;
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
-            @Value("${jwt.access.expiration}") final int accessTime,
             @Value("${jwt.refresh.expiration}") final int refreshTime,
             final JwtService jwtService,
             final UserDetailsService userDetailsService
     ) {
-        this.accessTime = accessTime;
         this.refreshTime = refreshTime;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
@@ -56,16 +53,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = jwtService.extractAccessToken(request);
         String refreshToken = jwtService.extractRefreshToken(request);
 
+        // ANONYMOUS 요청 처리
         if (accessToken == null && refreshToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Refresh Token 검증
         boolean isRefreshTokenValid = jwtService.validateToken(refreshToken);
         if (!isRefreshTokenValid) {
             throw new InvalidJwtTokenException();
         }
 
+        // Access Token 검증
         boolean isAccessTokenValid = jwtService.validateToken(accessToken);
         String memberId;
 
@@ -108,7 +108,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response
     ) {
         String generatedAccessToken = jwtService.generateAccessToken(memberId);
-        CookieUtils.addCookie(response, "accessToken", generatedAccessToken, accessTime);
+        response.addHeader("Authorization", "Bearer " + generatedAccessToken);
     }
 
     /**
