@@ -61,37 +61,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 토큰 검증 결과 boolean 변수로 분리
-        boolean isAccessTokenValid = jwtService.validateToken(accessToken);
         boolean isRefreshTokenValid = jwtService.validateToken(refreshToken);
-
-        String memberId = "";
-
-        // Access도 Refresh도 둘 다 유효하지 않으면 예외 발생
-        if (!isAccessTokenValid && !isRefreshTokenValid) {
+        if (!isRefreshTokenValid) {
             throw new InvalidJwtTokenException();
         }
 
-        // Access Token이 유효하지 않으나, Refresh Token은 유효한 경우 => Access Token 및 Refresh Token 재발급
+        boolean isAccessTokenValid = jwtService.validateToken(accessToken);
+        String memberId;
+
+        // Access Token X, Refresh Token O => Access Token 및 Refresh Token 재발급
         if (!isAccessTokenValid) {
             memberId = jwtService.extractMemberId(refreshToken);
             reissueAccessToken(memberId, response);
-            reissueRefreshToken(memberId, response);
+            reissueRefreshToken(memberId, response); // token rotate
         }
-
-        // Access Token이 유효하고, Refresh Token이 유효하지 않은 경우 => Refresh Token 재발급
-        if (isAccessTokenValid && !isRefreshTokenValid) {
-            memberId = jwtService.extractMemberId(accessToken);
-            reissueRefreshToken(memberId, response);
-        }
-
-        if (isAccessTokenValid && isRefreshTokenValid) {
+        // Access Token O, Refresh Token O
+        else {
             memberId = jwtService.extractMemberId(accessToken);
         }
 
-        // Authentication Security Holder에 저장
         setAuthenication(memberId, request);
-
         filterChain.doFilter(request, response);
     }
 
