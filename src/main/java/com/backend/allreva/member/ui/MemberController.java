@@ -23,7 +23,7 @@ public class MemberController implements MemberControllerSwagger {
 
     @GetMapping
     public Response<MemberDetailResponse> getMemberDetail(
-            final @AuthMember Member member
+            @AuthMember final Member member
     ) {
         return Response.onSuccess(memberQueryService.getById(member.getId()));
     }

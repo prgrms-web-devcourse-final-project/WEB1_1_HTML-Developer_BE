@@ -25,7 +25,7 @@ public interface MemberControllerSwagger {
 
     @Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복을 확인합니다.")
     Response<Boolean> isDuplicatedNickname(
-            final String nickname
+            String nickname
     );
 
     @Operation(summary = "회원 가입 API", description = "회원을 등록합니다.")

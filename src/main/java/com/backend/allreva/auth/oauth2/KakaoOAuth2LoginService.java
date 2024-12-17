@@ -41,7 +41,7 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
      * @return 사용자 정보
      */
     @Override
-    public UserInfo getUserInfo(String authorizationCode) {
+    public UserInfo getUserInfo(final String authorizationCode) {
         KakaoToken token = kakaoAuthClient.getToken(
                 kakaoClientId,
                 kakaoRedirectUri,

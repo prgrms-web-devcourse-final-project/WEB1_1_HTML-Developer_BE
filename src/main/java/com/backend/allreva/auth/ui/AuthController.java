@@ -27,8 +27,8 @@ public class AuthController implements AuthControllerSwagger {
 
     @GetMapping("/token/kakao")
     public Response<LoginResponse> authKakaoLogin(
-            @RequestParam("code") String authorizationCode,
-            HttpServletResponse response
+            @RequestParam("code") final String authorizationCode,
+            final HttpServletResponse response
     ) {
         LoginResponse loginResponse = authService.kakaoLogin(authorizationCode);
         cookieService.addRefreshTokenCookie(response, loginResponse.refreshToken());

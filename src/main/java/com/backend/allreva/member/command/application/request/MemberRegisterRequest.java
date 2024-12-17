@@ -17,7 +17,7 @@ public record MemberRegisterRequest(
         List<MemberArtistRequest> memberArtistRequests
 ) {
 
-    public Member toEntity(Image image) {
+    public Member toEntity(final Image image) {
         return Member.builder()
                 .email(Email.builder()
                         .email(email)

@@ -12,8 +12,8 @@ public class CookieService {
     private int refreshTime;
 
     public void addRefreshTokenCookie(
-            HttpServletResponse response,
-            String refreshToken
+            final HttpServletResponse response,
+            final String refreshToken
     ) {
         CookieUtils.addCookie(response, "refreshToken", refreshToken, refreshTime);
     }
