@@ -37,15 +37,15 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         );
 
         KakaoUserInfo kakaoUserInfo = kakaoUserInfoClient.getUserInfo(
-                "Bearer " + token.getAccessToken()
+                "Bearer " + token.accessToken()
         );
 
         return UserInfo.builder()
                 .loginProvider(LoginProvider.KAKAO)
-                .providerId(kakaoUserInfo.getId())
-                .email(kakaoUserInfo.getKakaoAccount().getEmail())
-                .nickname(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
-                .profileImageUrl(kakaoUserInfo.getKakaoAccount().getProfile().getProfileImageUrl())
+                .providerId(kakaoUserInfo.id())
+                .email(kakaoUserInfo.kakaoAccount().email())
+                .nickname(kakaoUserInfo.kakaoAccount().profile().nickname())
+                .profileImageUrl(kakaoUserInfo.kakaoAccount().profile().profileImageUrl())
                 .build();
     }
 }
