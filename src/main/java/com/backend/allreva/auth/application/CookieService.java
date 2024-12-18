@@ -10,7 +10,7 @@ public class CookieService {
 
     @Value("${jwt.refresh.expiration}")
     private int refreshTime;
-    @Value("${url.name}")
+    @Value("${url.front.domain-name}")
     private String domainName;
 
     public void addRefreshTokenCookie(

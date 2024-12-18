@@ -6,7 +6,9 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import java.text.MessageFormat;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,19 +18,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SwaggerConfig {
 
+    @Value("${url.back.protocol}")
+    private String protocol;
+    @Value("${url.back.domain}")
+    private String domain;
+
     @Bean
     public OpenAPI customOpenAPI() {
         SecurityRequirement developerRequirement = new SecurityRequirement().addList("USER");
 
         Server server1 = new Server();
-        server1.setUrl("https://allreva.shop");
-
-        Server server2 = new Server();
-        server2.setUrl("http://localhost:8080");
+        server1.setUrl(MessageFormat.format("{0}://{1}", protocol, domain));
 
         return new OpenAPI()
-                .info(new Info().title("AllReva"))
-                .servers(List.of(server1, server2))
+                .info(new Info().title("Allreva"))
+                .servers(List.of(server1))
                 .components(new Components()
                         .addSecuritySchemes("USER", createSecurityScheme()))
                 .addSecurityItem(developerRequirement);

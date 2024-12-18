@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public JwtAuthenticationFilter(
             @Value("${jwt.refresh.expiration}") final int refreshTime,
-            @Value("${url.name}") final String domainName,
+            @Value("${url.front.domain-name}") final String domainName,
             final JwtService jwtService,
             final UserDetailsService userDetailsService
     ) {
