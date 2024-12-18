@@ -2,8 +2,8 @@ package com.backend.allreva.auth.application;
 
 import com.backend.allreva.auth.domain.RefreshToken;
 import com.backend.allreva.auth.domain.RefreshTokenRepository;
-import com.backend.allreva.auth.exception.code.InvalidTokenException;
-import com.backend.allreva.auth.exception.code.TokenNotFoundException;
+import com.backend.allreva.auth.exception.code.TokenInvalidException;
+import com.backend.allreva.auth.exception.code.TokenNotMatchException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -11,9 +11,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
@@ -58,31 +56,6 @@ public class JwtService {
     }
 
     /**
-     * cookie 혹은 header에 있는 Refresh Token을 추출합니다.
-     * @param request HTTP 요청
-     * @return Refresh Token String 값
-     */
-    public String extractRefreshToken(final HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-
-        String refreshToken = null;
-        if (cookies != null && cookies.length != 0) {
-            refreshToken = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("refreshToken"))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }
-
-        // Cookie에 없다면 Header 재확인
-        if (refreshToken != null) {
-            return refreshToken;
-        } else {
-            return request.getHeader("refresh_token");
-        }
-    }
-
-    /**
      * 토큰에서 memberId를 추출합니다.
      * @param token 토큰
      * @return memberId String 값
@@ -101,10 +74,6 @@ public class JwtService {
      * @param token 토큰
      */
     public void validateToken(final String token) {
-        if (token == null) {
-            log.error("Token is not found");
-            throw new TokenNotFoundException();
-        }
         try {
             Jwts.parser()
                     .verifyWith(secretKey)
@@ -112,19 +81,19 @@ public class JwtService {
                     .parse(token);
         } catch (SignatureException e) {
             log.error("Invalid JWT token signature: {}", e.getMessage());
-            throw new InvalidTokenException();
+            throw new TokenInvalidException();
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
-            throw new InvalidTokenException();
+            throw new TokenInvalidException();
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token: {}", e.getMessage());
-            throw new InvalidTokenException();
+            throw new TokenInvalidException();
         } catch (UnsupportedJwtException e) {
             log.error("JWT token is unsupported: {}", e.getMessage());
-            throw new InvalidTokenException();
+            throw new TokenInvalidException();
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
-            throw new InvalidTokenException();
+            throw new TokenInvalidException();
         }
     }
 
@@ -187,7 +156,7 @@ public class JwtService {
      */
     public void validRefreshTokenExistInRedis(final String refreshToken) {
         if (!refreshTokenRepository.existsRefreshTokenByToken(refreshToken)) {
-            throw new TokenNotFoundException();
+            throw new TokenNotMatchException();
         }
     }
 }

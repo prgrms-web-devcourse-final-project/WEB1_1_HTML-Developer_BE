@@ -47,9 +47,7 @@ public class SecurityTestConfig {
                 .formLogin(FormLoginConfigurer<HttpSecurity>::disable)
                 .httpBasic(HttpBasicConfigurer<HttpSecurity>::disable)
                 .headers(it -> it.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .sessionManagement(it -> it.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        http
+                .sessionManagement(it -> it.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ALLOW_URLS).permitAll()
                         .requestMatchers("/test-developer").permitAll()

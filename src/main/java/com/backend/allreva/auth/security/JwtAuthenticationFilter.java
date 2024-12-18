@@ -1,9 +1,6 @@
 package com.backend.allreva.auth.security;
 
 import com.backend.allreva.auth.application.JwtService;
-import com.backend.allreva.auth.exception.code.InvalidAccessTokenException;
-import com.backend.allreva.auth.exception.code.InvalidRefreshTokenException;
-import com.backend.allreva.common.exception.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,29 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final HttpServletResponse response,
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
-        // 바디 및 쿠키로부터 토큰 추출
         String accessToken = jwtService.extractAccessToken(request);
-        String refreshToken = jwtService.extractRefreshToken(request);
 
         // ANONYMOUS 요청 처리
-        if (accessToken == null && refreshToken == null) {
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Refresh Token X
-        try {
-            jwtService.validateToken(refreshToken);
-        } catch (CustomException e) {
-            throw new InvalidRefreshTokenException();
-        }
-        // Access Token X, Refresh Token O
-        try {
-            jwtService.validateToken(accessToken);
-        } catch (CustomException e) {
-            throw new InvalidAccessTokenException();
-        }
-        // Access Token O, Refresh Token O
+        // Access Token X
+        jwtService.validateToken(accessToken);
+
+        // Access Token O
         String memberId = jwtService.extractMemberId(accessToken);
 
         setAuthenication(memberId, request);
