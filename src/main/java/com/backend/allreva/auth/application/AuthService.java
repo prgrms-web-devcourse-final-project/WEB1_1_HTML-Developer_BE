@@ -4,8 +4,6 @@ import com.backend.allreva.auth.application.dto.LoginResponse;
 import com.backend.allreva.auth.application.dto.ReissueRequest;
 import com.backend.allreva.auth.application.dto.ReissueResponse;
 import com.backend.allreva.auth.application.dto.UserInfo;
-import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
-import com.backend.allreva.auth.exception.code.TokenNotFoundException;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
@@ -83,13 +81,8 @@ public class AuthService {
         String refreshToken = reissueRequest.refreshToken();
 
         // refresh token 검증
-        boolean isRefreshTokenValid = jwtService.validateToken(refreshToken);
-        if (!isRefreshTokenValid) {
-            throw new InvalidJwtTokenException();
-        }
-        if (!jwtService.isRefreshTokenExist(refreshToken)) {
-            throw new TokenNotFoundException();
-        }
+        jwtService.validateToken(refreshToken);
+        jwtService.validRefreshTokenExistInRedis(refreshToken);
 
         // access token 재발급
         String memberId = jwtService.extractMemberId(refreshToken);
