@@ -9,8 +9,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,22 +24,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 @Profile("!local")
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
-    public JwtAuthenticationFilter(
-            @Value("${jwt.refresh.expiration}") final int refreshTime,
-            @Value("${url.front.domain-name}") final String domainName,
-            final JwtService jwtService,
-            final UserDetailsService userDetailsService
-    ) {
-        this.refreshTime = refreshTime;
-        this.domainName = domainName;
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-    }
 
     /**
      * JWT 토큰을 검증하고 권한을 부여합니다.
