@@ -2,6 +2,8 @@ package com.backend.allreva.auth.application;
 
 import com.backend.allreva.auth.domain.RefreshToken;
 import com.backend.allreva.auth.domain.RefreshTokenRepository;
+import com.backend.allreva.auth.exception.code.InvalidTokenException;
+import com.backend.allreva.auth.exception.code.TokenNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -97,30 +99,33 @@ public class JwtService {
     /**
      * 토큰을 검증합니다.
      * @param token 토큰
-     * @return 토큰이 유효하면 true, 그렇지 않으면 false
      */
-    public boolean validateToken(final String token) {
+    public void validateToken(final String token) {
         if (token == null) {
-            return false;
+            log.error("Token is not found");
+            throw new TokenNotFoundException();
         }
         try {
             Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parse(token);
-            return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT token signature: {}", e.getMessage());
+            throw new InvalidTokenException();
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
+            throw new InvalidTokenException();
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token: {}", e.getMessage());
+            throw new InvalidTokenException();
         } catch (UnsupportedJwtException e) {
             log.error("JWT token is unsupported: {}", e.getMessage());
+            throw new InvalidTokenException();
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
+            throw new InvalidTokenException();
         }
-        return false;
     }
 
     /**
@@ -179,9 +184,10 @@ public class JwtService {
     /**
      * Refresh Token이 Redis에 존재하는지 확인합니다.
      * @param refreshToken Cookie에 저장되있던 Refresh Token
-     * @return Refresh Token이 존재하면 true, 그렇지 않으면 false
      */
-    public boolean isRefreshTokenExist(final String refreshToken) {
-        return refreshTokenRepository.existsRefreshTokenByToken(refreshToken);
+    public void validRefreshTokenExistInRedis(final String refreshToken) {
+        if (!refreshTokenRepository.existsRefreshTokenByToken(refreshToken)) {
+            throw new TokenNotFoundException();
+        }
     }
 }
