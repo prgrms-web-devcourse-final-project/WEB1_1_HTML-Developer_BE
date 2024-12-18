@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.oauth2.exception;
+package com.backend.allreva.auth.exception.code;
 
 import org.springframework.http.HttpStatus;
 
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OAuth2ErrorCode implements ErrorCodeInterface {
 
-    UNSUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST.value(), "UNSUPPORTED_PROVIDER", "지원하지 않는 provider 입니다.")
+    UNSUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST.value(), "UNSUPPORTED_PROVIDER", "지원하지 않는 provider 입니다."),
     ;
 
     private final Integer status;

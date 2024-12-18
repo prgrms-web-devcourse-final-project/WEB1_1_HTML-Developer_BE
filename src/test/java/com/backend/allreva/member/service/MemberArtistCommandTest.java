@@ -13,7 +13,8 @@ import com.backend.allreva.member.command.application.request.MemberArtistReques
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberArtistRepository;
 import com.backend.allreva.member.command.domain.MemberArtistService;
-import com.backend.allreva.member.command.domain.value.LoginProvider;
+import com.backend.allreva.member.command.domain.value.MemberRole;
+import com.backend.allreva.member.fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -46,12 +46,7 @@ class MemberArtistCommandTest {
 
     @BeforeEach
     void setUp() {
-        member = Member.createTemporary(
-                "my@email",
-                "nickname",
-                LoginProvider.GOOGLE,
-                "https://my_picture");
-        ReflectionTestUtils.setField(member, "id", 1L);
+        member = MemberFixture.createMemberFixture(1L, MemberRole.USER);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.backend.allreva.member.command.application;
 
 import com.backend.allreva.common.model.Image;
-import com.backend.allreva.member.command.application.request.MemberInfoRequest;
+import com.backend.allreva.member.command.application.request.MemberRegisterRequest;
 import com.backend.allreva.member.command.application.request.RefundAccountRequest;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
@@ -15,19 +15,13 @@ public class MemberInfoCommandService {
     private final MemberRepository memberRepository;
 
     /**
-     * 회원 가입 시 유저정보 입력 회원 성공적으로 가입 시 GUEST에서 USER로 Role 변경
+     * 회원 정보 등록
      */
     public Member registerMember(
-            final MemberInfoRequest memberInfoRequest,
-            final Member member,
+            final MemberRegisterRequest memberRegisterRequest,
             final Image image
     ) {
-        member.setMemberInfo(
-                memberInfoRequest.nickname(),
-                memberInfoRequest.introduce(),
-                image.getUrl()
-        );
-        member.upgradeToUser(); // USER 권한으로 변경
+        Member member = memberRegisterRequest.toEntity(image);
         return memberRepository.save(member);
     }
 
@@ -35,13 +29,13 @@ public class MemberInfoCommandService {
      * 회원 정보 수정
      */
     public Member updateMemberInfo(
-            final MemberInfoRequest memberInfoRequest,
+            final MemberRegisterRequest memberRegisterRequest,
             final Member member,
             final Image image
     ) {
         member.setMemberInfo(
-                memberInfoRequest.nickname(),
-                memberInfoRequest.introduce(),
+                memberRegisterRequest.nickname(),
+                memberRegisterRequest.introduce(),
                 image.getUrl()
         );
         return memberRepository.save(member);

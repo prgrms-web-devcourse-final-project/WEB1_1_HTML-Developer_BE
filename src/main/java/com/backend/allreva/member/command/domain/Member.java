@@ -55,40 +55,18 @@ public class Member extends BaseEntity {
     @Builder
     private Member(
             final Email email,
-            final MemberRole memberRole,
             final LoginProvider loginProvider,
+            final MemberRole memberRole,
             final String nickname,
             final String introduce,
             final String profileImageUrl
     ) {
         this.email = email;
-        this.memberRole = memberRole;
         this.loginProvider = loginProvider;
+        this.memberRole = memberRole;
         this.memberInfo = MemberInfo.builder()
                 .nickname(nickname)
                 .introduce(introduce)
-                .profileImageUrl(profileImageUrl)
-                .build();
-    }
-
-    /**
-     * 임시 GUEST 생성 메서드
-     * <p>
-     * 아직 회원가입이 완전히 이루어진 상태가 아니기 때문에 GUEST 권한으로 등록되어 있습니다. 회원가입에 필요한 정보들을 모두 기입할 시 USER 권한으로 승격됩니다. - password 없음
-     */
-    public static Member createTemporary(
-            final String email,
-            final String nickname,
-            final LoginProvider loginProvider,
-            final String profileImageUrl
-    ) {
-        return Member.builder()
-                .email(Email.builder()
-                        .email(email)
-                        .build())
-                .nickname(nickname)
-                .loginProvider(loginProvider)
-                .memberRole(MemberRole.GUEST)
                 .profileImageUrl(profileImageUrl)
                 .build();
     }
@@ -120,11 +98,5 @@ public class Member extends BaseEntity {
                 .bank("")
                 .number("")
                 .build();
-    }
-
-    public void upgradeToUser() {
-        if (this.memberRole.equals(MemberRole.GUEST)) {
-            this.memberRole = MemberRole.USER;
-        }
     }
 }

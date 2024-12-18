@@ -18,7 +18,7 @@ public final class SecurityEndpointPaths {
     public static final String[] ANONYMOUS_LIST = {
             "/api/v1/search/**",
             "/api/v1/concerts/**",
-
+            "/api/v1/members/register"
     };
 
     public static final String[] USER_LIST_GET = {
@@ -31,14 +31,12 @@ public final class SecurityEndpointPaths {
     };
 
     public static final String[] ANONYMOUS_LIST_GET = {
-            "/api/v1/surveys/**", "/api/v1/rents/**"
+            "/api/v1/surveys/**",
+            "/api/v1/rents/**",
+            "/api/v1/auth/**"
     };
 
     public static final String[] ADMIN_LIST = {
             "/api/v1/admin/**"
-    };
-
-    public static final String[] GUEST_LIST = {
-            "/api/v1/members/register"
     };
 }

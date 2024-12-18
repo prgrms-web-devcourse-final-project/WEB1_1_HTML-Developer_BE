@@ -9,17 +9,16 @@ import org.springframework.http.ResponseCookie;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CookieUtils {
 
-    private static final String COOKIE_DOMAIN = "localhost";
-
     // refreshToken 쿠키 생성
     public static void addCookie(
             final HttpServletResponse response,
+            final String cookieDomain,
             final String name,
             final String value,
             final int maxAge
     ) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
-                .domain(COOKIE_DOMAIN)
+                .domain(cookieDomain)
                 .path("/")
                 .maxAge(maxAge)
                 .httpOnly(true)

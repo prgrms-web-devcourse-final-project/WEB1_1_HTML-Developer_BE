@@ -1,4 +1,4 @@
-package com.backend.allreva.auth.filter;
+package com.backend.allreva.auth.security;
 
 import com.backend.allreva.auth.application.JwtService;
 import com.backend.allreva.auth.exception.code.InvalidJwtTokenException;
@@ -25,20 +25,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Profile("!local")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final int ACCESS_TIME;
-    private final int REFRESH_TIME;
+    private final int refreshTime;
+    private final String domainName;
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
-            @Value("${jwt.access.expiration}") final int ACCESS_TIME,
-            @Value("${jwt.refresh.expiration}") final int REFRESH_TIME,
+            @Value("${jwt.refresh.expiration}") final int refreshTime,
+            @Value("${url.name}") final String domainName,
             final JwtService jwtService,
             final UserDetailsService userDetailsService
     ) {
-        this.ACCESS_TIME = ACCESS_TIME;
-        this.REFRESH_TIME = REFRESH_TIME;
+        this.refreshTime = refreshTime;
+        this.domainName = domainName;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
@@ -56,42 +56,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = jwtService.extractAccessToken(request);
         String refreshToken = jwtService.extractRefreshToken(request);
 
+        // ANONYMOUS 요청 처리
         if (accessToken == null && refreshToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 토큰 검증 결과 boolean 변수로 분리
-        boolean isAccessTokenValid = jwtService.validateToken(accessToken);
+        // Refresh Token 검증
         boolean isRefreshTokenValid = jwtService.validateToken(refreshToken);
-
-        String memberId = "";
-
-        // Access도 Refresh도 둘 다 유효하지 않으면 예외 발생
-        if (!isAccessTokenValid && !isRefreshTokenValid) {
+        if (!isRefreshTokenValid) {
             throw new InvalidJwtTokenException();
         }
 
-        // Access Token이 유효하지 않으나, Refresh Token은 유효한 경우 => Access Token 및 Refresh Token 재발급
+        // Access Token 검증
+        boolean isAccessTokenValid = jwtService.validateToken(accessToken);
+        String memberId;
+
+        // Access Token X, Refresh Token O => Access Token 및 Refresh Token 재발급
         if (!isAccessTokenValid) {
             memberId = jwtService.extractMemberId(refreshToken);
             reissueAccessToken(memberId, response);
-            reissueRefreshToken(memberId, response);
+            reissueRefreshToken(memberId, response); // token rotate
         }
-
-        // Access Token이 유효하고, Refresh Token이 유효하지 않은 경우 => Refresh Token 재발급
-        if (isAccessTokenValid && !isRefreshTokenValid) {
-            memberId = jwtService.extractMemberId(accessToken);
-            reissueRefreshToken(memberId, response);
-        }
-
-        if (isAccessTokenValid && isRefreshTokenValid) {
+        // Access Token O, Refresh Token O
+        else {
             memberId = jwtService.extractMemberId(accessToken);
         }
 
-        // Authentication Security Holder에 저장
         setAuthenication(memberId, request);
-
         filterChain.doFilter(request, response);
     }
 
@@ -105,8 +97,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response
     ) {
         String generatedRefreshToken = jwtService.generateRefreshToken(memberId);
-        CookieUtils.addCookie(response, "refreshToken", generatedRefreshToken, REFRESH_TIME);
-        jwtService.updateRefreshToken(generatedRefreshToken, memberId);
+        CookieUtils.addCookie(response, "refreshToken", domainName, generatedRefreshToken, refreshTime);
+        jwtService.updateRefreshToken(generatedRefreshToken, Long.valueOf(memberId));
     }
 
     /**
@@ -119,7 +111,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response
     ) {
         String generatedAccessToken = jwtService.generateAccessToken(memberId);
-        CookieUtils.addCookie(response, "accessToken", generatedAccessToken, ACCESS_TIME);
+        response.addHeader("Authorization", "Bearer " + generatedAccessToken);
     }
 
     /**

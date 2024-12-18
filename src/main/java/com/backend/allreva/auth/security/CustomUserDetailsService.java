@@ -1,11 +1,10 @@
-package com.backend.allreva.auth.application;
+package com.backend.allreva.auth.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.backend.allreva.auth.application.dto.PrincipalDetails;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.exception.MemberNotFoundException;
@@ -23,6 +22,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findById(Long.valueOf(memberId))
                 .orElseThrow(MemberNotFoundException::new);
 
-        return new PrincipalDetails(member, null);
+        return new PrincipalDetails(member);
     }
 }
