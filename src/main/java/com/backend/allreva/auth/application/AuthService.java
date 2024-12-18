@@ -41,9 +41,9 @@ public class AuthService {
 
         if (memberOptional.isPresent()) {
             return getMemberInfo(memberOptional.get());
-        } else {
-            return getTemporaryMemberInfo(userInfo);
         }
+        return getTemporaryMemberInfo(userInfo);
+
     }
 
     private LoginResponse getTemporaryMemberInfo(final UserInfo userInfo) {
