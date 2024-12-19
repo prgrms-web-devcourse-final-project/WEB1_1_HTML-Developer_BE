@@ -50,13 +50,10 @@ public class RentQueryService {
             final LocalDate boardingDate,
             final Long rentId
     ) {
-        RentAdminDetailResponse rentAdminDetailResponse = rentRepository.findRentAdminDetail(memberId,
-                        boardingDate, rentId)
+        RentAdminDetailResponse rentAdminDetailResponse = rentRepository.findRentAdminDetail(memberId, boardingDate, rentId)
                 .orElseThrow(RentNotFoundException::new);
-        List<RentAdminJoinDetailResponse> rentAdminJoinDetails = rentRepository.findRentAdminJoinDetails(memberId,
-                rentId, boardingDate);
+        List<RentAdminJoinDetailResponse> rentAdminJoinDetails = rentRepository.findRentAdminJoinDetails(memberId, rentId, boardingDate);
         rentAdminDetailResponse.setRentJoinDetailResponses(rentAdminJoinDetails);
         return rentAdminDetailResponse;
     }
-
 }

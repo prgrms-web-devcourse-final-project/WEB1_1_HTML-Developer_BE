@@ -20,6 +20,7 @@ public class RentRepositoryImpl implements RentRepository {
     private final RentJpaRepository rentJpaRepository;
     private final RentDslRepositoryImpl rentDslRepository;
     private final RentBoardingDateJpaRepository rentBoardingDateJpaRepository;
+
     @Override
     public Optional<Rent> findById(final Long id) {
         return rentJpaRepository.findById(id);
@@ -110,5 +111,4 @@ public class RentRepositoryImpl implements RentRepository {
     public List<RentSummaryResponse> findRentMainSummaries() {
         return rentDslRepository.findRentMainSummaries();
     }
-
 }
