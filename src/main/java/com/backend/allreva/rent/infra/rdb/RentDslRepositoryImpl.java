@@ -1,29 +1,38 @@
 package com.backend.allreva.rent.infra.rdb;
 
-import com.backend.allreva.common.util.DateHolder;
-import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.query.application.response.*;
-import com.backend.allreva.rent_join.command.domain.value.BoardingType;
-import com.backend.allreva.rent_join.command.domain.value.RefundType;
-import com.backend.allreva.survey.query.application.response.SortType;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import static com.backend.allreva.concert.command.domain.QConcert.concert;
 import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
 import static com.backend.allreva.rent.command.domain.QRent.rent;
 import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoardingDate;
 import static com.backend.allreva.rent_join.command.domain.QRentJoin.rentJoin;
 import static com.querydsl.core.types.Projections.list;
+
+import com.backend.allreva.common.util.DateHolder;
+import com.backend.allreva.rent.command.domain.value.Region;
+import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminJoinDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
+import com.backend.allreva.rent.query.application.response.RentDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentDetailResponse.RentBoardingDateResponse;
+import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
+import com.backend.allreva.rent_join.command.domain.value.BoardingType;
+import com.backend.allreva.rent_join.command.domain.value.RefundType;
+import com.backend.allreva.survey.query.application.response.SortType;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -163,6 +172,8 @@ public class RentDslRepositoryImpl {
                 .leftJoin(concert).on(rent.concertId.eq(concert.id))
                 .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
                 .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
+                .leftJoin(rentJoin).on(rentBoardingDate.date.eq(rentJoin.boardingDate))
+                .groupBy(rentBoardingDate.date)
                 .fetchFirst();
         return Optional.ofNullable(rentDetailResponse);
     }
@@ -178,8 +189,12 @@ public class RentDslRepositoryImpl {
                 concertHall.name, // 하행 지역
                 rent.operationInfo.upTime,
                 rent.operationInfo.downTime,
-                list(rentBoardingDate.date),
-                list(getParticipationCount()),
+                list(
+                        Projections.constructor(
+                                RentBoardingDateResponse.class,
+                                rentBoardingDate.date,
+                                rentJoin.passengerNum.sum()
+                        )),
                 rent.operationInfo.bus.busSize,
                 rent.operationInfo.bus.busType,
                 rent.operationInfo.bus.maxPassenger,
@@ -190,7 +205,8 @@ public class RentDslRepositoryImpl {
                 rent.additionalInfo.endDate,
                 rent.additionalInfo.chatUrl,
                 rent.additionalInfo.refundType,
-                rent.additionalInfo.information
+                rent.additionalInfo.information,
+                rent.isClosed
         );
     }
 
