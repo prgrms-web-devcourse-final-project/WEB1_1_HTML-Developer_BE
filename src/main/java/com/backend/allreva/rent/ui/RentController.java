@@ -9,6 +9,7 @@ import com.backend.allreva.rent.command.application.request.RentRegisterRequest;
 import com.backend.allreva.rent.command.application.request.RentUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,4 +52,12 @@ public class RentController implements RentControllerSwagger {
         return Response.onSuccess();
     }
 
+    @DeleteMapping
+    public Response<Void> deleteRent(
+            @RequestBody final RentIdRequest rentIdRequest,
+            @AuthMember final Member member
+    ) {
+        rentCommandService.deleteRent(rentIdRequest, member.getId());
+        return Response.onSuccess();
+    }
 }

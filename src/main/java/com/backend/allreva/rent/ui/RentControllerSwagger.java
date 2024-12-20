@@ -30,4 +30,10 @@ public interface RentControllerSwagger {
             @RequestBody RentIdRequest rentIdRequest,
             @AuthMember Member member
     );
+
+    @Operation(summary = "차량 대절 삭제 API", description = "차량 대절 폼을 삭제합니다.")
+    Response<Void> deleteRent(
+            @RequestBody final RentIdRequest rentIdRequest,
+            @AuthMember final Member member
+    );
 }
