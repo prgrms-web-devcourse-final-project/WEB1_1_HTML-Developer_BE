@@ -301,6 +301,7 @@ public class RentDslRepositoryImpl {
                         rentJoin.boardingDate.eq(boardingDate),
                         rent.memberId.eq(memberId)
                 )
+                .groupBy(rentJoin.boardingType, rentJoin.refundType)
                 .fetchFirst();
         return Optional.ofNullable(rentJoinCountResponse);
     }
