@@ -22,7 +22,6 @@ public class RentJoinController implements RentJoinControllerSwagger{
     private final RentJoinCommandService rentJoinCommandService;
     private final RentJoinQueryService rentJoinQueryService;
 
-
     @PostMapping("/apply")
     public Response<Long> applyRent(
             @RequestBody final RentJoinApplyRequest rentJoinApplyRequest,
