@@ -42,7 +42,6 @@ public class AuthService {
             return getMemberInfo(memberOptional.get());
         }
         return getTemporaryMemberInfo(userInfo);
-
     }
 
     private LoginResponse getTemporaryMemberInfo(final UserInfo userInfo) {

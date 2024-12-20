@@ -11,13 +11,11 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -39,20 +37,6 @@ public class JwtService {
         this.accessTime = accessTime;
         this.refreshTime = refreshTime;
         this.refreshTokenRepository = refreshTokenRepository;
-    }
-
-    /**
-     * header에 있는 Access Token을 추출합니다.
-     * @param request HTTP 요청
-     * @return Access Token String 값
-     */
-    public String extractAccessToken(final HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 
     /**

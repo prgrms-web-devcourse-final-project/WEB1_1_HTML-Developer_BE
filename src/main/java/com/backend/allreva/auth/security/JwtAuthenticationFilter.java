@@ -3,9 +3,11 @@ package com.backend.allreva.auth.security;
 import com.backend.allreva.auth.application.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -36,7 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final HttpServletResponse response,
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
-        String accessToken = jwtService.extractAccessToken(request);
+        // extract access token from cookie
+        String accessToken = extractAccessToken(request);
 
         // ANONYMOUS 요청 처리
         if (accessToken == null) {
@@ -52,6 +55,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         setAuthenication(memberId, request);
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * header에 있는 Access Token을 추출합니다.
+     * @param request HTTP 요청
+     * @return Access Token String 값 (없을 경우 null)
+     */
+    private String extractAccessToken(final HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("accessToken"))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
     }
 
     /**

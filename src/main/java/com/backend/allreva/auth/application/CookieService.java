@@ -25,4 +25,17 @@ public class CookieService {
                 refreshTime
         );
     }
+
+    public void addAccessTokenCookie(
+            final HttpServletResponse response,
+            final String accessToken
+    ) {
+        CookieUtils.addCookie(
+                response,
+                domainName,
+                "accessToken",
+                accessToken,
+                refreshTime
+        );
+    }
 }

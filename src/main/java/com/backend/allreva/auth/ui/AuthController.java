@@ -31,7 +31,7 @@ public class AuthController implements AuthControllerSwagger {
         LoginResponse loginResponse = authService.kakaoLogin(authorizationCode);
         if (loginResponse.isUser()) {
             cookieService.addRefreshTokenCookie(response, loginResponse.refreshToken());
-            response.addHeader("Authorization", "Bearer " + loginResponse.accessToken());
+            cookieService.addAccessTokenCookie(response, loginResponse.accessToken());
         }
         return Response.onSuccess(loginResponse);
     }
@@ -43,7 +43,7 @@ public class AuthController implements AuthControllerSwagger {
     ) {
         ReissueResponse reissueResponse = authService.reissueAccessToken(reissueRequest);
         cookieService.addRefreshTokenCookie(response, reissueResponse.refreshToken());
-        response.addHeader("Authorization", "Bearer " + reissueResponse.accessToken());
+        cookieService.addAccessTokenCookie(response, reissueResponse.accessToken());
         return Response.onSuccess(reissueResponse);
     }
 }
