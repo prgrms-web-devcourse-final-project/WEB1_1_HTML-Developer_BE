@@ -90,13 +90,23 @@ public class KopisHallResponse {
 
     public static ConcertHall toEntity(final KopisHallResponse response, final int idx) {
         Db db = response.getDb();
+        String hallName = getHallName(db, idx);
+
         return ConcertHall.builder()
                 .id(db.mt13s.mt13List.get(idx).mt13id)
-                .name(db.fcltynm + " " + db.mt13s.mt13List.get(idx).prfplcnm)
+                .name(hallName)
                 .seatScale(Integer.parseInt(db.mt13s.mt13List.get(idx).seatscale.replace(",", "")))
                 .convenienceInfo(toConvenienceInfo(response))
                 .location(toLocation(db.lo, db.la, db.adres))
                 .build();
+    }
+    private static String getHallName(final Db db, final int idx) {
+        String fcltyName = db.fcltynm;
+        String prfplcName = db.mt13s.mt13List.get(idx).prfplcnm;
+        if (fcltyName.equals(prfplcName)) {
+            return fcltyName;
+        }
+        return db.fcltynm + " " + db.mt13s.mt13List.get(idx).prfplcnm;
     }
 
     private static ConvenienceInfo toConvenienceInfo(final KopisHallResponse response) {
