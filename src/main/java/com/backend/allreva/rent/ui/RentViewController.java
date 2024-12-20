@@ -5,16 +5,22 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentQueryService;
-import com.backend.allreva.rent.query.application.response.*;
+import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
+import com.backend.allreva.rent.query.application.response.RentDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.response.SortType;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
-import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
@@ -23,6 +29,11 @@ import java.util.List;
 public class RentViewController implements RentViewControllerSwagger {
 
     private final RentQueryService rentQueryService;
+
+    @GetMapping("/main")
+    public Response<List<RentSummaryResponse>> getRentMainSummaries(){
+        return Response.onSuccess(rentQueryService.getRentMainSummaries());
+    }
 
     @GetMapping("/list")
     public Response<List<RentSummaryResponse>> getRentSummaries(
@@ -33,15 +44,6 @@ public class RentViewController implements RentViewControllerSwagger {
             @RequestParam(name = "pageSize", defaultValue = "10") @Min(10) final int pageSize
     ) {
         return Response.onSuccess(rentQueryService.getRentSummaries(region, sortType, lastEndDate, lastId, pageSize));
-    }
-
-    @GetMapping("/main")
-    @Operation(
-            summary = "첫 화면 rent API 입니다.",
-            description = "첫 화면 rent API 입니다. 현재 날짜에서 가장 가까운 콘서트 순으로 5개 정렬"
-    )
-    public Response<List<RentSummaryResponse>> getRentMainSummaries(){
-        return Response.onSuccess(rentQueryService.getRentMainSummaries());
     }
 
     @GetMapping("/{id}")
@@ -68,8 +70,9 @@ public class RentViewController implements RentViewControllerSwagger {
     @GetMapping("/{id}/register")
     public Response<RentAdminDetailResponse> getRentAdminDetail(
             @PathVariable("id") final Long rentId,
+            @RequestParam final LocalDate boardingDate,
             @AuthMember Member member
     ) {
-        return Response.onSuccess(rentQueryService.getRentAdminDetail(member.getId(), LocalDate.now(), rentId));
+        return Response.onSuccess(rentQueryService.getRentAdminDetail(member.getId(), boardingDate, rentId));
     }
 }

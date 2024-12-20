@@ -16,6 +16,12 @@ import java.util.List;
 public interface RentViewControllerSwagger {
 
     @Operation(
+            summary = "첫 화면 rent API 입니다.",
+            description = "첫 화면 rent API 입니다. 현재 날짜에서 가장 가까운 콘서트 순으로 5개 정렬"
+    )
+    Response<List<RentSummaryResponse>> getRentMainSummaries();
+
+    @Operation(
             summary = "차량 대절 폼 리스트 조회 API",
             description = """
                     차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
@@ -62,10 +68,12 @@ public interface RentViewControllerSwagger {
             summary = "내가 등록한 차 대절 상세 조회 API",
             description = """
                     사용자가 등록한 특정 차량 대절 폼의 상세 정보를 조회합니다.
+                    
+                    조회하고자 하는 차량 대절 rentId는 path variable로, 특정 가용 날짜인 boardingDate는 query parameter로 전달합니다.
                     """)
     Response<RentAdminDetailResponse> getRentAdminDetail(
             Long rentId,
+            LocalDate boardingDate,
             Member member
     );
-
 }

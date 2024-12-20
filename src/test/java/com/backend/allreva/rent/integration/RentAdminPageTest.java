@@ -53,8 +53,8 @@ class RentAdminPageTest extends IntegrationTestSupport {
         // then
         assertThat(rentAdminDetail).isNotNull();
         assertSoftly(softly -> {
-            softly.assertThat(rentAdminDetail.getRentRoundCount()).isEqualTo(1);
-            softly.assertThat(rentAdminDetail.getAdditionalDepositCount()).isEqualTo(1);
+            softly.assertThat(rentAdminDetail.getRentJoinCountResponse().rentRoundCount()).isEqualTo(1);
+            softly.assertThat(rentAdminDetail.getRentJoinCountResponse().additionalDepositCount()).isEqualTo(1);
             softly.assertThat(rentAdminDetail.getRentJoinDetailResponses().get(0).rentJoinId()).isEqualTo(savedRentJoin.getId());
         });
     }
