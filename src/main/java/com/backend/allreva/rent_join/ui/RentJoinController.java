@@ -8,7 +8,7 @@ import com.backend.allreva.rent_join.command.application.request.RentJoinApplyRe
 import com.backend.allreva.rent_join.command.application.request.RentJoinIdRequest;
 import com.backend.allreva.rent_join.command.application.request.RentJoinUpdateRequest;
 import com.backend.allreva.rent_join.query.RentJoinQueryService;
-import com.backend.allreva.rent_join.query.response.RentJoinSummaryResponse;
+import com.backend.allreva.rent_join.query.response.RentJoinResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,9 +51,9 @@ public class RentJoinController implements RentJoinControllerSwagger{
     }
 
     @GetMapping("/join/list")
-    public Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
+    public Response<List<RentJoinResponse>> getRentJoin(
             @AuthMember Member member
     ) {
-        return Response.onSuccess(rentJoinQueryService.getRentJoinSummariesByMemberId(member.getId()));
+        return Response.onSuccess(rentJoinQueryService.getRentJoin(member.getId()));
     }
 }

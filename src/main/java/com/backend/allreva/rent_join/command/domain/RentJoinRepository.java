@@ -1,6 +1,6 @@
 package com.backend.allreva.rent_join.command.domain;
 
-import com.backend.allreva.rent_join.query.response.RentJoinSummaryResponse;
+import com.backend.allreva.rent_join.query.response.RentJoinResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,5 +14,5 @@ public interface RentJoinRepository {
 
     void delete(RentJoin rentJoin);
 
-    List<RentJoinSummaryResponse> findRentJoinSummariesByMemberId(Long memberId);
+    List<RentJoinResponse> findRentJoin(Long memberId);
 }
