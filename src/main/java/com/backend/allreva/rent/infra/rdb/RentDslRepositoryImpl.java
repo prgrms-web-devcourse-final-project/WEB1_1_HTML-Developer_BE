@@ -20,7 +20,6 @@ import com.backend.allreva.rent_join.command.domain.value.BoardingType;
 import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.survey.query.application.response.SortType;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -40,19 +39,6 @@ public class RentDslRepositoryImpl {
 
     private final JPAQueryFactory queryFactory;
     private final DateHolder dateHolder;
-
-    /**
-     * [SubQuery] 차 대절 현재 참여자 수
-     */
-    private Expression<Integer> getParticipationCount() {
-        // 해당 쿼리를 rentBoardingDate 별로 나눠서 count를 구하고 싶어
-        return ExpressionUtils.as(JPAExpressions
-                .select(rentJoin.passengerNum.sum())
-                .from(rentJoin)
-                .where(rentJoin.rentId.eq(rent.id)
-                        .and(rentJoin.boardingDate.eq(rentBoardingDate.date)))
-                .groupBy(rentJoin.rentId, rentJoin.boardingDate), "participationCount");
-    }
 
     /**
      * 차 대절 메인 페이지 조회
@@ -232,22 +218,20 @@ public class RentDslRepositoryImpl {
                         rent.detailInfo.title,
                         rentBoardingDate.date,
                         rent.operationInfo.boardingArea,
+                        rent.createdAt,
+                        rent.additionalInfo.endDate,
+                        rent.additionalInfo.recruitmentCount,
+                        rentJoin.passengerNum.sum().intValue(),
+                        rent.isClosed,
                         rent.operationInfo.bus.busSize,
                         rent.operationInfo.bus.busType,
-                        rent.operationInfo.bus.maxPassenger,
-                        rent.additionalInfo.endDate,
-                        rent.createdAt,
-                        rent.additionalInfo.recruitmentCount,
-                        getParticipationCount(),
-                        rent.isClosed
+                        rent.operationInfo.bus.maxPassenger
                 ))
                 .from(rent)
                 .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
-                .where(
-                        rent.memberId.eq(memberId),
-                        rent.isClosed.eq(false),
-                        rentBoardingDate.date.goe(dateHolder.getDate()) // 마감 날짜 안지난것만
-                )
+                .join(rentJoin).on(rentBoardingDate.date.eq(rentJoin.boardingDate))
+                .where(rent.memberId.eq(memberId))
+                .groupBy(rent.id, rentBoardingDate.date)
                 .fetch();
     }
 

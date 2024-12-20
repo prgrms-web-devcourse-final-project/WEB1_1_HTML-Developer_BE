@@ -28,16 +28,16 @@ class RentAdminPageTest extends IntegrationTestSupport {
     void 내가_등록한_차량_대절_리스트를_조회한다() {
         // given
         var registerId = 1L;
-        var anotherRegisterId = 2L;
         var savedRent = rentJpaRepository.save(createRentFixture(registerId, 1L));
-        rentJpaRepository.save(createRentFixture(anotherRegisterId, 2L));
+        var savedRentJoin = rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), registerId));
 
         // when
         var rentAdminSummaries = rentQueryService.getRentAdminSummariesByMemberId(registerId);
 
         // then
         assertThat(rentAdminSummaries).hasSize(1);
-        assertThat(rentAdminSummaries.get(0).maxRecruitmentCount()).isEqualTo(savedRent.getAdditionalInfo().getRecruitmentCount());
+        assertThat(rentAdminSummaries.get(0).recruitmentCount()).isEqualTo(savedRent.getAdditionalInfo().getRecruitmentCount());
+        assertThat(rentAdminSummaries.get(0).participationCount()).isEqualTo(savedRentJoin.getPassengerNum());
     }
 
     @Test
