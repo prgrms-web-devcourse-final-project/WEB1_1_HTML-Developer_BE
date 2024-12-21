@@ -14,7 +14,7 @@ public interface EventEntryRepository extends JpaRepository<EventEntry, Long> {
             value = "INSERT INTO event_entry (entity_id, entity_type, timestamp) " +
                     "VALUES (:entityId, :entityType, :timestamp) " +
                     "ON DUPLICATE KEY UPDATE " +
-                    "timestamp = IF(:timestamp > timestamp, :timestamp, timestamp)",
+                    "timestamp = IF(:timestamp >= timestamp, :timestamp, timestamp)",
             nativeQuery = true
     )
     int upsert(

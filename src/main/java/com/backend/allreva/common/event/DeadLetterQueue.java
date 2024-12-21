@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
@@ -11,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Component
 public class DeadLetterQueue {
 
-    private final LinkedBlockingQueue<Event> queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Event> queue = new LinkedBlockingQueue<>();
 
     public void put(final Event deadLetter) {
         try {
