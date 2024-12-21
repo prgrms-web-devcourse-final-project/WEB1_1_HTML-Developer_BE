@@ -70,12 +70,19 @@ public class SurveyEventHandler {
         return isEventExpired(surveyId, event);
     }
     private boolean isEventExpired(final Long surveyId, final Event event) {
+        if (event.isReissued()) {
+            return eventEntryRepository.isValidEvent(
+                    EntityType.SURVEY,
+                    surveyId.toString(),
+                    event.getTimestamp()
+            );
+        }
+
         int affectedRows = eventEntryRepository.upsert(
                 EntityType.SURVEY.name(),
                 surveyId.toString(),
                 event.getTimestamp()
         );
-
         return affectedRows == 0;
     }
 }

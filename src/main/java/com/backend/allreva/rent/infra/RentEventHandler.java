@@ -71,6 +71,14 @@ public class RentEventHandler {
     }
 
     private boolean isEventExpired(final Long rentId, final Event event) {
+        if (event.isReissued()) {
+            return eventEntryRepository.isValidEvent(
+                    EntityType.RENT,
+                    rentId.toString(),
+                    event.getTimestamp()
+            );
+        }
+
         int affectedRows = eventEntryRepository.upsert(
                 EntityType.RENT.name(),
                 rentId.toString(),

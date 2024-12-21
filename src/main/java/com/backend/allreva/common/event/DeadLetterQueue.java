@@ -16,6 +16,7 @@ public class DeadLetterQueue {
 
     public void put(final Event deadLetter) {
         try {
+            deadLetter.markAsReissued();
             queue.put(deadLetter);
         } catch (InterruptedException e) {
             log.warn("DLQ put() 에서 인터럽트 발생");

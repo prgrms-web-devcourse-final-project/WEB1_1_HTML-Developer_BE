@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface EventEntryRepository extends JpaRepository<EventEntry, Long> {
+public interface EventEntryRepository extends JpaRepository<EventEntry, Long>, EventEntryDslRepository {
 
     @Transactional
     @Modifying
@@ -22,4 +22,6 @@ public interface EventEntryRepository extends JpaRepository<EventEntry, Long> {
             @Param("entityId") String entityId,
             @Param("timestamp") Long timestamp
     );
+
+
 }
