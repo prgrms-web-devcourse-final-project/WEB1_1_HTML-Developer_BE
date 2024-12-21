@@ -26,14 +26,15 @@ public final class SecurityEndpointPaths {
             "/api/v1/rents/register/list",
             "/api/v1/rents/*/register",
             "/api/v1/rents/join/list",
-            "/api/v1/serveys/member/list",
-            "/api/v1/serveys/member/apply/list",
+            "/api/v1/surveys/member/list",
+            "/api/v1/surveys/member/apply/list",
     };
 
     public static final String[] ANONYMOUS_LIST_GET = {
             "/api/v1/surveys/**",
             "/api/v1/rents/**",
-            "/api/v1/auth/**"
+            "/api/v1/auth/**",
+            "/api/v1/artists/search"
     };
 
     public static final String[] ADMIN_LIST = {
