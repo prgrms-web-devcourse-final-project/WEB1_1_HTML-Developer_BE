@@ -1,4 +1,10 @@
 package com.backend.allreva.rent.command.application.request;
 
-public record RentIdRequest(Long rentId) {
+import jakarta.validation.constraints.NotNull;
+
+public record RentIdRequest(
+        @NotNull
+        Long rentId
+) {
+
 }
