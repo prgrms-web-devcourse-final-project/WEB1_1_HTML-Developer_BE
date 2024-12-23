@@ -15,14 +15,14 @@ public final class RentJoinUpdateRequestFixture {
     ) {
         return new RentJoinUpdateRequest(
                 rentJoinId,
+                LocalDate.of(2024, 9, 20),
+                BoardingType.ROUND,
+                3,
                 "홍길동",
                 "22:00", // fix
                 "010-1234-5678",
-                3,
-                BoardingType.ROUND,
                 RefundType.BOTH,
-                "123-4567-4344-23",
-                LocalDate.of(2024, 9, 20)
+                "123-4567-4344-23"
         );
     }
 }
