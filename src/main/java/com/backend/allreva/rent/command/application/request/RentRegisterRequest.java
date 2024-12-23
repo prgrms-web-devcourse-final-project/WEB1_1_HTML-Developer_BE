@@ -12,6 +12,7 @@ import com.backend.allreva.rent.command.domain.value.OperationInfo;
 import com.backend.allreva.rent.command.domain.value.Price;
 import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public record RentRegisterRequest(
         String boardingArea,
         String upTime,
         String downTime,
+        @JsonProperty("boardingDates")
         List<LocalDate> rentBoardingDateRequests,
         BusSize busSize, // enum
         BusType busType, // enum
