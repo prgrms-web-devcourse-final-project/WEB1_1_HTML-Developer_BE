@@ -1,10 +1,9 @@
 package com.backend.allreva.rent.command.application.request;
 
-import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
-import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.rent.command.domain.value.Region;
+import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
@@ -51,11 +50,4 @@ public record RentUpdateRequest(
         String information
 ) {
 
-    public List<RentBoardingDate> toRentBoardingDates() {
-        return rentBoardingDateRequests.stream()
-                .map(request -> RentBoardingDate.builder()
-                        .date(request)
-                        .build())
-                .toList();
-    }
 }
