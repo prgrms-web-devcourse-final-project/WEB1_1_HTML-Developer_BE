@@ -2,10 +2,10 @@ package com.backend.allreva.survey.infra;
 
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import com.backend.allreva.common.event.DeadLetterQueue;
 import com.backend.allreva.common.event.EntityType;
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.common.event.EventEntryRepository;
+import com.backend.allreva.common.event.deadletter.DeadLetterHandler;
 import com.backend.allreva.survey.command.domain.SurveyDeletedEvent;
 import com.backend.allreva.survey.command.domain.SurveySavedEvent;
 import com.backend.allreva.survey.infra.elasticsearch.SurveyDocument;
@@ -26,10 +26,10 @@ public class SurveyEventHandler {
     private final SurveyDocumentRepository surveyDocumentRepository;
 
     private final EventEntryRepository eventEntryRepository;
-    private final DeadLetterQueue deadLetterQueue;
+    private final DeadLetterHandler deadLetterHandler;
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onMessage(final SurveySavedEvent event) {
         if (isEventExpired(event)) {
             return;
@@ -39,13 +39,13 @@ public class SurveyEventHandler {
             surveyDocumentRepository.save(surveyDocument);
             log.info("SurveySavedEvent Sync 완료!! surveyId: {}", event.getSurveyId());
         } catch (ElasticsearchException | DataAccessException e) {
-            deadLetterQueue.put(event);
+            deadLetterHandler.put(event);
             log.info("SurveySavedEvent 가 DeadLetterQueue 로 발송 성공!! surveyId: {}", event.getSurveyId());
         }
     }
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onMessage(final SurveyDeletedEvent event) {
         if (isEventExpired(event)) {
             return;
@@ -55,7 +55,7 @@ public class SurveyEventHandler {
             surveyDocumentRepository.deleteById(surveyId.toString());
             log.info("SurveyDeletedEvent Sync 완료!! surveyId: {}", event.getSurveyId());
         } catch (ElasticsearchException | DataAccessException e) {
-            deadLetterQueue.put(event);
+            deadLetterHandler.put(event);
             log.info("SurveyDeletedEvent 가 DeadLetterQueue 로 발송 성공!! surveyId: {}", event.getSurveyId());
         }
     }
@@ -71,7 +71,7 @@ public class SurveyEventHandler {
     }
     private boolean isEventExpired(final Long surveyId, final Event event) {
         if (event.isReissued()) {
-            return eventEntryRepository.isValidEvent(
+            return !eventEntryRepository.isValidEvent(
                     EntityType.SURVEY,
                     surveyId.toString(),
                     event.getTimestamp()

@@ -8,6 +8,7 @@ import com.backend.allreva.rent.command.domain.*;
 import com.backend.allreva.rent.exception.RentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service

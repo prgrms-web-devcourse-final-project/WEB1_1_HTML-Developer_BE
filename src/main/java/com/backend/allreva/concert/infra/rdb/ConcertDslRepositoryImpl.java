@@ -38,7 +38,7 @@ public class ConcertDslRepositoryImpl implements ConcertDslRepository {
                 .get(concertId);
 
         if (response == null) {
-            throw new NotFoundException();
+            return ConcertDetailResponse.EMPTY;
         }
         return response;
     }

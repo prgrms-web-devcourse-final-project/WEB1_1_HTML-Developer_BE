@@ -23,5 +23,4 @@ public interface EventEntryRepository extends JpaRepository<EventEntry, Long>, E
             @Param("timestamp") Long timestamp
     );
 
-
 }

@@ -2,10 +2,10 @@ package com.backend.allreva.rent.infra;
 
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import com.backend.allreva.common.event.DeadLetterQueue;
 import com.backend.allreva.common.event.EntityType;
 import com.backend.allreva.common.event.Event;
 import com.backend.allreva.common.event.EventEntryRepository;
+import com.backend.allreva.common.event.deadletter.DeadLetterHandler;
 import com.backend.allreva.rent.command.domain.RentDeletedEvent;
 import com.backend.allreva.rent.command.domain.RentSaveEvent;
 import com.backend.allreva.rent.infra.elasticsearch.RentDocument;
@@ -26,10 +26,10 @@ public class RentEventHandler {
     private final RentDocumentRepository rentDocumentRepository;
 
     private final EventEntryRepository eventEntryRepository;
-    private final DeadLetterQueue deadLetterQueue;
+    private final DeadLetterHandler deadLetterHandler;
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onMessage(final RentSaveEvent event) {
         if (isEventExpired(event)) {
             return;
@@ -39,23 +39,25 @@ public class RentEventHandler {
             rentDocumentRepository.save(rentDocument);
             log.info("RentSavedEvent Sync 완료!! rentId: {}", event.getRentId());
         } catch (ElasticsearchException | DataAccessException e) {
-            deadLetterQueue.put(event);
+            deadLetterHandler.put(event);
             log.info("RentSavedEvent 가 DeadLetterQueue 로 발송 성공!! rentId: {}", event.getRentId());
         }
     }
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onMessage(final RentDeletedEvent event) {
         if (isEventExpired(event)) {
+            log.info("isEventExpired() = true");
             return;
         }
+        log.info("isEventExpired() = false");
         try {
             Long rentId = event.getRentId();
             rentDocumentRepository.deleteById(rentId.toString());
             log.info("RentDeletedEvent Sync 완료!! rentId: {}", rentId);
         } catch (ElasticsearchException | DataAccessException e) {
-            deadLetterQueue.put(event);
+            deadLetterHandler.put(event);
             log.info("RentDeletedEvent 가 DeadLetterQueue 로 발송 성공!! rentId: {}", event.getRentId());
         }
     }
@@ -72,7 +74,7 @@ public class RentEventHandler {
 
     private boolean isEventExpired(final Long rentId, final Event event) {
         if (event.isReissued()) {
-            return eventEntryRepository.isValidEvent(
+            return !eventEntryRepository.isValidEvent(
                     EntityType.RENT,
                     rentId.toString(),
                     event.getTimestamp()

@@ -1,5 +1,6 @@
-package com.backend.allreva.common.event;
+package com.backend.allreva.common.event.deadletter;
 
+import com.backend.allreva.common.event.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class DeadLetterQueue {
 
     private final BlockingQueue<Event> queue = new LinkedBlockingQueue<>();
 
-    public void put(final Event deadLetter) {
+    protected void put(final Event deadLetter) {
         try {
             deadLetter.markAsReissued();
             queue.put(deadLetter);
@@ -24,7 +25,7 @@ public class DeadLetterQueue {
         }
     }
 
-    public Event take() throws InterruptedException {
+    protected Event take() throws InterruptedException {
         return queue.take();
     }
 
