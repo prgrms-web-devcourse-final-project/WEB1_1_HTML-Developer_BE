@@ -58,7 +58,7 @@ public class RentDslRepositoryImpl {
                 ))
                 .from(rent)
                 .where(
-                        rent.additionalInfo.endDate.goe(dateHolder.getDate()),
+                        rent.additionalInfo.endDate.goe(dateHolder.getDate()), // TODO: 마감 기한 스케쥴러 구현 시 조건 1개 빼도 될듯
                         rent.isClosed.eq(false),
                         getRegionCondition(region),
                         getPagingCondition(sortType, lastId, lastEndDate)
@@ -105,16 +105,13 @@ public class RentDslRepositoryImpl {
         switch (sortType) {
             case CLOSING -> {
                 return (rent.additionalInfo.endDate.gt(lastEndDate))
-                        .or(rent.additionalInfo.endDate.eq(lastEndDate).and(rent.id.gt(lastId)));
+                            .or(rent.additionalInfo.endDate.eq(lastEndDate).and(rent.id.gt(lastId)));
             }
             case OLDEST -> {
                 return rent.id.gt(lastId);
             }
-            case LATEST -> {
-                return rent.id.lt(lastId);
-            }
             default -> {
-                return null;
+                return rent.id.lt(lastId);
             }
         }
     }
@@ -124,23 +121,18 @@ public class RentDslRepositoryImpl {
             case CLOSING -> {
                 return new OrderSpecifier[]{
                         rent.additionalInfo.endDate.asc(),
-                        rent.detailInfo.title.asc()
+                        rent.id.asc()
                 };
             }
             case OLDEST -> {
                 return new OrderSpecifier[]{
-                        rent.createdAt.asc(),
-                        rent.detailInfo.title.asc()
-                };
-            }
-            case LATEST -> {
-                return new OrderSpecifier[]{
-                        rent.createdAt.desc(),
-                        rent.detailInfo.title.asc()
+                        rent.id.asc()
                 };
             }
             default -> {
-                return new OrderSpecifier[0];
+                return new OrderSpecifier[]{
+                        rent.id.desc()
+                };
             }
         }
     }
