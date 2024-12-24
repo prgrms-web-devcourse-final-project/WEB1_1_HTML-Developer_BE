@@ -2,6 +2,9 @@ package com.backend.allreva.auth.application;
 
 import com.backend.allreva.auth.domain.RefreshToken;
 import com.backend.allreva.auth.domain.RefreshTokenRepository;
+import com.backend.allreva.auth.exception.code.TokenInvalidException;
+import com.backend.allreva.auth.exception.code.TokenNotFoundException;
+import com.backend.allreva.auth.exception.code.TokenNotMatchException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -9,10 +12,9 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,31 +58,6 @@ public class JwtService {
     }
 
     /**
-     * cookie 혹은 header에 있는 Refresh Token을 추출합니다.
-     * @param request HTTP 요청
-     * @return Refresh Token String 값
-     */
-    public String extractRefreshToken(final HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-
-        String refreshToken = null;
-        if (cookies != null && cookies.length != 0) {
-            refreshToken = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("refreshToken"))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }
-
-        // Cookie에 없다면 Header 재확인
-        if (refreshToken != null) {
-            return refreshToken;
-        } else {
-            return request.getHeader("refresh_token");
-        }
-    }
-
-    /**
      * 토큰에서 memberId를 추출합니다.
      * @param token 토큰
      * @return memberId String 값
@@ -97,30 +74,29 @@ public class JwtService {
     /**
      * 토큰을 검증합니다.
      * @param token 토큰
-     * @return 토큰이 유효하면 true, 그렇지 않으면 false
      */
-    public boolean validateToken(final String token) {
-        if (token == null) {
-            return false;
-        }
+    public void validateToken(final String token) {
         try {
             Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parse(token);
-            return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT token signature: {}", e.getMessage());
+            throw new TokenInvalidException();
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
+            throw new TokenInvalidException();
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token: {}", e.getMessage());
+            throw new TokenInvalidException();
         } catch (UnsupportedJwtException e) {
             log.error("JWT token is unsupported: {}", e.getMessage());
+            throw new TokenInvalidException();
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
+            throw new TokenInvalidException();
         }
-        return false;
     }
 
     /**
@@ -179,9 +155,14 @@ public class JwtService {
     /**
      * Refresh Token이 Redis에 존재하는지 확인합니다.
      * @param refreshToken Cookie에 저장되있던 Refresh Token
-     * @return Refresh Token이 존재하면 true, 그렇지 않으면 false
      */
-    public boolean isRefreshTokenExist(final String refreshToken) {
-        return refreshTokenRepository.existsRefreshTokenByToken(refreshToken);
+    public void validRefreshTokenExistInRedis(final String refreshToken) {
+        Optional<RefreshToken> refreshTokenFromRedis = refreshTokenRepository.findRefreshTokenByToken(refreshToken);
+        if (refreshTokenFromRedis.isEmpty()) {
+            throw new TokenNotFoundException();
+        }
+        if (!refreshTokenFromRedis.get().getToken().equals(refreshToken)) {
+            throw new TokenNotMatchException();
+        }
     }
 }

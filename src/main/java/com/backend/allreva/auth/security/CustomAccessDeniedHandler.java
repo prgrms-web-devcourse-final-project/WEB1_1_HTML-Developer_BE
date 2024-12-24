@@ -35,13 +35,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             final HttpServletResponse response,
             final AccessDeniedException accessDeniedException
     ) throws IOException, ServletException {
-        Exception exception = (Exception) request.getAttribute("jakarta.servlet.error.exception");
-        if (exception != null) {
-            resolver.resolveException(request, response, null, exception);
-            return;
-        }
-        CustomAccessDeniedException customAccessDeniedException = new CustomAccessDeniedException(
-                accessDeniedException.getLocalizedMessage());
+        CustomAccessDeniedException customAccessDeniedException = new CustomAccessDeniedException(accessDeniedException.getLocalizedMessage());
         resolver.resolveException(request, response, null, customAccessDeniedException);
     }
 }
