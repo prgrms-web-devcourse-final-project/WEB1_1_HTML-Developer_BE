@@ -11,8 +11,7 @@ public final class SecurityEndpointPaths {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-resources/**",
-            "/api/v1/oauth2/login/**",
-            "/login/oauth2/**"
+            "/api/v1/auth/**"
     };
 
     public static final String[] ANONYMOUS_LIST = {
@@ -33,7 +32,6 @@ public final class SecurityEndpointPaths {
     public static final String[] ANONYMOUS_LIST_GET = {
             "/api/v1/surveys/**",
             "/api/v1/rents/**",
-            "/api/v1/auth/**",
             "/api/v1/artists/search"
     };
 

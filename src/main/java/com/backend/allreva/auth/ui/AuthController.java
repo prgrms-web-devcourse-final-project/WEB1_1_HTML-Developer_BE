@@ -2,14 +2,12 @@ package com.backend.allreva.auth.ui;
 
 import com.backend.allreva.auth.application.AuthService;
 import com.backend.allreva.auth.application.CookieService;
-import com.backend.allreva.auth.application.dto.RefreshTokenRequest;
 import com.backend.allreva.auth.application.dto.UserInfoResponse;
 import com.backend.allreva.common.dto.Response;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,23 +33,23 @@ public class AuthController implements AuthControllerSwagger {
         return Response.onSuccess(userInfoResponse);
     }
 
-    @PostMapping("/token/reissue")
-    public Response<UserInfoResponse> reissueToken(
-            @RequestBody final RefreshTokenRequest refreshTokenRequest,
+    @GetMapping("/token/reissue")
+    public Response<Void> reissueToken(
+            @CookieValue(name = "refreshToken", required = false) final String refreshToken,
             final HttpServletResponse response
     ) {
-        UserInfoResponse userInfoResponse = authService.reissueAccessToken(refreshTokenRequest);
+        UserInfoResponse userInfoResponse = authService.reissueAccessToken(refreshToken);
         cookieService.addRefreshTokenCookie(response, userInfoResponse.refreshToken());
         response.addHeader("Authorization", "Bearer " + userInfoResponse.accessToken());
         return Response.onSuccess();
     }
 
-    @PostMapping("/login/check")
+    @GetMapping("/login/check")
     public Response<UserInfoResponse> loginCheck(
-            @RequestBody final RefreshTokenRequest refreshTokenRequest,
+            @CookieValue(name = "refreshToken", required = false) final String refreshToken,
             final HttpServletResponse response
     ) {
-        UserInfoResponse userInfoResponse = authService.reissueAccessToken(refreshTokenRequest);
+        UserInfoResponse userInfoResponse = authService.reissueAccessToken(refreshToken);
         cookieService.addRefreshTokenCookie(response, userInfoResponse.refreshToken());
         response.addHeader("Authorization", "Bearer " + userInfoResponse.accessToken());
         return Response.onSuccess(userInfoResponse);

@@ -1,9 +1,8 @@
 package com.backend.allreva.auth.application;
 
-import com.backend.allreva.auth.application.dto.RefreshTokenRequest;
 import com.backend.allreva.auth.application.dto.UserInfo;
 import com.backend.allreva.auth.application.dto.UserInfoResponse;
-import com.backend.allreva.auth.exception.code.TokenNotFoundException;
+import com.backend.allreva.auth.exception.code.TokenEmptyException;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
@@ -75,15 +74,13 @@ public class AuthService {
 
     /**
      * Access Token을 재발급합니다.
-     * @param refreshTokenRequest Refresh Token
+     * @param refreshToken Refresh Token
      * @Return 재발급된 Access Token 및 Refresh Token
      */
-    public UserInfoResponse reissueAccessToken(final RefreshTokenRequest refreshTokenRequest) {
-        String refreshToken = refreshTokenRequest.refreshToken();
-
+    public UserInfoResponse reissueAccessToken(final String refreshToken) {
         // refresh token 검증
         if (refreshToken == null) {
-            throw new TokenNotFoundException();
+            throw new TokenEmptyException();
         }
         jwtService.validateToken(refreshToken);
         jwtService.validRefreshTokenExistInRedis(refreshToken);

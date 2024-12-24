@@ -9,7 +9,7 @@ import org.springframework.http.ResponseCookie;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CookieUtils {
 
-    // refreshToken 쿠키 생성
+    // 쿠키 생성
     public static void addCookie(
             final HttpServletResponse response,
             final String cookieDomain,
