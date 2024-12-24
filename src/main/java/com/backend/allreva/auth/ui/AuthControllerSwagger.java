@@ -1,6 +1,6 @@
 package com.backend.allreva.auth.ui;
 
-import com.backend.allreva.auth.application.dto.ReissueRequest;
+import com.backend.allreva.auth.application.dto.RefreshTokenRequest;
 import com.backend.allreva.auth.application.dto.UserInfoResponse;
 import com.backend.allreva.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +19,7 @@ public interface AuthControllerSwagger {
 
     @Operation(summary = "access token 재발급 요청", description = "refresh token을 이용하여 access token을 재발급합니다.")
     Response<UserInfoResponse> reissueToken(
-            ReissueRequest reissueRequest,
+            RefreshTokenRequest refreshTokenRequest,
             HttpServletResponse response
     );
 }

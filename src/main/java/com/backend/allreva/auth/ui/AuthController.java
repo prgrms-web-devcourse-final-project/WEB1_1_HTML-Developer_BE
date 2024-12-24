@@ -2,7 +2,7 @@ package com.backend.allreva.auth.ui;
 
 import com.backend.allreva.auth.application.AuthService;
 import com.backend.allreva.auth.application.CookieService;
-import com.backend.allreva.auth.application.dto.ReissueRequest;
+import com.backend.allreva.auth.application.dto.RefreshTokenRequest;
 import com.backend.allreva.auth.application.dto.UserInfoResponse;
 import com.backend.allreva.common.dto.Response;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,10 +37,21 @@ public class AuthController implements AuthControllerSwagger {
 
     @PostMapping("/token/reissue")
     public Response<UserInfoResponse> reissueToken(
-            @RequestBody final ReissueRequest reissueRequest,
+            @RequestBody final RefreshTokenRequest refreshTokenRequest,
             final HttpServletResponse response
     ) {
-        UserInfoResponse userInfoResponse = authService.reissueAccessToken(reissueRequest);
+        UserInfoResponse userInfoResponse = authService.reissueAccessToken(refreshTokenRequest);
+        cookieService.addRefreshTokenCookie(response, userInfoResponse.refreshToken());
+        response.addHeader("Authorization", "Bearer " + userInfoResponse.accessToken());
+        return Response.onSuccess();
+    }
+
+    @PostMapping("/login/check")
+    public Response<UserInfoResponse> loginCheck(
+            @RequestBody final RefreshTokenRequest refreshTokenRequest,
+            final HttpServletResponse response
+    ) {
+        UserInfoResponse userInfoResponse = authService.reissueAccessToken(refreshTokenRequest);
         cookieService.addRefreshTokenCookie(response, userInfoResponse.refreshToken());
         response.addHeader("Authorization", "Bearer " + userInfoResponse.accessToken());
         return Response.onSuccess(userInfoResponse);

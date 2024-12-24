@@ -1,6 +1,6 @@
 package com.backend.allreva.auth.application;
 
-import com.backend.allreva.auth.application.dto.ReissueRequest;
+import com.backend.allreva.auth.application.dto.RefreshTokenRequest;
 import com.backend.allreva.auth.application.dto.UserInfo;
 import com.backend.allreva.auth.application.dto.UserInfoResponse;
 import com.backend.allreva.auth.exception.code.TokenNotFoundException;
@@ -75,11 +75,11 @@ public class AuthService {
 
     /**
      * Access Token을 재발급합니다.
-     * @param reissueRequest Refresh Token
+     * @param refreshTokenRequest Refresh Token
      * @Return 재발급된 Access Token 및 Refresh Token
      */
-    public UserInfoResponse reissueAccessToken(final ReissueRequest reissueRequest) {
-        String refreshToken = reissueRequest.refreshToken();
+    public UserInfoResponse reissueAccessToken(final RefreshTokenRequest refreshTokenRequest) {
+        String refreshToken = refreshTokenRequest.refreshToken();
 
         // refresh token 검증
         if (refreshToken == null) {
