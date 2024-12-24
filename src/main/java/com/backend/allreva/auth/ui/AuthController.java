@@ -2,9 +2,8 @@ package com.backend.allreva.auth.ui;
 
 import com.backend.allreva.auth.application.AuthService;
 import com.backend.allreva.auth.application.CookieService;
-import com.backend.allreva.auth.application.dto.LoginResponse;
 import com.backend.allreva.auth.application.dto.ReissueRequest;
-import com.backend.allreva.auth.application.dto.ReissueResponse;
+import com.backend.allreva.auth.application.dto.UserInfoResponse;
 import com.backend.allreva.common.dto.Response;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,26 +23,26 @@ public class AuthController implements AuthControllerSwagger {
     private final CookieService cookieService;
 
     @GetMapping("/token/kakao")
-    public Response<LoginResponse> authKakaoLogin(
+    public Response<UserInfoResponse> authKakaoLogin(
             @RequestParam("code") final String authorizationCode,
             final HttpServletResponse response
     ) {
-        LoginResponse loginResponse = authService.kakaoLogin(authorizationCode);
-        if (loginResponse.isUser()) {
-            cookieService.addRefreshTokenCookie(response, loginResponse.refreshToken());
-            response.addHeader("Authorization", "Bearer " + loginResponse.accessToken());
+        UserInfoResponse userInfoResponse = authService.kakaoLogin(authorizationCode);
+        if (userInfoResponse.isUser()) {
+            cookieService.addRefreshTokenCookie(response, userInfoResponse.refreshToken());
+            response.addHeader("Authorization", "Bearer " + userInfoResponse.accessToken());
         }
-        return Response.onSuccess(loginResponse);
+        return Response.onSuccess(userInfoResponse);
     }
 
     @PostMapping("/token/reissue")
-    public Response<ReissueResponse> reissueToken(
+    public Response<UserInfoResponse> reissueToken(
             @RequestBody final ReissueRequest reissueRequest,
             final HttpServletResponse response
     ) {
-        ReissueResponse reissueResponse = authService.reissueAccessToken(reissueRequest);
-        cookieService.addRefreshTokenCookie(response, reissueResponse.refreshToken());
-        response.addHeader("Authorization", "Bearer " + reissueResponse.accessToken());
-        return Response.onSuccess(reissueResponse);
+        UserInfoResponse userInfoResponse = authService.reissueAccessToken(reissueRequest);
+        cookieService.addRefreshTokenCookie(response, userInfoResponse.refreshToken());
+        response.addHeader("Authorization", "Bearer " + userInfoResponse.accessToken());
+        return Response.onSuccess(userInfoResponse);
     }
 }
