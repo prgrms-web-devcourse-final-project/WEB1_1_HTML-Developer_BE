@@ -1,7 +1,6 @@
 package com.backend.allreva.common.event.deadletter;
 
 import com.backend.allreva.common.event.Event;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +8,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class DeadLetterQueue {
 
