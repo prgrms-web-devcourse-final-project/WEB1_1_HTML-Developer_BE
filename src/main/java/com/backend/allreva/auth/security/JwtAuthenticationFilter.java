@@ -1,11 +1,14 @@
 package com.backend.allreva.auth.security;
 
 import com.backend.allreva.auth.application.JwtService;
+import com.backend.allreva.common.config.SecurityEndpointPaths;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -36,6 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final HttpServletResponse response,
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
+        // white list 요청 처리
+        Optional<String> matchedWhiteList = Arrays.stream(SecurityEndpointPaths.WHITE_LIST)
+                .filter(path -> path.equals(request.getRequestURI()))
+                .findAny();
+        if (matchedWhiteList.isPresent()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = jwtService.extractAccessToken(request);
 
         // ANONYMOUS 요청 처리

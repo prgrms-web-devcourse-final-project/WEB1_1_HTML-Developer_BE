@@ -3,6 +3,7 @@ package com.backend.allreva.auth.application;
 import com.backend.allreva.auth.domain.RefreshToken;
 import com.backend.allreva.auth.domain.RefreshTokenRepository;
 import com.backend.allreva.auth.exception.code.TokenInvalidException;
+import com.backend.allreva.auth.exception.code.TokenNotFoundException;
 import com.backend.allreva.auth.exception.code.TokenNotMatchException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -155,7 +157,11 @@ public class JwtService {
      * @param refreshToken Cookie에 저장되있던 Refresh Token
      */
     public void validRefreshTokenExistInRedis(final String refreshToken) {
-        if (!refreshTokenRepository.existsRefreshTokenByToken(refreshToken)) {
+        Optional<RefreshToken> refreshTokenFromRedis = refreshTokenRepository.findRefreshTokenByToken(refreshToken);
+        if (refreshTokenFromRedis.isEmpty()) {
+            throw new TokenNotFoundException();
+        }
+        if (!refreshTokenFromRedis.get().getToken().equals(refreshToken)) {
             throw new TokenNotMatchException();
         }
     }

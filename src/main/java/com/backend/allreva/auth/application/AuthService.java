@@ -1,14 +1,13 @@
 package com.backend.allreva.auth.application;
 
-import com.backend.allreva.auth.application.dto.LoginResponse;
-import com.backend.allreva.auth.application.dto.ReissueRequest;
-import com.backend.allreva.auth.application.dto.ReissueResponse;
 import com.backend.allreva.auth.application.dto.UserInfo;
-import com.backend.allreva.auth.exception.code.TokenNotFoundException;
+import com.backend.allreva.auth.application.dto.UserInfoResponse;
+import com.backend.allreva.auth.exception.code.TokenEmptyException;
 import com.backend.allreva.common.model.Email;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.member.command.domain.value.LoginProvider;
+import com.backend.allreva.member.exception.MemberNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class AuthService {
      * @param authorizationCode 인가 코드
      * @return 로그인 응답
      */
-    public LoginResponse kakaoLogin(final String authorizationCode) {
+    public UserInfoResponse kakaoLogin(final String authorizationCode) {
         UserInfo userInfo = oAuth2LoginService.getUserInfo(authorizationCode);
 
         // 회원 존재 확인
@@ -45,8 +44,8 @@ public class AuthService {
 
     }
 
-    private LoginResponse getTemporaryMemberInfo(final UserInfo userInfo) {
-        return LoginResponse.builder()
+    private UserInfoResponse getTemporaryMemberInfo(final UserInfo userInfo) {
+        return UserInfoResponse.builder()
                 .isUser(false)
                 .email(userInfo.email())
                 .nickname(userInfo.nickname())
@@ -54,7 +53,7 @@ public class AuthService {
                 .build();
     }
 
-    private LoginResponse getMemberInfo(final Member member) {
+    private UserInfoResponse getMemberInfo(final Member member) {
         // token 생성
         Long memberId = member.getId();
         String accessToken = jwtService.generateAccessToken(String.valueOf(memberId));
@@ -63,7 +62,7 @@ public class AuthService {
         // redis에 RefreshToken 저장
         jwtService.updateRefreshToken(refreshToken, memberId);
 
-        return LoginResponse.builder()
+        return UserInfoResponse.builder()
                 .isUser(true)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -75,30 +74,37 @@ public class AuthService {
 
     /**
      * Access Token을 재발급합니다.
-     * @param reissueRequest Refresh Token
+     * @param refreshToken Refresh Token
      * @Return 재발급된 Access Token 및 Refresh Token
      */
-    public ReissueResponse reissueAccessToken(final ReissueRequest reissueRequest) {
-        String refreshToken = reissueRequest.refreshToken();
-
+    public UserInfoResponse reissueAccessToken(final String refreshToken) {
         // refresh token 검증
         if (refreshToken == null) {
-            throw new TokenNotFoundException();
+            throw new TokenEmptyException();
         }
         jwtService.validateToken(refreshToken);
         jwtService.validRefreshTokenExistInRedis(refreshToken);
 
-        // access token 재발급
         String memberId = jwtService.extractMemberId(refreshToken);
+
+        // member db 확인
+        Member member = memberRepository.findById(Long.valueOf(memberId))
+                .orElseThrow(MemberNotFoundException::new);
+
+        // access token 재발급
         String generatedAccessToken = jwtService.generateAccessToken(memberId);
 
         // token rotate
         String generateRefreshToken = jwtService.generateRefreshToken(memberId);
         jwtService.updateRefreshToken(generateRefreshToken, Long.valueOf(memberId));
 
-        return ReissueResponse.builder()
+        return UserInfoResponse.builder()
+                .isUser(true)
                 .accessToken(generatedAccessToken)
                 .refreshToken(generateRefreshToken)
+                .email(member.getEmail().getEmail())
+                .nickname(member.getMemberInfo().getNickname())
+                .profileImageUrl(member.getMemberInfo().getProfileImageUrl())
                 .build();
     }
 }

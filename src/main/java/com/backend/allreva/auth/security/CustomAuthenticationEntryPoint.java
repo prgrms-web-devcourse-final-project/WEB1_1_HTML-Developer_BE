@@ -33,11 +33,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             final HttpServletResponse response,
             final AuthenticationException authException
     ) throws IOException, ServletException {
-        Exception jwtException = (Exception) request.getAttribute("jakarta.servlet.error.exception");
-        if (jwtException != null) {
-            resolver.resolveException(request, response, null, jwtException);
-            return;
-        }
         UnauthorizedException unauthorizedException = new UnauthorizedException(authException.getLocalizedMessage());
         resolver.resolveException(request, response, null, unauthorizedException);
     }
