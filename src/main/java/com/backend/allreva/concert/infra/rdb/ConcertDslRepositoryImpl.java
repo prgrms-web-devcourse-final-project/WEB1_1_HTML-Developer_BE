@@ -1,5 +1,6 @@
 package com.backend.allreva.concert.infra.rdb;
 
+import com.backend.allreva.common.exception.NotFoundException;
 import com.backend.allreva.concert.query.application.response.ConcertDetailResponse;
 import com.backend.allreva.concert.query.application.response.ConcertThumbnail;
 import com.querydsl.core.group.GroupBy;

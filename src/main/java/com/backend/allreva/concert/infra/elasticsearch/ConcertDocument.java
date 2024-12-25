@@ -120,7 +120,9 @@ public class ConcertDocument {
 
 
     public void updateViewCount(final Long viewCount) {
-        this.viewCount = viewCount;
+        if (this.viewCount < viewCount) {
+            this.viewCount = viewCount;
+        }
     }
 
     public void intiViewCount() {

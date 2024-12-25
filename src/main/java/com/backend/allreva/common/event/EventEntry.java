@@ -6,11 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = @Index(name = "idx_event_created_at", columnList = "created_at"))
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"entity_id", "entity_type"})
+)
 @Entity
 public class EventEntry {
 
@@ -18,21 +17,23 @@ public class EventEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String topic;
+    @Enumerated(EnumType.STRING)
+    private EntityType entityType;
 
-    @Column(columnDefinition = "TEXT")
-    private String payload;
+    private String entityId;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Getter
+    @Column(updatable = false)
+    private Long timestamp;
 
     @Builder
     private EventEntry(
-            final String topic,
-            final String payload
+            final EntityType entityType,
+            final String entityId,
+            final Long timestamp
     ) {
-        this.topic = topic;
-        this.payload = payload;
-        this.createdAt = LocalDateTime.now();
+        this.entityType = entityType;
+        this.entityId = entityId;
+        this.timestamp = timestamp;
     }
 }

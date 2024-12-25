@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RentDeleteEvent extends Event {
+public class RentDeletedEvent extends Event {
 
     private Long rentId;
 
-    public RentDeleteEvent(
+    public RentDeletedEvent(
             final Long rentId
     ) {
         this.rentId = rentId;

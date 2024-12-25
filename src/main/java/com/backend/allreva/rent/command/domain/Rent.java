@@ -105,6 +105,6 @@ public class Rent extends BaseEntity {
 
     public void close() {
         isClosed = true;
-        Events.raise(new RentDeleteEvent(id));
+        Events.raise(new RentDeletedEvent(id));
     }
 }
