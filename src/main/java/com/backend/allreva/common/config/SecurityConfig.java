@@ -27,12 +27,16 @@ import org.springframework.security.config.annotation.web.configurers.HttpBasicC
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
 @Profile("!local")
 public class SecurityConfig {
+
+    // CORS
+    private final CorsConfigurationSource corsConfigurationSource;
 
     // JWT
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -43,6 +47,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
+                .cors(it -> it.configurationSource(corsConfigurationSource))
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .formLogin(FormLoginConfigurer<HttpSecurity>::disable)
                 .httpBasic(HttpBasicConfigurer<HttpSecurity>::disable)
