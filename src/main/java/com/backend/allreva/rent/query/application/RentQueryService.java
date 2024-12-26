@@ -3,13 +3,16 @@ package com.backend.allreva.rent.query.application;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.exception.RentNotFoundException;
-import com.backend.allreva.rent.query.application.response.*;
+import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
+import com.backend.allreva.rent.query.application.response.RentDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.response.SortType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +45,7 @@ public class RentQueryService {
     }
 
     public List<RentAdminSummaryResponse> getRentAdminSummariesByMemberId(final Long memberId) {
-        return rentRepository.findRentAdminSummariesByMemberId(memberId);
+        return rentRepository.findRentAdminSummaries(memberId);
     }
 
     public RentAdminDetailResponse getRentAdminDetail(
@@ -50,13 +53,12 @@ public class RentQueryService {
             final LocalDate boardingDate,
             final Long rentId
     ) {
-        RentAdminDetailResponse rentAdminDetailResponse = rentRepository.findRentAdminDetail(memberId,
-                        boardingDate, rentId)
-                .orElseThrow(RentNotFoundException::new);
-        List<RentAdminJoinDetailResponse> rentAdminJoinDetails = rentRepository.findRentAdminJoinDetails(memberId,
-                rentId, boardingDate);
-        rentAdminDetailResponse.setRentJoinDetailResponses(rentAdminJoinDetails);
-        return rentAdminDetailResponse;
+        return new RentAdminDetailResponse(
+                rentRepository.findRentAdminSummary(memberId, boardingDate, rentId)
+                        .orElseThrow(RentNotFoundException::new),
+                rentRepository.findRentJoinCount(memberId, boardingDate, rentId)
+                        .orElseThrow(RentNotFoundException::new),
+                rentRepository.findRentJoinDetails(memberId, rentId, boardingDate)
+        );
     }
-
 }

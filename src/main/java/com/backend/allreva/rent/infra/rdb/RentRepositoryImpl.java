@@ -4,14 +4,18 @@ import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.query.application.response.*;
+import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
+import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
+import com.backend.allreva.rent.query.application.response.RentDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentJoinCountResponse;
+import com.backend.allreva.rent.query.application.response.RentJoinDetailResponse;
+import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.response.SortType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class RentRepositoryImpl implements RentRepository {
     private final RentJpaRepository rentJpaRepository;
     private final RentDslRepositoryImpl rentDslRepository;
     private final RentBoardingDateJpaRepository rentBoardingDateJpaRepository;
+
     @Override
     public Optional<Rent> findById(final Long id) {
         return rentJpaRepository.findById(id);
@@ -63,8 +68,7 @@ public class RentRepositoryImpl implements RentRepository {
             final Long lastId,
             final int pageSize
     ) {
-        return rentDslRepository
-                .findRentSummaries(region, sortType, lastEndDate, lastId, pageSize);
+        return rentDslRepository.findRentSummaries(region, sortType, lastEndDate, lastId, pageSize);
     }
 
     @Override
@@ -80,35 +84,41 @@ public class RentRepositoryImpl implements RentRepository {
     }
 
     @Override
-    public List<RentAdminSummaryResponse> findRentAdminSummariesByMemberId(
+    public List<RentAdminSummaryResponse> findRentAdminSummaries(
             final Long memberId
     ) {
-        return rentDslRepository.findRentAdminSummariesByMemberId(memberId);
+        return rentDslRepository.findRentAdminSummaries(memberId);
     }
 
     @Override
-    public Optional<RentAdminDetailResponse> findRentAdminDetail(
+    public Optional<RentAdminSummaryResponse> findRentAdminSummary(
             final Long memberId,
             final LocalDate boardingDate,
             final Long rentId
     ) {
-        return rentDslRepository
-                .findRentAdminDetail(memberId, boardingDate, rentId);
+        return rentDslRepository.findRentAdminSummary(memberId, boardingDate, rentId);
     }
 
     @Override
-    public List<RentAdminJoinDetailResponse> findRentAdminJoinDetails(
+    public Optional<RentJoinCountResponse> findRentJoinCount(
+            final Long memberId,
+            final LocalDate boardingDate,
+            final Long rentId
+    ) {
+        return rentDslRepository.findRentJoinCount(memberId, boardingDate, rentId);
+    }
+
+    @Override
+    public List<RentJoinDetailResponse> findRentJoinDetails(
             final Long memberId,
             final Long rentId,
             final LocalDate boardingDate
     ) {
-        return rentDslRepository
-                .findRentAdminJoinDetails(memberId, rentId, boardingDate);
+        return rentDslRepository.findRentJoinDetails(memberId, rentId, boardingDate);
     }
 
     @Override
     public List<RentSummaryResponse> findRentMainSummaries() {
         return rentDslRepository.findRentMainSummaries();
     }
-
 }

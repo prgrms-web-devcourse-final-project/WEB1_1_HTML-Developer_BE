@@ -1,8 +1,8 @@
 package com.backend.allreva.rent_join.infra;
 
-import com.backend.allreva.rent_join.query.response.RentJoinSummaryResponse;
 import com.backend.allreva.rent_join.command.domain.RentJoin;
 import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
+import com.backend.allreva.rent_join.query.response.RentJoinResponse;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +35,8 @@ public class RentJoinRepositoryImpl implements RentJoinRepository {
         rentJoinJpaRepository.delete(rentJoin);
     }
 
-    // rentJoinRepository.findRentJoinSummariesByMemberId(memberId);
-
     @Override
-    public List<RentJoinSummaryResponse> findRentJoinSummariesByMemberId(Long memberId) {
-        return rentJoinDslRepository.findRentJoinSummariesByMemberId(memberId);
+    public List<RentJoinResponse> findRentJoin(final Long memberId) {
+        return rentJoinDslRepository.findRentJoin(memberId);
     }
 }

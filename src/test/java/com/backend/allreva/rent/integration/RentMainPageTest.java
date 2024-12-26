@@ -1,12 +1,24 @@
 package com.backend.allreva.rent.integration;
 
+import static com.backend.allreva.concert.fixture.ConcertFixture.createConcertFixture;
+import static com.backend.allreva.concert.fixture.ConcertHallFixture.createConcertHallFixture;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
 import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.RentRepository;
-import com.backend.allreva.rent.command.domain.value.*;
+import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
+import com.backend.allreva.rent.command.domain.value.Bus;
+import com.backend.allreva.rent.command.domain.value.BusSize;
+import com.backend.allreva.rent.command.domain.value.BusType;
+import com.backend.allreva.rent.command.domain.value.DetailInfo;
+import com.backend.allreva.rent.command.domain.value.OperationInfo;
+import com.backend.allreva.rent.command.domain.value.Price;
+import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.rent_join.command.domain.RentJoin;
 import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
@@ -15,17 +27,11 @@ import com.backend.allreva.rent_join.command.domain.value.Depositor;
 import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.support.IntegrationTestSupport;
 import com.backend.allreva.survey.query.application.response.SortType;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static com.backend.allreva.concert.fixture.ConcertFixture.createConcertFixture;
-import static com.backend.allreva.concert.fixture.ConcertHallFixture.createConcertHallFixture;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Transactional
@@ -101,7 +107,7 @@ class RentMainPageTest extends IntegrationTestSupport {
             softly.assertThat(rentDetail.title()).isEqualTo(savedRent.getDetailInfo().getTitle());
             softly.assertThat(rentDetail.concertName()).isEqualTo(concert.getConcertInfo().getTitle());
             softly.assertThat(rentDetail.dropOffArea()).isEqualTo(concertHall.getName());
-            softly.assertThat(rentDetail.currentRecruitmentCounts().get(0)).isEqualTo(2);
+            softly.assertThat(rentDetail.boardingDates().get(0).participationCount()).isEqualTo(2);
         });
     }
 

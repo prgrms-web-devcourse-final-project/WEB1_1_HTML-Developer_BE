@@ -1,11 +1,19 @@
 package com.backend.allreva.rent.integration;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentBoardingDate;
-import com.backend.allreva.rent.command.domain.value.*;
+import com.backend.allreva.rent.command.domain.value.AdditionalInfo;
+import com.backend.allreva.rent.command.domain.value.Bus;
+import com.backend.allreva.rent.command.domain.value.BusSize;
+import com.backend.allreva.rent.command.domain.value.BusType;
+import com.backend.allreva.rent.command.domain.value.DetailInfo;
+import com.backend.allreva.rent.command.domain.value.OperationInfo;
+import com.backend.allreva.rent.command.domain.value.Price;
+import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.infra.rdb.RentJpaRepository;
-import com.backend.allreva.rent.query.application.RentQueryService;
 import com.backend.allreva.rent_join.command.domain.RentJoin;
 import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
 import com.backend.allreva.rent_join.command.domain.value.BoardingType;
@@ -13,21 +21,16 @@ import com.backend.allreva.rent_join.command.domain.value.Depositor;
 import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.rent_join.query.RentJoinQueryService;
 import com.backend.allreva.support.IntegrationTestSupport;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Transactional
 class RentJoinPageTest extends IntegrationTestSupport {
 
-    @Autowired
-    private RentQueryService rentQueryService;
     @Autowired
     private RentJoinQueryService rentJoinQueryService;
     @Autowired
@@ -47,7 +50,7 @@ class RentJoinPageTest extends IntegrationTestSupport {
         rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user3Id, "김철수", boardingDates.get(1).getDate()));
 
         // when
-        var rentJoinSummaries = rentJoinQueryService.getRentJoinSummariesByMemberId(user2Id);
+        var rentJoinSummaries = rentJoinQueryService.getRentJoin(user2Id);
 
         // then
         assertThat(rentJoinSummaries).hasSize(1);

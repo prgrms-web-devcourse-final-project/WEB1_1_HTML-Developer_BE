@@ -6,7 +6,7 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent_join.command.application.request.RentJoinApplyRequest;
 import com.backend.allreva.rent_join.command.application.request.RentJoinIdRequest;
 import com.backend.allreva.rent_join.command.application.request.RentJoinUpdateRequest;
-import com.backend.allreva.rent_join.query.response.RentJoinSummaryResponse;
+import com.backend.allreva.rent_join.query.response.RentJoinResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +35,11 @@ public interface RentJoinControllerSwagger {
     );
 
     @Operation(
-            summary = "내가 참여한 차 대절 리스트 조회 API",
+            summary = "자신이 참가한 차 대절 리스트 조회 API",
             description = """
                     사용자가 참여한 차량 대절 폼의 요약된 정보를 리스트로 조회합니다.
                     """)
-    Response<List<RentJoinSummaryResponse>> getRentJoinSummaries(
+    Response<List<RentJoinResponse>> getRentJoin(
             Member member
     );
 }

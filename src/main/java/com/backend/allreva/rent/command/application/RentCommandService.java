@@ -52,5 +52,14 @@ public class RentCommandService {
         rent.close();
     }
 
+    public void deleteRent(
+            final RentIdRequest rentIdRequest,
+            final Long memberId
+    ) {
+        Rent rent = rentRepository.findById(rentIdRequest.rentId())
+                .orElseThrow(RentNotFoundException::new);
 
+        rent.validateMine(memberId);
+        rentRepository.delete(rent);
+    }
 }
