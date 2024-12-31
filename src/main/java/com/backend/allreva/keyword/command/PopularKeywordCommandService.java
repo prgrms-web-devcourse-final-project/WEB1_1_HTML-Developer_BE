@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +38,15 @@ public class PopularKeywordCommandService {
     public void updatePopularKeywordRank() {
         //1. 인기 검색어 목록 가져오기
         PopularKeywordResponses responses = popularKeywordRepository.getPopularKeywordRank();
-        List<String> top10 = responses.popularKeywordResponses().stream()
+
+        List<String> top10 = Optional.ofNullable(responses)
+                .map(PopularKeywordResponses::popularKeywordResponses)
+                .orElse(Collections.emptyList())
+                .stream()
                 .map(PopularKeywordResponse::keyword)
-                .toList(); // 기존 top10
+                .toList();
+
+
 
         //2. 현재 랭킹가져오기
         List<String> updatedTop10 = popularKeywordRepository.getTop10Keywords();
