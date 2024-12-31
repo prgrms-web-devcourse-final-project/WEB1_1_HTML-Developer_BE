@@ -26,6 +26,7 @@ public class CorsConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "https://localhost:3000",
                 "http://localhost:8080",
+                "https://api.allreva.shop",
                 frontProtocol + "://" + frontDomain
         ));
 
