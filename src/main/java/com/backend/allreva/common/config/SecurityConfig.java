@@ -2,8 +2,7 @@ package com.backend.allreva.common.config;
 
 import static com.backend.allreva.common.config.SecurityEndpointPaths.ADMIN_LIST;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST;
-import static com.backend.allreva.common.config.SecurityEndpointPaths.ANONYMOUS_LIST_GET;
-import static com.backend.allreva.common.config.SecurityEndpointPaths.USER_LIST_GET;
+import static com.backend.allreva.common.config.SecurityEndpointPaths.USER_LIST;
 import static com.backend.allreva.common.config.SecurityEndpointPaths.WHITE_LIST;
 
 import com.backend.allreva.auth.security.CustomAccessDeniedHandler;
@@ -57,10 +56,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, USER_LIST_GET).hasRole("USER")
                         .requestMatchers(ANONYMOUS_LIST).permitAll()
-                        .requestMatchers(HttpMethod.GET, ANONYMOUS_LIST_GET).permitAll()
+                        .requestMatchers(USER_LIST).hasRole("USER")
+                        .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         // jwt 인증 필터
