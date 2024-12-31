@@ -25,6 +25,7 @@ public class CorsConfig {
         // 허용할 출처 패턴 설정
         configuration.setAllowedOriginPatterns(List.of(
                 "https://localhost:3000",
+                "http://localhost:8080",
                 frontProtocol + "://" + frontDomain
         ));
 
