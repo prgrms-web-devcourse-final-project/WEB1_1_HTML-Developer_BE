@@ -7,6 +7,7 @@ import com.backend.allreva.concert.exception.search.ElasticSearchException;
 import com.backend.allreva.concert.exception.search.SearchResultNotFoundException;
 import com.backend.allreva.concert.query.application.response.ConcertSearchListResponse;
 import com.backend.allreva.concert.infra.elasticsearch.ConcertDocument;
+import com.backend.allreva.keyword.command.PopularKeywordCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -21,14 +22,18 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ConcertSearchService {
     private final ConcertSearchRepository concertSearchRepository;
+    private final PopularKeywordCommandService popularKeywordCommandService;
 
     public List<ConcertThumbnail> searchConcertThumbnails(final String title) {
         try {
+            popularKeywordCommandService.updateKeywordCount(title);
+
             List<ConcertDocument> content = concertSearchRepository.findByTitleMixed(
                     title, PageRequest.of(0, 2)).getContent();
             if (content.isEmpty()) {
                 throw new SearchResultNotFoundException();
             }
+
             return content.stream()
                     .map(ConcertThumbnail::from)
                     .toList();
