@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -19,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -40,10 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
         // white list 요청 처리
-        Optional<String> matchedWhiteList = Arrays.stream(SecurityEndpointPaths.WHITE_LIST)
-                .filter(path -> path.equals(request.getRequestURI()))
-                .findAny();
-        if (matchedWhiteList.isPresent()) {
+        PathMatcher pathMatcher = new AntPathMatcher();
+        boolean isWhiteListed = Arrays.stream(SecurityEndpointPaths.WHITE_LIST)
+                .anyMatch(pattern -> pathMatcher.match(pattern, request.getRequestURI()));
+        if (isWhiteListed) {
             filterChain.doFilter(request, response);
             return;
         }
