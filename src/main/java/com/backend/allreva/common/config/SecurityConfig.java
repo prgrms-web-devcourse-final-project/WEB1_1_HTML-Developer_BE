@@ -64,11 +64,9 @@ public class SecurityConfig {
         // jwt 인증 필터
         http
                 .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
-                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
-        http
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
-                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler));
 
         return http.build();
