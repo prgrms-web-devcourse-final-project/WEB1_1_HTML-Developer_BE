@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.backend.allreva.common.model.Image;
 import com.backend.allreva.rent.command.application.RentCommandService;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import com.backend.allreva.rent.exception.RentAccessDeniedException;
@@ -36,10 +37,11 @@ class RentUpdateTest {
         var memberId = 1L;
         var rentRequest = createRentUpdateRequestFixture(1L);
         var rent = createRentFixture(memberId, 1L);
+        var uploadedImage = new Image("test url");
         given(rentRepository.findById(anyLong())).willReturn(Optional.of(rent));
 
         // when
-        rentCommandService.updateRent(rentRequest, memberId);
+        rentCommandService.updateRent(rentRequest, uploadedImage, memberId);
 
         // then
         assertSoftly(softly -> {
@@ -53,11 +55,12 @@ class RentUpdateTest {
         // given
         var anotherMemberId = 2L;
         var rentUpdateRequest = createRentUpdateRequestFixture(1L);
+        var uploadedImage = new Image("test url");
         given(rentRepository.findById(anyLong())).willReturn(Optional.of(createRentFixture(1L, 1L)));
 
         // when & then
         assertThrows(RentAccessDeniedException.class,
-                () -> rentCommandService.updateRent(rentUpdateRequest, anotherMemberId));
+                () -> rentCommandService.updateRent(rentUpdateRequest, uploadedImage, anotherMemberId));
         verify(rentRepository, times(1)).findById(anyLong());
     }
 
@@ -67,10 +70,11 @@ class RentUpdateTest {
         // given
         var memberId = 1L;
         var rentUpdateRequest = createRentUpdateRequestFixture(1L);
+        var uploadedImage = new Image("test url");
         given(rentRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
         assertThrows(RentNotFoundException.class,
-                () -> rentCommandService.updateRent(rentUpdateRequest, memberId));
+                () -> rentCommandService.updateRent(rentUpdateRequest, uploadedImage, memberId));
     }
 }

@@ -16,7 +16,6 @@ public final class RentRegisterRequestFixture {
     public static RentRegisterRequest createRentRegisterRequestFixture() {
         return new RentRegisterRequest(
                 1L,
-                "imageUrl",
                 "title",
                 "artistName",
                 Region.서울,

@@ -5,7 +5,6 @@ import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
 import static com.backend.allreva.rent.command.domain.QRent.rent;
 import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoardingDate;
 import static com.backend.allreva.rent_join.command.domain.QRentJoin.rentJoin;
-import static com.querydsl.core.types.Projections.list;
 
 import com.backend.allreva.common.util.DateHolder;
 import com.backend.allreva.rent.command.domain.value.Region;
@@ -141,20 +140,28 @@ public class RentDslRepositoryImpl {
      * 차 대절 상세 조회
      */
     public Optional<RentDetailResponse> findRentDetailById(final Long rentId) {
-        RentDetailResponse rentDetailResponse = queryFactory
+        Optional<RentDetailResponse> rentDetailResponse = Optional.ofNullable(queryFactory
                 .select(rentDetailProjections())
                 .from(rent)
                 .where(rent.id.eq(rentId))
                 .leftJoin(concert).on(rent.concertId.eq(concert.id))
                 .leftJoin(concertHall).on(concert.code.hallCode.eq(concertHall.id))
+                .fetchFirst());
+
+        List<RentBoardingDateResponse> rentBoardingDateResponses = queryFactory
+                .select(rentBoardingDateProjection())
+                .from(rent)
                 .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
                 .leftJoin(rentJoin).on(rentBoardingDate.date.eq(rentJoin.boardingDate))
+                .where(rent.id.eq(rentId))
                 .groupBy(rentBoardingDate.date)
-                .fetchFirst();
-        return Optional.ofNullable(rentDetailResponse);
+                .fetch();
+        rentDetailResponse.ifPresent(detailResponse -> detailResponse.setBoardingDates(rentBoardingDateResponses));
+
+        return rentDetailResponse;
     }
 
-    public ConstructorExpression<RentDetailResponse> rentDetailProjections() {
+    private ConstructorExpression<RentDetailResponse> rentDetailProjections() {
         return Projections.constructor(RentDetailResponse.class,
                 concert.concertInfo.title,
                 rent.detailInfo.image.url,
@@ -165,12 +172,6 @@ public class RentDslRepositoryImpl {
                 concertHall.name, // 하행 지역
                 rent.operationInfo.upTime,
                 rent.operationInfo.downTime,
-                list(
-                        Projections.constructor(
-                                RentBoardingDateResponse.class,
-                                rentBoardingDate.date,
-                                rentJoin.passengerNum.sum()
-                        )),
                 rent.operationInfo.bus.busSize,
                 rent.operationInfo.bus.busType,
                 rent.operationInfo.bus.maxPassenger,
@@ -183,6 +184,13 @@ public class RentDslRepositoryImpl {
                 rent.additionalInfo.refundType,
                 rent.additionalInfo.information,
                 rent.isClosed
+        );
+    }
+
+    private ConstructorExpression<RentBoardingDateResponse> rentBoardingDateProjection() {
+        return Projections.constructor(RentBoardingDateResponse.class,
+                rentBoardingDate.date,
+                rentJoin.passengerNum.sum().coalesce(0).intValue()
         );
     }
 

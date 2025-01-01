@@ -16,7 +16,6 @@ import java.util.List;
 public record RentUpdateRequest(
         @NotNull
         Long rentId,
-        String imageUrl,
         @NotNull
         Region region, // enum 파싱
         @NotNull

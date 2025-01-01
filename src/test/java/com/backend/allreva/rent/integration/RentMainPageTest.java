@@ -104,10 +104,10 @@ class RentMainPageTest extends IntegrationTestSupport {
         // then
         assertThat(rentDetail).isNotNull();
         assertSoftly(softly -> {
-            softly.assertThat(rentDetail.title()).isEqualTo(savedRent.getDetailInfo().getTitle());
-            softly.assertThat(rentDetail.concertName()).isEqualTo(concert.getConcertInfo().getTitle());
-            softly.assertThat(rentDetail.dropOffArea()).isEqualTo(concertHall.getName());
-            softly.assertThat(rentDetail.boardingDates().get(0).participationCount()).isEqualTo(2);
+            softly.assertThat(rentDetail.getTitle()).isEqualTo(savedRent.getDetailInfo().getTitle());
+            softly.assertThat(rentDetail.getConcertName()).isEqualTo(concert.getConcertInfo().getTitle());
+            softly.assertThat(rentDetail.getDropOffArea()).isEqualTo(concertHall.getName());
+            softly.assertThat(rentDetail.getBoardingDates().get(0).participationCount()).isEqualTo(2);
         });
     }
 

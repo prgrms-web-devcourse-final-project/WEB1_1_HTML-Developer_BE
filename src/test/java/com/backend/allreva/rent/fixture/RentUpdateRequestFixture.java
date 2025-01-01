@@ -16,7 +16,6 @@ public final class RentUpdateRequestFixture {
     public static RentUpdateRequest createRentUpdateRequestFixture(final Long rentId) {
         return new RentUpdateRequest(
                 rentId,
-                "imageUrl",
                 Region.서울,
                 "영주",
                 "09:00",
