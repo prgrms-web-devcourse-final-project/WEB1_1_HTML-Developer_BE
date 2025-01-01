@@ -3,7 +3,7 @@ package com.backend.allreva.rent.ui;
 import com.backend.allreva.auth.security.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
-import com.backend.allreva.rent.command.application.RentCommandService;
+import com.backend.allreva.rent.command.application.RentCommandFacade;
 import com.backend.allreva.rent.command.application.request.RentIdRequest;
 import com.backend.allreva.rent.command.application.request.RentRegisterRequest;
 import com.backend.allreva.rent.command.application.request.RentUpdateRequest;
@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Validated
 @RestController
@@ -36,25 +39,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/rents")
 public class RentController implements RentControllerSwagger {
 
-    private final RentCommandService rentCommandService;
+    private final RentCommandFacade rentCommandFacade;
     private final RentQueryService rentQueryService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<Long> createRent(
-            @RequestBody final RentRegisterRequest rentRegisterRequest,
+            @RequestPart final RentRegisterRequest rentRegisterRequest,
+            @RequestPart(value = "image", required = false) final MultipartFile image,
             @AuthMember final Member member
     ) {
-        Long rentIdResponse = rentCommandService.registerRent(rentRegisterRequest, member.getId());
-
+        Long rentIdResponse = rentCommandFacade.registerRent(rentRegisterRequest, image, member.getId());
         return Response.onSuccess(rentIdResponse);
     }
 
-    @PatchMapping
+    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<Void> updateRent(
-            @RequestBody final RentUpdateRequest rentUpdateRequest,
+            @RequestPart final RentUpdateRequest rentUpdateRequest,
+            @RequestPart(value = "image", required = false) final MultipartFile image,
             @AuthMember final Member member
     ) {
-        rentCommandService.updateRent(rentUpdateRequest, member.getId());
+        rentCommandFacade.updateRent(rentUpdateRequest, image, member.getId());
         return Response.onSuccess();
     }
 
@@ -63,7 +67,7 @@ public class RentController implements RentControllerSwagger {
             @RequestBody final RentIdRequest rentIdRequest,
             @AuthMember final Member member
     ) {
-        rentCommandService.closeRent(rentIdRequest, member.getId());
+        rentCommandFacade.closeRent(rentIdRequest, member.getId());
         return Response.onSuccess();
     }
 
@@ -72,7 +76,7 @@ public class RentController implements RentControllerSwagger {
             @RequestBody final RentIdRequest rentIdRequest,
             @AuthMember final Member member
     ) {
-        rentCommandService.deleteRent(rentIdRequest, member.getId());
+        rentCommandFacade.deleteRent(rentIdRequest, member.getId());
         return Response.onSuccess();
     }
 

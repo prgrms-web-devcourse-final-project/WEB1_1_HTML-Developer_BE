@@ -1,6 +1,5 @@
 package com.backend.allreva.rent.ui;
 
-import com.backend.allreva.auth.security.AuthMember;
 import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.rent.command.application.request.RentIdRequest;
@@ -14,37 +13,51 @@ import com.backend.allreva.rent.query.application.response.RentDetailResponse;
 import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
 import com.backend.allreva.survey.query.application.response.SortType;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "차량 대절 폼 API")
 public interface RentControllerSwagger {
 
     @Operation(summary = "차량 대절 생성 API", description = "차량 대절 폼을 생성합니다.")
+    @RequestBody(
+            content = @Content(
+                    encoding = @Encoding(
+                            name = "rentRegisterRequest", contentType = MediaType.APPLICATION_JSON_VALUE)))
     Response<Long> createRent(
-            @RequestBody RentRegisterRequest rentRegisterRequest,
-            @AuthMember Member member
+            RentRegisterRequest rentRegisterRequest,
+            MultipartFile image,
+            Member member
     );
 
     @Operation(summary = "차량 대절 수정 API", description = "차량 대절 폼을 수정합니다.")
+    @RequestBody(
+            content = @Content(
+                    encoding = @Encoding(
+                            name = "rentUpdateRequest", contentType = MediaType.APPLICATION_JSON_VALUE)))
     Response<Void> updateRent(
-            @RequestBody RentUpdateRequest rentUpdateRequest,
-            @AuthMember Member member
+            RentUpdateRequest rentUpdateRequest,
+            MultipartFile image,
+            Member member
     );
 
     @Operation(summary = "차량 대절 마감 API", description = "차량 대절 폼을 마감합니다.")
     Response<Void> closeRent(
-            @RequestBody RentIdRequest rentIdRequest,
-            @AuthMember Member member
+            RentIdRequest rentIdRequest,
+            Member member
     );
 
     @Operation(summary = "차량 대절 삭제 API", description = "차량 대절 폼을 삭제합니다.")
     Response<Void> deleteRent(
-            @RequestBody final RentIdRequest rentIdRequest,
-            @AuthMember final Member member
+            RentIdRequest rentIdRequest,
+            Member member
     );
 
     @Operation(

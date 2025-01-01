@@ -55,11 +55,14 @@ public class Rent extends BaseEntity {
         this.boardingDates = boardingDates;
     }
 
-    public void updateRent(RentUpdateRequest request) {
+    public void updateRent(
+            final RentUpdateRequest request,
+            final Image image
+    ) {
         this.detailInfo = DetailInfo.builder()
                 .title(detailInfo.getTitle())
                 .artistName(detailInfo.getArtistName())
-                .image(new Image(request.imageUrl()))
+                .image(image)
                 .region(request.region())
                 .depositAccount(detailInfo.getDepositAccount())
                 .build();

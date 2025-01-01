@@ -27,7 +27,6 @@ public record RentRegisterRequest(
         Long concertId,
         @NotBlank
         String title,
-        String imageUrl,
         @NotNull
         String artistName,
         @NotNull
@@ -65,7 +64,10 @@ public record RentRegisterRequest(
         String information
 ) {
 
-    public Rent toEntity(final Long memberId) {
+    public Rent toEntity(
+            final Long memberId,
+            final Image image
+    ) {
         Rent rent = Rent.builder()
                 .memberId(memberId)
                 .concertId(concertId)
@@ -75,7 +77,7 @@ public record RentRegisterRequest(
                                 .build())
                         .toList())
                 .detailInfo(DetailInfo.builder()
-                        .image(new Image(imageUrl))
+                        .image(image)
                         .title(title)
                         .artistName(artistName)
                         .depositAccount(depositAccount)
