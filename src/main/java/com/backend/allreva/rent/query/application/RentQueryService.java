@@ -23,7 +23,6 @@ public class RentQueryService {
 
     private final RentRepository rentRepository;
     private final RentJoinRepository rentJoinRepository;
-    private final MemberRepository memberRepository;
 
     public List<RentSummaryResponse> getRentSummaries(
             final Region region,
