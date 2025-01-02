@@ -3,6 +3,7 @@ package com.backend.allreva.rent_join.infra;
 import com.backend.allreva.rent_join.command.domain.RentJoin;
 import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
 import com.backend.allreva.rent_join.query.response.RentJoinResponse;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,15 @@ public class RentJoinRepositoryImpl implements RentJoinRepository {
     @Override
     public boolean existsById(final Long id) {
         return rentJoinJpaRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByBoardingDateAndRentIdAndMemberId(
+            final LocalDate boardingDate,
+            final Long rentId,
+            final Long memberId
+    ) {
+        return rentJoinJpaRepository.existsByBoardingDateAndRentIdAndMemberId(boardingDate, rentId, memberId);
     }
 
     @Override
