@@ -98,9 +98,10 @@ public class RentController implements RentControllerSwagger {
 
     @GetMapping("/{id}")
     public Response<RentDetailResponse> getRentDetailById(
-            @PathVariable final Long id
+            @PathVariable final Long id,
+            @AuthMember final Member member
     ) {
-        return Response.onSuccess(rentQueryService.getRentDetailById(id));
+        return Response.onSuccess(rentQueryService.getRentDetailById(id, member));
     }
 
     @GetMapping("/{id}/deposit-account")

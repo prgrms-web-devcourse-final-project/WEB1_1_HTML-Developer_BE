@@ -87,7 +87,8 @@ public interface RentControllerSwagger {
                     endDate는 2024-11-30 과 같은 형태로 반환됩니다.
                     """)
     Response<RentDetailResponse> getRentDetailById(
-            Long id
+            Long id,
+            Member member
     );
 
     @Operation(

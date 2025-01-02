@@ -2,12 +2,14 @@ package com.backend.allreva.rent.integration;
 
 import static com.backend.allreva.concert.fixture.ConcertFixture.createConcertFixture;
 import static com.backend.allreva.concert.fixture.ConcertHallFixture.createConcertHallFixture;
+import static com.backend.allreva.member.fixture.MemberFixture.createMemberFixture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.backend.allreva.common.model.Image;
 import com.backend.allreva.concert.command.domain.ConcertRepository;
 import com.backend.allreva.hall.command.domain.ConcertHallRepository;
+import com.backend.allreva.member.command.domain.value.MemberRole;
 import com.backend.allreva.rent.command.domain.Rent;
 import com.backend.allreva.rent.command.domain.RentBoardingDate;
 import com.backend.allreva.rent.command.domain.RentRepository;
@@ -89,6 +91,7 @@ class RentMainPageTest extends IntegrationTestSupport {
     void 차량_대절_폼_상세_조회를_성공한다() {
         // given
         var registerId = 1L;
+        var register = createMemberFixture(registerId, MemberRole.USER);
         var user2Id = 2L;
         var user3Id = 3L;
         var concertHall = concertHallRepository.save(createConcertHallFixture());
@@ -99,7 +102,7 @@ class RentMainPageTest extends IntegrationTestSupport {
         rentJoinRepository.save(createRentJoinFixture(savedRent.getId(), user3Id, "김철수", boardingDates.get(1).getDate()));
 
         // when
-        var rentDetail = rentQueryService.getRentDetailById(savedRent.getId());
+        var rentDetail = rentQueryService.getRentDetailById(savedRent.getId(), register);
 
         // then
         assertThat(rentDetail).isNotNull();
@@ -107,7 +110,28 @@ class RentMainPageTest extends IntegrationTestSupport {
             softly.assertThat(rentDetail.getTitle()).isEqualTo(savedRent.getDetailInfo().getTitle());
             softly.assertThat(rentDetail.getConcertName()).isEqualTo(concert.getConcertInfo().getTitle());
             softly.assertThat(rentDetail.getDropOffArea()).isEqualTo(concertHall.getName());
-            softly.assertThat(rentDetail.getBoardingDates().get(0).participationCount()).isEqualTo(2);
+            softly.assertThat(rentDetail.getBoardingDates().get(0).getParticipationCount()).isEqualTo(2);
+            softly.assertThat(rentDetail.getBoardingDates().get(0).getIsApplied()).isFalse();
+            softly.assertThat(rentDetail.getRefundAccount()).isEqualTo(register.getRefundAccount());
+        });
+    }
+
+    @Test
+    void 차량_대절_폼_상세_조회할_때_익명_사용자면_신청_여부와_환불_계좌를_제공하지_않는다() {
+        // given
+        var registerId = 1L;
+        var concertHall = concertHallRepository.save(createConcertHallFixture());
+        var concert = concertRepository.save(createConcertFixture(concertHall.getId()));
+        var savedRent = rentRepository.save(createRentFixture(registerId, concert.getId(), Region.서울, LocalDate.of(2024, 9, 21)));
+
+        // when
+        var rentDetail = rentQueryService.getRentDetailById(savedRent.getId(), null);
+
+        // then
+        assertThat(rentDetail).isNotNull();
+        assertSoftly(softly -> {
+            softly.assertThat(rentDetail.getBoardingDates().get(0).getIsApplied()).isNull();
+            softly.assertThat(rentDetail.getRefundAccount()).isNull();
         });
     }
 

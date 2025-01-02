@@ -1,9 +1,11 @@
 package com.backend.allreva.rent.query.application.response;
 
+import com.backend.allreva.member.command.domain.value.RefundAccount;
 import com.backend.allreva.rent.command.domain.value.BusSize;
 import com.backend.allreva.rent.command.domain.value.BusType;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent_join.command.domain.value.RefundType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
@@ -35,29 +37,32 @@ public class RentDetailResponse {
     private final RefundType refundType; //
     private final String information; // 기타 안내 사항
     private final boolean isClosed; // 마감 여부
+    @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private RefundAccount refundAccount; // 환불 계좌
 
     public RentDetailResponse(
-            String concertName,
-            String imageUrl,
-            String title,
-            String artistName,
-            Region region,
-            String boardingArea,
-            String dropOffArea,
-            String upTime,
-            String downTime,
-            BusSize busSize,
-            BusType busType,
-            int maxPassenger,
-            int roundPrice,
-            int upTimePrice,
-            int downTimePrice,
-            int recruitmentCount,
-            LocalDate endDate,
-            String chatUrl,
-            RefundType refundType,
-            String information,
-            boolean isClosed
+            final String concertName,
+            final String imageUrl,
+            final String title,
+            final String artistName,
+            final Region region,
+            final String boardingArea,
+            final String dropOffArea,
+            final String upTime,
+            final String downTime,
+            final BusSize busSize,
+            final BusType busType,
+            final int maxPassenger,
+            final int roundPrice,
+            final int upTimePrice,
+            final int downTimePrice,
+            final int recruitmentCount,
+            final LocalDate endDate,
+            final String chatUrl,
+            final RefundType refundType,
+            final String information,
+            final boolean isClosed
     ) {
         this.concertName = concertName;
         this.imageUrl = imageUrl;
@@ -82,10 +87,20 @@ public class RentDetailResponse {
         this.isClosed = isClosed;
     }
 
-    public record RentBoardingDateResponse(
-            LocalDate date,
-            int participationCount
-    ) {
+    @Getter
+    public static class RentBoardingDateResponse {
+        private final LocalDate date;
+        private final int participationCount;
+        @Setter
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        private Boolean isApplied;
 
+        public RentBoardingDateResponse(
+                final LocalDate date,
+                final int participationCount
+        ) {
+            this.date = date;
+            this.participationCount = participationCount;
+        }
     }
 }
