@@ -26,7 +26,7 @@ class ConcertSearchServiceTest extends IntegrationTestSupport {
     void successTest() {
         //give
         //when
-        List<ConcertThumbnail> result = concertSearchService.searchConcertThumbnails("day6");
+        List<ConcertThumbnail> result = concertSearchService.searchConcertThumbnails("영탁");
 
         //then
         assertThat(result).isNotEmpty();
