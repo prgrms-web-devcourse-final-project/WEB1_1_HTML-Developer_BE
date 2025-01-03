@@ -63,4 +63,25 @@ public class ConcertSearchService {
                 searchHits.getSearchHits().get(size -1).getSortValues() : null;
         return ConcertSearchListResponse.from(concertThumbnails, nextSearchAfter);
     }
+
+    public ConcertSearchListResponse searchAllConcertList(
+            final String title,
+            final List<Object> searchAfter,
+            final int size
+    ) {
+        SearchHits<ConcertDocument> searchHits = concertSearchRepository.searchByTitleListAll(title, searchAfter, size + 1);
+        List<ConcertThumbnail> concertThumbnails = searchHits.getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .map(ConcertThumbnail::from)
+                .limit(size)
+                .toList();
+
+        if(concertThumbnails.isEmpty()) {
+            throw new SearchResultNotFoundException();
+        }
+        boolean hasNext = searchHits.getSearchHits().size() > size;
+        List<Object> nextSearchAfter = hasNext ?
+                searchHits.getSearchHits().get(size -1).getSortValues() : null;
+        return ConcertSearchListResponse.from(concertThumbnails, nextSearchAfter);
+    }
 }

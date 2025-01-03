@@ -8,6 +8,28 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface RentDocumentRepository extends
         ElasticsearchRepository<RentDocument, String>,
         CustomRentDocumentRepo {
-    @Query("{\"match\": {\"title.mixed\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}")
+    @Query("""
+    {
+        "bool": {
+            "must": {
+                "match": {
+                    "title.mixed": {
+                        "query": "?0",
+                        "fuzziness": "AUTO"
+                    }
+                }
+            },
+            "filter": {
+                "range": {
+                    "eddate": {
+                        "gte": "now/d",
+                        "format": "strict_date_optional_time"
+                    }
+                }
+            }
+        }
+    }
+""")
     Page<RentDocument> findByTitleMixed(String title, Pageable pageable);
+
 }

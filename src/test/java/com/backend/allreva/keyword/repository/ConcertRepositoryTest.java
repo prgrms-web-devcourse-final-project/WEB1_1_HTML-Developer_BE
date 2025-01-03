@@ -28,7 +28,7 @@ class ConcertRepositoryTest extends IntegrationTestSupport {
         PageRequest pageRequest = PageRequest.of(0, 2);
 
         //when
-        List<ConcertDocument> day6 = concertSearchRepository.findByTitleMixed("day6", pageRequest).getContent();
+        List<ConcertDocument> day6 = concertSearchRepository.findByTitleMixed("영탁", pageRequest).getContent();
 
         //then
         assertThat(day6.size(), is(2));

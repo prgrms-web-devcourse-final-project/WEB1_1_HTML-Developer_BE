@@ -26,7 +26,7 @@ public class CustomRentDocumentRepoImpl implements CustomRentDocumentRepo {
             final String query,
             final List<Object> searchAfter,
             final int size
-            ){
+    ){
         try {
             NativeQuery nativeQuery = getNativeQuery(query, searchAfter, size);
             return elasticsearchOperations.search(nativeQuery, RentDocument.class);
@@ -34,12 +34,12 @@ public class CustomRentDocumentRepoImpl implements CustomRentDocumentRepo {
             throw new ElasticSearchException();
         }
     }
+
     private NativeQuery getNativeQuery(
             final String searchTerm,
             final List<Object> searchAfter,
             final int size
     ) {
-
         NativeQueryBuilder nativeQueryBuilder = NativeQuery.builder()
                 .withQuery(buildSearchQuery(searchTerm))
                 .withSort(buildPrimarySort())
@@ -55,15 +55,16 @@ public class CustomRentDocumentRepoImpl implements CustomRentDocumentRepo {
     private Query buildSearchQuery(final String searchTerm) {
         BoolQuery.Builder boolQuery = new BoolQuery.Builder();
 
-        // 날짜 필터 추가 (현재 시점 이후 데이터만)
+        // 날짜 필터 수정
         boolQuery.filter(f -> f
                 .range(r -> r
                         .field("eddate")
-                        .gte(JsonData.of("now"))
+                        .gte(JsonData.of("now/d"))
+                        .format("strict_date_optional_time")
                 )
         );
 
-        // 검색어가 있는 경우
+        // 검색어 처리
         if (StringUtils.hasText(searchTerm)) {
             boolQuery.must(m -> m
                     .match(mt -> mt
@@ -81,7 +82,6 @@ public class CustomRentDocumentRepoImpl implements CustomRentDocumentRepo {
         return Query.of(q -> q.bool(boolQuery.build()));
     }
 
-
     private SortOptions buildPrimarySort() {
         return SortOptions.of(s -> s
                 .score(f -> f
@@ -93,7 +93,7 @@ public class CustomRentDocumentRepoImpl implements CustomRentDocumentRepo {
     private SortOptions buildSecondarySort() {
         return SortOptions.of(s -> s
                 .field(f -> f
-                        .field("id")  // _id 필드로 정렬
+                        .field("id")
                         .order(SortOrder.Asc)
                 )
         );

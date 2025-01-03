@@ -59,7 +59,8 @@ public class CustomSurveyDocumentRepoImpl implements CustomSurveyDocumentRepo {
         boolQuery.filter(f -> f
                 .range(r -> r
                         .field("eddate")
-                        .gte(JsonData.of("now"))
+                        .gte(JsonData.of("now/d"))
+                        .format("strict_date_optional_time")
                 )
         );
 
