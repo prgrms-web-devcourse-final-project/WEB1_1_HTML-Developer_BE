@@ -2,6 +2,7 @@ package com.backend.allreva.concert.infra.elasticsearch;
 
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.json.JsonData;
 import com.backend.allreva.concert.exception.search.ElasticSearchException;
@@ -26,7 +27,7 @@ public class CustomConcertSearchRepoImpl implements CustomConcertSearchRepo {
             final int size,
             final SortDirection sortDirection) {
         try {
-            NativeQuery searchQuery = getNativeQuery(SearchField.ADDRESS,address, searchAfter, size, sortDirection);
+            NativeQuery searchQuery = getNativeQuery(SearchField.ADDRESS,address, searchAfter, size, sortDirection, true);
             return elasticsearchOperations.search(searchQuery, ConcertDocument.class);
         }catch (ElasticSearchException e){
             throw new ElasticSearchException();
@@ -38,8 +39,25 @@ public class CustomConcertSearchRepoImpl implements CustomConcertSearchRepo {
             final String query,
             final List<Object> searchAfter,
             final int size) {
+        return searchByTitleList(query, searchAfter, size, true);
+    }
+
+    @Override
+    public SearchHits<ConcertDocument> searchByTitleListAll(
+            String query,
+            List<Object> searchAfter,
+            int size) {
+        return searchByTitleList(query, searchAfter, size, false);
+    }
+
+    private SearchHits<ConcertDocument> searchByTitleList(
+            final String query,
+            final List<Object> searchAfter,
+            final int size,
+            final boolean filterByDate) {
         try{
-            NativeQuery searchQuery = getNativeQuery(SearchField.TITLE, query, searchAfter, size, SortDirection.SCORE);
+            NativeQuery searchQuery = getNativeQuery(SearchField.TITLE, query, searchAfter, size, SortDirection.SCORE, filterByDate);
+            System.out.println(searchQuery.getQuery());
             return elasticsearchOperations.search(searchQuery, ConcertDocument.class);
         }catch (ElasticSearchException e){
             throw new ElasticSearchException();
@@ -51,10 +69,11 @@ public class CustomConcertSearchRepoImpl implements CustomConcertSearchRepo {
             final String searchTerm,
             final List<Object> searchAfter,
             final int size,
-            final SortDirection sortDirection) {
+            final SortDirection sortDirection,
+            final boolean filterByDate) {
 
         NativeQueryBuilder nativeQueryBuilder = NativeQuery.builder()
-                .withQuery(buildSearchQuery(searchField, searchTerm))
+                .withQuery(buildSearchQuery(searchField, searchTerm, filterByDate))
                 .withSort(buildPrimarySort(sortDirection))
                 .withSort(buildSecondarySort())
                 .withPageable(PageRequest.of(0, size));
@@ -65,43 +84,49 @@ public class CustomConcertSearchRepoImpl implements CustomConcertSearchRepo {
         return nativeQueryBuilder.build();
     }
 
-    private Query buildSearchQuery(final SearchField searchField, final String searchTerm) {
+    private Query buildSearchQuery(final SearchField searchField, final String searchTerm, final boolean filterByDate) {
         if (!StringUtils.hasText(searchTerm)) {
-            return Query.of(q -> q
-                    .bool(b -> b
-                            .filter(f -> f
-                                    .range(r -> r
-                                            .field("eddate")
-                                            .gte(JsonData.of("now"))
-                                    )
-                            )
-                    )
-            );
+            return filterByDate ? buildDateFilterQuery() : Query.of(q -> q.matchAll(m -> m));
         }
 
-        // 검색어가 있는 경우의 퍼지 매칭 쿼리
-        if (StringUtils.hasText(searchTerm)) {
-            return Query.of(q -> q
-                    .bool(b -> b
+        return Query.of(q -> q
+                .bool(b -> {
+                    BoolQuery.Builder builder = b
                             .must(m -> m
                                     .match(mt -> mt
                                             .field(searchField.getFieldName())
                                             .query(searchTerm)
                                             .fuzziness("AUTO")
                                     )
-                            )
-                            .filter(f -> f
-                                    .range(r -> r
-                                            .field("eddate")
-                                            .gte(JsonData.of("now"))
-                                    )
-                            )
-                    )
-            );
-        }
-
-        return Query.of(q -> q.matchAll(m -> m));
+                            );
+                    if (filterByDate) {
+                        builder.filter(f -> f
+                                .range(r -> r
+                                        .field("eddate")
+                                        .gte(JsonData.of("now"))
+                                )
+                        );
+                    }
+                    return builder;
+                })
+        );
     }
+
+    private Query buildDateFilterQuery() {
+        return Query.of(q -> q
+                .bool(b -> b
+                        .filter(f -> f
+                                .range(r -> r
+                                        .field("eddate")
+                                        .gte(JsonData.of("now/d"))
+                                        .format("strict_date_optional_time")
+                                )
+                        )
+                )
+        );
+    }
+
+
 
 
     private SortOptions buildPrimarySort(final SortDirection sortDirection) {

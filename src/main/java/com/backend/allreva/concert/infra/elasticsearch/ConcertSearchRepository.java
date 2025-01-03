@@ -12,7 +12,31 @@ import java.util.Optional;
 public interface ConcertSearchRepository extends
         ElasticsearchRepository<ConcertDocument, String>,
         CustomConcertSearchRepo {
-    @Query("{\"match\": {\"title.mixed\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}")
+    @Query("""
+    {
+      "bool": {
+        "must": [
+          {
+            "match": {
+              "title.mixed": {
+                "query": "?0",
+                "fuzziness": "AUTO"
+              }
+            }
+          }
+        ],
+        "filter": [
+          {
+            "range": {
+              "eddate": {
+                "gte": "now/d"
+              }
+            }
+          }
+        ]
+      }
+    }
+    """)
     Page<ConcertDocument> findByTitleMixed(String title, Pageable pageable);
 
     Optional<ConcertDocument> findByConcertCode(String concertCode);

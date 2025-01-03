@@ -60,4 +60,31 @@ public class ConcertSearchController {
         ConcertSearchListResponse response = concertSearchService.searchConcertList(query, searchAfter, pageSize);
         return Response.onSuccess(response);
     }
+
+    @Operation(
+            summary = "전체 기간 콘서트 검색 API",
+            description = """
+                과거와 현재 모든 콘서트를 검색하는 API입니다.
+                searchAfter1, searchAfter2에 이전 SearchAfter에 있는 값들을 순서대로 넣어주어야 합니다.
+                """
+    )
+    @GetMapping("/list/all")
+    public Response<ConcertSearchListResponse> searchAllConcertList(
+            @RequestParam
+            @NotEmpty(message = "검색어를 입력해야 합니다.")
+            final String query,
+            @RequestParam(defaultValue = "7")
+            final int pageSize,
+            @RequestParam(required = false)
+            final String searchAfter1,
+            @RequestParam(required = false)
+            final String searchAfter2
+    ){
+        List<Object> searchAfter = Stream.of(searchAfter1, searchAfter2)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        ConcertSearchListResponse response = concertSearchService.searchAllConcertList(query, searchAfter, pageSize);
+        return Response.onSuccess(response);
+    }
 }
