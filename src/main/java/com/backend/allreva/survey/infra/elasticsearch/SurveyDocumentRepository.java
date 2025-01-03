@@ -8,7 +8,32 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface SurveyDocumentRepository extends
         ElasticsearchRepository<SurveyDocument, String>,
         CustomSurveyDocumentRepo {
-    @Query("{\"match\": {\"title.mixed\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}")
+    @Query("""
+    {
+      "bool": {
+        "must": [
+          {
+            "match": {
+              "title.mixed": {
+                "query": "?0",
+                "fuzziness": "AUTO"
+              }
+            }
+          }
+        ],
+        "filter": [
+          {
+            "range": {
+              "eddate": {
+                "gte": "now/d"
+              }
+            }
+          }
+        ]
+      }
+    }
+    """)
     Page<SurveyDocument> findByTitleMixed(String title, Pageable pageable);
+
 }
 
