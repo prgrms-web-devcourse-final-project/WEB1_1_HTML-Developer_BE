@@ -5,6 +5,8 @@ import com.backend.allreva.rent.query.application.response.RentSearchListRespons
 import com.backend.allreva.rent.query.application.response.RentThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.List;
 
 @Tag(name = "차량 대절 검색 API")
@@ -21,6 +23,7 @@ public interface RentSearchControllerSwagger {
             description = "검색어에 따라 관련도 순으로 무한 스크롤 searchAfter1, searchAfter2에 이전 SearchAfter에 있는 값들을 순서대로 넣어주어야 합니다."
     )
    Response<RentSearchListResponse> searchRentList(
+            @NotEmpty(message = "검색어를 입력해야 합니다.")
             String query,
             int pageSize,
             String searchAfter1,
