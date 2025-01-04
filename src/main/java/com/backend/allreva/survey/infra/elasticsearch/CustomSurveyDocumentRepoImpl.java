@@ -28,6 +28,7 @@ public class CustomSurveyDocumentRepoImpl implements CustomSurveyDocumentRepo {
             ){
         try {
             NativeQuery nativeQuery = getNativeQuery(query, searchAfter, size);
+            System.out.println("nativeQuery: " + nativeQuery);
             return elasticsearchOperations.search(nativeQuery, SurveyDocument.class);
         } catch (ElasticSearchException e) {
             throw new ElasticSearchException();
