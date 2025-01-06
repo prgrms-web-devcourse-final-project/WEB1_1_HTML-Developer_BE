@@ -27,6 +27,7 @@ public class CorsConfig {
                 "https://localhost:3000",
                 "http://localhost:8080",
                 "https://api.allreva.shop",
+                "https://allreva.shop/",
                 frontProtocol + "://" + frontDomain
         ));
 
