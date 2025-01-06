@@ -71,6 +71,7 @@ public class DiaryDslRepositoryImpl implements DiaryDslRepository {
 
     private ConstructorExpression<DiarySummaryResponse> summaryProjection() {
         return Projections.constructor(DiarySummaryResponse.class,
+                concertDiary.id,
                 concert.poster,
                 concertDiary.diaryDate
         );
