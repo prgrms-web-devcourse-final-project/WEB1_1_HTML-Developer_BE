@@ -1,20 +1,9 @@
 package com.backend.allreva.rent.infra.rdb;
 
-import static com.backend.allreva.concert.command.domain.QConcert.concert;
-import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
-import static com.backend.allreva.rent.command.domain.QRent.rent;
-import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoardingDate;
-import static com.backend.allreva.rent_join.command.domain.QRentJoin.rentJoin;
-
 import com.backend.allreva.common.util.DateHolder;
 import com.backend.allreva.rent.command.domain.value.Region;
-import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
-import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
-import com.backend.allreva.rent.query.application.response.RentDetailResponse;
+import com.backend.allreva.rent.query.application.response.*;
 import com.backend.allreva.rent.query.application.response.RentDetailResponse.RentBoardingDateResponse;
-import com.backend.allreva.rent.query.application.response.RentJoinCountResponse;
-import com.backend.allreva.rent.query.application.response.RentJoinDetailResponse;
-import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
 import com.backend.allreva.rent_join.command.domain.value.BoardingType;
 import com.backend.allreva.rent_join.command.domain.value.RefundType;
 import com.backend.allreva.survey.query.application.response.SortType;
@@ -24,11 +13,18 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+
+import static com.backend.allreva.concert.command.domain.QConcert.concert;
+import static com.backend.allreva.hall.command.domain.QConcertHall.concertHall;
+import static com.backend.allreva.rent.command.domain.QRent.rent;
+import static com.backend.allreva.rent.command.domain.QRentBoardingDate.rentBoardingDate;
+import static com.backend.allreva.rent_join.command.domain.QRentJoin.rentJoin;
 
 @Repository
 @RequiredArgsConstructor
@@ -68,7 +64,7 @@ public class RentDslRepositoryImpl {
                 .fetch();
     }
 
-    public List<RentSummaryResponse> findRentMainSummaries(){
+    public List<RentSummaryResponse> findRentMainSummaries() {
         return queryFactory
                 .select(Projections.constructor(RentSummaryResponse.class,
                         rent.id,
@@ -104,7 +100,7 @@ public class RentDslRepositoryImpl {
         switch (sortType) {
             case CLOSING -> {
                 return (rent.additionalInfo.endDate.gt(lastEndDate))
-                            .or(rent.additionalInfo.endDate.eq(lastEndDate).and(rent.id.gt(lastId)));
+                        .or(rent.additionalInfo.endDate.eq(lastEndDate).and(rent.id.gt(lastId)));
             }
             case OLDEST -> {
                 return rent.id.gt(lastId);
@@ -209,6 +205,7 @@ public class RentDslRepositoryImpl {
 
     /**
      * [Register] 등록한 차 대절 관리 리스트 조회
+     *
      * @param memberId 등록자 ID
      * @return 차 대절 관리 리스트 조회 결과
      */
@@ -237,9 +234,10 @@ public class RentDslRepositoryImpl {
 
     /**
      * [Register] 자신이 등록한 차 대절 관리 상세 조회
-     * @param memberId 등록자 ID
+     *
+     * @param memberId     등록자 ID
      * @param boardingDate 차 대절 날짜
-     * @param rentId 차 대절 ID
+     * @param rentId       차 대절 ID
      * @return 차 대절 관리 상세 조회 결과
      */
     public Optional<RentAdminSummaryResponse> findRentAdminSummary(
@@ -263,11 +261,13 @@ public class RentDslRepositoryImpl {
                                 rent.operationInfo.bus.maxPassenger
                         ))
                 .from(rent)
-                .join(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
-                .join(rentJoin).on(rentBoardingDate.date.eq(rentJoin.boardingDate))
+                .leftJoin(rentBoardingDate).on(rent.id.eq(rentBoardingDate.rent.id))
+                .leftJoin(rentJoin)
+                .on(rentJoin.rentId.eq(rent.id)
+                        .and(rentBoardingDate.date.eq(rentJoin.boardingDate))
+                )
                 .where(
-                        rentJoin.rentId.eq(rentId),
-                        rentJoin.boardingDate.eq(boardingDate),
+                        rent.id.eq(rentId),
                         rent.memberId.eq(memberId)
                 )
                 .groupBy(rent.id, rentBoardingDate.date)
@@ -277,9 +277,10 @@ public class RentDslRepositoryImpl {
 
     /**
      * [Register] 자신이 등록한 차 대절 신청 인원 상세 조회
-     * @param memberId 등록자 ID
+     *
+     * @param memberId     등록자 ID
      * @param boardingDate 차 대절 날짜
-     * @param rentId 차 대절 ID
+     * @param rentId       차 대절 ID
      * @return 차 대절 신청 인원 상세 조회 결과
      */
     public Optional<RentJoinCountResponse> findRentJoinCount(
@@ -330,8 +331,9 @@ public class RentDslRepositoryImpl {
 
     /**
      * [Register] 자신이 등록한 차 대절 참가자 리스트 조회
-     * @param memberId 등록자 ID
-     * @param rentId 차 대절 ID
+     *
+     * @param memberId     등록자 ID
+     * @param rentId       차 대절 ID
      * @param boardingDate 차 대절 날짜
      * @return 자신이 등록한 차 대절 참가자 리스트 조회 결과
      */
