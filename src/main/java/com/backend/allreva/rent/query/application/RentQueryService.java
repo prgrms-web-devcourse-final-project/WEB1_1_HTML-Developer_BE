@@ -5,11 +5,7 @@ import com.backend.allreva.member.command.domain.MemberRepository;
 import com.backend.allreva.rent.command.domain.RentRepository;
 import com.backend.allreva.rent.command.domain.value.Region;
 import com.backend.allreva.rent.exception.RentNotFoundException;
-import com.backend.allreva.rent.query.application.response.DepositAccountResponse;
-import com.backend.allreva.rent.query.application.response.RentAdminDetailResponse;
-import com.backend.allreva.rent.query.application.response.RentAdminSummaryResponse;
-import com.backend.allreva.rent.query.application.response.RentDetailResponse;
-import com.backend.allreva.rent.query.application.response.RentSummaryResponse;
+import com.backend.allreva.rent.query.application.response.*;
 import com.backend.allreva.rent_join.command.domain.RentJoinRepository;
 import com.backend.allreva.survey.query.application.response.SortType;
 import java.time.LocalDate;
@@ -74,7 +70,7 @@ public class RentQueryService {
                 rentRepository.findRentAdminSummary(memberId, boardingDate, rentId)
                         .orElseThrow(RentNotFoundException::new),
                 rentRepository.findRentJoinCount(memberId, boardingDate, rentId)
-                        .orElseThrow(RentNotFoundException::new),
+                        .orElse(RentJoinCountResponse.EMPTY),
                 rentRepository.findRentJoinDetails(memberId, rentId, boardingDate)
         );
     }

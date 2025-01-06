@@ -96,7 +96,7 @@ public class RentRepositoryImpl implements RentRepository {
             final LocalDate boardingDate,
             final Long rentId
     ) {
-        return rentDslRepository.findRentAdminSummary(memberId, boardingDate, rentId);
+        return rentDslRepository.findRentAdminSummary(rentId, boardingDate, memberId);
     }
 
     @Override
