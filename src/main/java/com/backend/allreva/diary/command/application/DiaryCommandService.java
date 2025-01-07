@@ -46,7 +46,6 @@ public class DiaryCommandService {
 
         diary.validateWriter(memberId);
         diary.update(
-                memberId,
                 request.concertId(),
                 request.date(),
                 request.episode(),

@@ -85,7 +85,6 @@ public class ConcertDiary extends BaseEntity {
     }
 
     public void update(
-            final Long memberId,
             final Long concertId,
             final LocalDate diaryDate,
             final String episode,
@@ -93,12 +92,13 @@ public class ConcertDiary extends BaseEntity {
             final String seatName,
             final List<Image> diaryImages
     ) {
-        this.memberId = memberId;
         this.concertId = concertId;
         this.diaryDate = diaryDate;
         this.episode = episode;
         this.content = content;
         this.seatName = seatName;
-        addImages(diaryImages);
+
+        this.diaryImages.clear();
+        this.diaryImages.addAll(diaryImages);
     }
 }
