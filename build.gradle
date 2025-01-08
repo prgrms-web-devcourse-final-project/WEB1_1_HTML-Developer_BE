@@ -70,6 +70,7 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
