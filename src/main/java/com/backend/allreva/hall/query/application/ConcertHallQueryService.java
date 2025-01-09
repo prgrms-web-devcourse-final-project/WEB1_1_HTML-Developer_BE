@@ -8,6 +8,7 @@ import com.backend.allreva.hall.query.application.response.ConcertHallMainRespon
 import com.backend.allreva.hall.query.application.response.ConcertHallThumbnail;
 import com.backend.allreva.hall.query.domain.ConcertHallDocument;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,12 @@ public class ConcertHallQueryService {
         return concertHallRepository.findDetailByHallCode(hallCode);
     }
 
+    @Cacheable(
+            cacheNames = "concertHallMain",
+            key = "#address + '_' + #seatScale + '_' + #size + '_' + (#searchAfter != null ? #searchAfter.toString() : 'null')",
+            unless = "#result == null",
+            cacheManager = "concertHallMainCacheManager"
+    )
     public ConcertHallMainResponse getConcertHallMain(
             final String address,
             final int seatScale,
