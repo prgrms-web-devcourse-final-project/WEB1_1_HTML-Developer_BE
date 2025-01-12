@@ -10,6 +10,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Range;
 
+import java.time.LocalDate;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,4 +38,7 @@ public class SeatReview extends BaseEntity {
 
     @Column(nullable = false)
     private String hallId;
+
+    @Column(nullable = false)
+    private LocalDate viewDate;
 }
