@@ -41,9 +41,20 @@ public class SeatReviewController implements SeatReviewControllerSwagger {
             @RequestPart @Valid final ReviewUpdateRequest request,
             @RequestPart(value = "images", required = false)final List<MultipartFile> images,
             @AuthMember final Member member) {
-        log.info("images : {}", images);
         return Response.onSuccess(
-                seatReviewFacade.updateSeatReview(request.seatReviewId(), request, images, member)
+                seatReviewFacade.updateSeatReview(request, images, member)
         );
     }
+
+    @Override
+    @DeleteMapping
+    public Response<Void> deleteSeatReview(
+            @RequestParam final Long seatReviewId,
+            @AuthMember final Member member) {
+        seatReviewFacade.deleteSeatReview(seatReviewId, member);
+
+        return Response.onSuccess();
+    }
+
+
 }

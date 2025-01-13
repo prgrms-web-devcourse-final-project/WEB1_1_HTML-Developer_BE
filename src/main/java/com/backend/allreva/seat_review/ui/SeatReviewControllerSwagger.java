@@ -26,4 +26,10 @@ public interface SeatReviewControllerSwagger {
             List<MultipartFile> images,
             Member member
     );
+
+    @Operation(summary = "좌석리뷰 삭제 API", description = "좌석리뷰 삭제 API")
+    Response<Void> deleteSeatReview(
+            Long seatReviewId,
+            Member member
+    );
 }

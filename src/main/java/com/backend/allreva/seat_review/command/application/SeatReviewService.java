@@ -37,13 +37,18 @@ public class SeatReviewService {
     }
 
     public Long updateSeatReview(
-            final Long id,
             final ReviewUpdateRequest request,
             final Member member) {
-        SeatReview seatReview = seatReviewRepository.findById(id).orElseThrow(SeatReviewNotFoundException::new);
+        SeatReview seatReview = seatReviewRepository.findById(request.seatReviewId()).orElseThrow(SeatReviewNotFoundException::new);
         validateWriter(seatReview.getMemberId(), member.getId());
         seatReview.updateSeatReview(request);
         return seatReviewRepository.save(seatReview).getId();
+    }
+
+    public void deleteSeatReview(final Long id, final Member member) {
+        SeatReview seatReview = seatReviewRepository.findById(id).orElseThrow(SeatReviewNotFoundException::new);
+        validateWriter(seatReview.getMemberId(), member.getId());
+        seatReviewRepository.delete(seatReview);
     }
 
     private void validateWriter(final Long writerId, final Long memberId) {

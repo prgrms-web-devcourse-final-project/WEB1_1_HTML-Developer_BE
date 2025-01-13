@@ -32,19 +32,27 @@ public class SeatReviewFacade {
     }
 
     public Long updateSeatReview(
-            final Long seatReviewId,
             final ReviewUpdateRequest request,
             final List<MultipartFile> images,
             final Member member
     ) {
-        Long updatedSeatReviewId = seatReviewService.updateSeatReview(seatReviewId, request, member);
+        Long updatedSeatReviewId = seatReviewService.updateSeatReview(request, member);
 
         // 기존 이미지 삭제 비동기 처리
-        seatReviewImageService.deleteImages(seatReviewId);
+        seatReviewImageService.deleteImages(request.seatReviewId());
 
         // 새로운 이미지 업로드 및 저장 비동기 처리
-        seatReviewImageService.uploadAndSaveImages(seatReviewId, images);
+        seatReviewImageService.uploadAndSaveImages(request.seatReviewId(), images);
 
         return updatedSeatReviewId;
+    }
+
+    public void deleteSeatReview(
+            final Long seatReviewId,
+            final Member member
+    ) {
+        seatReviewImageService.deleteImages(seatReviewId);
+
+        seatReviewService.deleteSeatReview(seatReviewId, member);
     }
 }

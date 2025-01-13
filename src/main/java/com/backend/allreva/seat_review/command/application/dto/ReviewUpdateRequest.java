@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record ReviewUpdateRequest(
+
         @NotNull(message = "seatReviewId는 필수입니다")
         Long seatReviewId,
 
