@@ -30,4 +30,6 @@ public class SeatReviewController implements SeatReviewControllerSwagger {
                 seatReviewFacade.createSeatReview(request, Images, member)
         );
     }
+
+
 }

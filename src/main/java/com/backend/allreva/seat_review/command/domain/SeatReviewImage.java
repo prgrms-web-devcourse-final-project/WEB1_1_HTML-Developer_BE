@@ -23,4 +23,7 @@ public class SeatReviewImage extends BaseEntity {
 
     @Column(nullable = false)
     private Long seatReviewId;
+
+    @Column(nullable = false)
+    private Integer orderNum;
 }

@@ -62,15 +62,21 @@ public class SeatReviewImageEventHandler {
     }
 
     private void saveSeatReviewImages(Long seatReviewId, List<Image> uploadedImages) {
-        List<SeatReviewImage> seatReviewImages = uploadedImages.stream()
-                .map(img -> SeatReviewImage.builder()
-                        .url(img.getUrl())
-                        .seatReviewId(seatReviewId)
-                        .build())
-                .toList();
+        List<SeatReviewImage> seatReviewImages = new ArrayList<>();
+
+        for (int i = 0; i < uploadedImages.size(); i++) {
+            Image img = uploadedImages.get(i);
+            SeatReviewImage seatReviewImage = SeatReviewImage.builder()
+                    .url(img.getUrl())
+                    .seatReviewId(seatReviewId)
+                    .orderNum(i + 1) // 순서를 설정
+                    .build();
+            seatReviewImages.add(seatReviewImage);
+        }
 
         seatReviewImageRepository.saveAll(seatReviewImages);
     }
+
 
     private void rollbackImages(List<Image> uploadedImages) {
         uploadedImages.forEach(image -> deleteImageAsync(image.getUrl()));
