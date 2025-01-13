@@ -2,7 +2,10 @@ package com.backend.allreva.seat_review.command.application;
 
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.seat_review.command.application.dto.ReviewCreateRequest;
+import com.backend.allreva.seat_review.command.application.dto.ReviewUpdateRequest;
 import com.backend.allreva.seat_review.command.domain.SeatReview;
+import com.backend.allreva.seat_review.exception.NotWriterException;
+import com.backend.allreva.seat_review.exception.SeatReviewNotFoundException;
 import com.backend.allreva.seat_review.exception.SeatReviewSaveFailedException;
 import com.backend.allreva.seat_review.infra.SeatReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,22 @@ public class SeatReviewService {
             return savedSeatReview.getId();
         }catch (Exception e){
             throw new SeatReviewSaveFailedException();
+        }
+    }
+
+    public Long updateSeatReview(
+            final Long id,
+            final ReviewUpdateRequest request,
+            final Member member) {
+        SeatReview seatReview = seatReviewRepository.findById(id).orElseThrow(SeatReviewNotFoundException::new);
+        validateWriter(seatReview.getMemberId(), member.getId());
+        seatReview.updateSeatReview(request);
+        return seatReviewRepository.save(seatReview).getId();
+    }
+
+    private void validateWriter(final Long writerId, final Long memberId) {
+        if (!writerId.equals(memberId)) {
+            throw new NotWriterException();
         }
     }
 }

@@ -12,7 +12,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Builder
 @Getter
 @SQLRestriction("deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE seat_review SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE seat_review_image SET deleted_at = NOW() WHERE id = ?")
 public class SeatReviewImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

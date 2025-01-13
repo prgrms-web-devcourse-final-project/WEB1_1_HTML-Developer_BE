@@ -1,4 +1,4 @@
-package com.backend.allreva.seat_review.command.application;
+package com.backend.allreva.seat_review.command.application.event;
 
 import com.backend.allreva.common.event.Event;
 import lombok.Getter;

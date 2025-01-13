@@ -2,8 +2,8 @@ package com.backend.allreva.seat_review.command.application;
 
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.seat_review.command.application.dto.ReviewCreateRequest;
+import com.backend.allreva.seat_review.command.application.dto.ReviewUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +16,7 @@ import java.util.List;
 public class SeatReviewFacade {
 
     private final SeatReviewService seatReviewService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final SeatReviewImageService seatReviewImageService;
 
     public Long createSeatReview(
             final ReviewCreateRequest request,
@@ -25,8 +25,26 @@ public class SeatReviewFacade {
     ) {
         Long seatReviewId = seatReviewService.createSeatReview(request, member);
 
-        eventPublisher.publishEvent(new SeatReviewImageEvent(seatReviewId, images));
+        // 비동기로 이미지 업로드 및 저장 처리
+        seatReviewImageService.uploadAndSaveImages(seatReviewId, images);
 
         return seatReviewId;
+    }
+
+    public Long updateSeatReview(
+            final Long seatReviewId,
+            final ReviewUpdateRequest request,
+            final List<MultipartFile> images,
+            final Member member
+    ) {
+        Long updatedSeatReviewId = seatReviewService.updateSeatReview(seatReviewId, request, member);
+
+        // 기존 이미지 삭제 비동기 처리
+        seatReviewImageService.deleteImages(seatReviewId);
+
+        // 새로운 이미지 업로드 및 저장 비동기 처리
+        seatReviewImageService.uploadAndSaveImages(seatReviewId, images);
+
+        return updatedSeatReviewId;
     }
 }

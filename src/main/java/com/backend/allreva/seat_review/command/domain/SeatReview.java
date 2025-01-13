@@ -1,6 +1,7 @@
 package com.backend.allreva.seat_review.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
+import com.backend.allreva.seat_review.command.application.dto.ReviewUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -39,4 +40,12 @@ public class SeatReview extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate viewDate;
+
+    public void updateSeatReview(ReviewUpdateRequest request) {
+        this.seat = request.seat();
+        this.content = request.content();
+        this.star = request.star();
+        this.viewDate = LocalDate.now();
+        this.hallId = request.hallId();
+    }
 }
