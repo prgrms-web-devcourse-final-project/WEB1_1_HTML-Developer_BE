@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record ReviewCreateResponse(
+public record ReviewCreateRequest(
 
         @NotNull(message = "관란일자는 필수 입니다.")
         LocalDate viewDate,

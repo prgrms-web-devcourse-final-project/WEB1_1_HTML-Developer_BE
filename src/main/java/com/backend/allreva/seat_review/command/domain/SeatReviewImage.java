@@ -2,13 +2,15 @@ package com.backend.allreva.seat_review.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
+@Builder
+@Getter
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE seat_review SET deleted_at = NOW() WHERE id = ?")
 public class SeatReviewImage extends BaseEntity {

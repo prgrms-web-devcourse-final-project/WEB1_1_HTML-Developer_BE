@@ -2,10 +2,7 @@ package com.backend.allreva.seat_review.command.domain;
 
 import com.backend.allreva.common.model.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Range;
@@ -16,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE seat_review SET deleted_at = NOW() WHERE id = ?")
 public class SeatReview extends BaseEntity {

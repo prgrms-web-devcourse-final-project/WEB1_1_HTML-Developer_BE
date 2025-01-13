@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -52,6 +53,19 @@ public class S3ImageService {
         return uploadOnS3(imageFile, storeKey, objectMetadata);
     }
 
+    public void delete(String imageUrl) {
+        if (StringUtils.isEmpty(imageUrl)) {
+            return;
+        }
+        try {
+            String key = extractKeyFromUrl(imageUrl);
+            s3Operations.deleteObject(bucketName, key);
+        } catch (Exception e) {
+            log.error("Failed to delete image from S3: {}", imageUrl, e);
+            throw new CustomException(GlobalErrorCode.SERVER_ERROR);
+        }
+    }
+
     private Image uploadOnS3(
             MultipartFile imageFile,
             String storeKey,
@@ -64,5 +78,9 @@ public class S3ImageService {
             log.error(e.getMessage());
             throw new CustomException(GlobalErrorCode.SERVER_ERROR);
         }
+    }
+
+    private String extractKeyFromUrl(String imageUrl) {
+        return imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
     }
 }
