@@ -6,6 +6,8 @@ import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.seat_review.command.application.SeatReviewFacade;
 import com.backend.allreva.seat_review.command.application.dto.ReviewCreateRequest;
 import com.backend.allreva.seat_review.command.application.dto.ReviewUpdateRequest;
+import com.backend.allreva.seat_review.query.application.SeatReviewQueryService;
+import com.backend.allreva.seat_review.query.application.dto.SeatReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class SeatReviewController implements SeatReviewControllerSwagger {
 
     private final SeatReviewFacade seatReviewFacade;
+    private final SeatReviewQueryService seatReviewQueryService;
 
     @Override
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -54,6 +57,21 @@ public class SeatReviewController implements SeatReviewControllerSwagger {
         seatReviewFacade.deleteSeatReview(seatReviewId, member);
 
         return Response.onSuccess();
+    }
+
+
+    @Override
+    @GetMapping
+    public Response<List<SeatReviewResponse>> getReviews(
+            @RequestParam(required = false) final Long lastId,
+            @RequestParam(defaultValue = "20") final int size,
+            @RequestParam(defaultValue = "CREATED_AT") final SortType sortType,
+            @RequestParam final String hallId,
+            @AuthMember final Member member
+    ) {
+        SeatReviewSearchCondition condition = new SeatReviewSearchCondition(lastId, size, sortType, hallId);
+        List<SeatReviewResponse> reviews = seatReviewQueryService.getReviews(condition, member.getId());
+        return Response.onSuccess(reviews);
     }
 
 

@@ -4,6 +4,7 @@ import com.backend.allreva.common.dto.Response;
 import com.backend.allreva.member.command.domain.Member;
 import com.backend.allreva.seat_review.command.application.dto.ReviewCreateRequest;
 import com.backend.allreva.seat_review.command.application.dto.ReviewUpdateRequest;
+import com.backend.allreva.seat_review.query.application.dto.SeatReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,15 @@ public interface SeatReviewControllerSwagger {
     @Operation(summary = "좌석리뷰 삭제 API", description = "좌석리뷰 삭제 API")
     Response<Void> deleteSeatReview(
             Long seatReviewId,
+            Member member
+    );
+
+    @Operation(summary = "좌석리뷰 삭제 API", description = "좌석리뷰 삭제 API")
+    Response<List<SeatReviewResponse>> getReviews(
+            Long lastId,
+            int size,
+            SortType sortType,
+            String hallId,
             Member member
     );
 }

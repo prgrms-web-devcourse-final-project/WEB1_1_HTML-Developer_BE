@@ -55,4 +55,5 @@ public class SeatReviewFacade {
 
         seatReviewService.deleteSeatReview(seatReviewId, member);
     }
+
 }
